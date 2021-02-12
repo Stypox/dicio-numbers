@@ -16,22 +16,22 @@ public class PronounceNumberParameters {
         this.number = number;
     }
 
-    public PronounceNumberParameters places(int places) {
+    public PronounceNumberParameters places(final int places) {
         this.places = places;
         return this;
     }
 
-    public PronounceNumberParameters shortScale(boolean shortScale) {
+    public PronounceNumberParameters shortScale(final boolean shortScale) {
         this.shortScale = shortScale;
         return this;
     }
 
-    public PronounceNumberParameters scientific(boolean scientific) {
+    public PronounceNumberParameters scientific(final boolean scientific) {
         this.scientific = scientific;
         return this;
     }
 
-    public PronounceNumberParameters ordinals(boolean ordinals) {
+    public PronounceNumberParameters ordinals(final boolean ordinals) {
         this.ordinals = ordinals;
         return this;
     }
