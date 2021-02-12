@@ -6,6 +6,7 @@ import static org.dicio.numbers.Utils.WHOLE_NUMBER_ACCURACY;
 import static org.dicio.numbers.Utils.decimalPlacesNoFinalZeros;
 import static org.dicio.numbers.Utils.isWhole;
 import static org.dicio.numbers.Utils.longPow;
+import static org.dicio.numbers.Utils.roundToLong;
 import static org.dicio.numbers.Utils.splitByModulus;
 import static org.junit.Assert.*;
 
@@ -55,6 +56,18 @@ public class UtilsTest {
         assertEquals(1000000000, longPow(1000, 3));
         assertEquals(1000000000, longPow(10, 9));
         assertEquals(10000000000L, longPow(100, 5));
+    }
+
+    @Test
+    public void testRoundToLong() {
+        assertEquals(5, roundToLong(5.0));
+        assertEquals(2, roundToLong(2.4));
+        assertEquals(11, roundToLong(10.6));
+        assertEquals(1, roundToLong(0.5));
+        assertEquals(-5, roundToLong(-5.0));
+        assertEquals(-2, roundToLong(-2.4));
+        assertEquals(-11, roundToLong(-10.6));
+        assertEquals(-1, roundToLong(-0.5));
     }
 
     private void assertSplitByModulus(final long number,

@@ -6,6 +6,7 @@ import java.util.List;
 public final class Utils {
 
     public static final double WHOLE_NUMBER_ACCURACY = 0.0001f;
+    public static final double WHOLE_FRACTION_ACCURACY = 0.0001f;
 
     private Utils() {
     }
@@ -41,7 +42,7 @@ public final class Utils {
     }
 
     /**
-     * @param n the number
+     * @param n the base
      * @param exponent the exponent
      * @return n ^ exponent
      */
@@ -51,6 +52,18 @@ public final class Utils {
             result *= n;
         }
         return result;
+    }
+
+    /**
+     * @param number the number to round
+     * @return the nearest long to the number
+     */
+    public static long roundToLong(final double number) {
+        if (number < 0) {
+            return (long) number + (number % 1 <= -0.5 ? -1 : 0);
+        } else {
+            return (long) number + (number % 1 >= 0.5 ? 1 : 0);
+        }
     }
 
     /**
