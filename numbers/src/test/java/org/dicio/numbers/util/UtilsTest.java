@@ -1,13 +1,13 @@
-package org.dicio.numbers;
+package org.dicio.numbers.util;
 
 import org.junit.Test;
 
-import static org.dicio.numbers.Utils.WHOLE_NUMBER_ACCURACY;
-import static org.dicio.numbers.Utils.decimalPlacesNoFinalZeros;
-import static org.dicio.numbers.Utils.isWhole;
-import static org.dicio.numbers.Utils.longPow;
-import static org.dicio.numbers.Utils.roundToLong;
-import static org.dicio.numbers.Utils.splitByModulus;
+import static org.dicio.numbers.util.Utils.WHOLE_NUMBER_ACCURACY;
+import static org.dicio.numbers.util.Utils.decimalPlacesNoFinalZeros;
+import static org.dicio.numbers.util.Utils.isWhole;
+import static org.dicio.numbers.util.Utils.longPow;
+import static org.dicio.numbers.util.Utils.roundToLong;
+import static org.dicio.numbers.util.Utils.splitByModulus;
 import static org.junit.Assert.*;
 
 public class UtilsTest {

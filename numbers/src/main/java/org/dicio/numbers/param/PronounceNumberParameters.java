@@ -1,4 +1,6 @@
-package org.dicio.numbers;
+package org.dicio.numbers.param;
+
+import org.dicio.numbers.NumberParseFormat;
 
 public class PronounceNumberParameters {
 
@@ -11,7 +13,7 @@ public class PronounceNumberParameters {
     private boolean scientific = false;
     private boolean ordinals = false;
 
-    PronounceNumberParameters(final NumberParseFormat numberParseFormat, final double number) {
+    public PronounceNumberParameters(final NumberParseFormat numberParseFormat, final double number) {
         this.numberParseFormat = numberParseFormat;
         this.number = number;
     }

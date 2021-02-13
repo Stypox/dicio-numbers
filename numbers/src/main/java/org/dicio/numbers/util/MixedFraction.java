@@ -1,9 +1,9 @@
-package org.dicio.numbers;
+package org.dicio.numbers.util;
 
 import java.util.Arrays;
 import java.util.List;
 
-class MixedFraction {
+public class MixedFraction {
 
     public static final List<Integer> DEFAULT_DENOMINATORS
             = Arrays.asList(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
@@ -34,7 +34,7 @@ class MixedFraction {
      *         E.g. {@code 4.500002} would become the whole number {@code 4}, the numerator {@code
      *         1} and the denominator {@code 2}.
      */
-    static MixedFraction of(final double number, final List<Integer> denominators) {
+    public static MixedFraction of(final double number, final List<Integer> denominators) {
         if ((long) Math.abs(number) == Long.MAX_VALUE) {
             return null; // number is too large to fit
         } else if (Utils.isWhole(number, Utils.WHOLE_FRACTION_ACCURACY)) {

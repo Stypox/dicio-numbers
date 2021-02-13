@@ -1,8 +1,12 @@
-package org.dicio.numbers;
+package org.dicio.numbers.param;
+
+import org.dicio.numbers.NumberParseFormat;
+import org.dicio.numbers.util.MixedFraction;
+import org.dicio.numbers.util.Utils;
 
 import java.util.List;
 
-import static org.dicio.numbers.MixedFraction.DEFAULT_DENOMINATORS;
+import static org.dicio.numbers.util.MixedFraction.DEFAULT_DENOMINATORS;
 
 public class NiceNumberParameters {
 
@@ -13,7 +17,7 @@ public class NiceNumberParameters {
     private boolean speech = true;
     private List<Integer> denominators = DEFAULT_DENOMINATORS;
 
-    NiceNumberParameters(final NumberParseFormat numberParseFormat, final double number) {
+    public NiceNumberParameters(final NumberParseFormat numberParseFormat, final double number) {
         this.numberParseFormat = numberParseFormat;
         this.number = number;
     }

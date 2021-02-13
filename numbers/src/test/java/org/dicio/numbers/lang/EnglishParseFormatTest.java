@@ -1,4 +1,4 @@
-package org.dicio.numbers;
+package org.dicio.numbers.lang;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class EnglishParseFormatTest {
 

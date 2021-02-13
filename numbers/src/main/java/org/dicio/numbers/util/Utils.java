@@ -1,4 +1,4 @@
-package org.dicio.numbers;
+package org.dicio.numbers.util;
 
 import java.util.ArrayList;
 import java.util.List;
