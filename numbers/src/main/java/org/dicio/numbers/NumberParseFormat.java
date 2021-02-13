@@ -8,7 +8,7 @@ public abstract class NumberParseFormat {
 
     // FORMAT
 
-    public abstract String niceNumber(double number, boolean speech, List<Integer> denominators);
+    public abstract String niceNumber(MixedFraction mixedFraction, boolean speech);
 
     public abstract String pronounceNumber(double number, int places, boolean shortScale,
                                            boolean scientific, boolean ordinals);
@@ -48,6 +48,10 @@ public abstract class NumberParseFormat {
 
 
     // FORMAT DEFAULT PARAMETERS
+
+    public final NiceNumberParameters niceNumber(final double number) {
+        return new NiceNumberParameters(this, number);
+    }
 
     public final PronounceNumberParameters pronounceNumber(final double number) {
         return new PronounceNumberParameters(this, number);

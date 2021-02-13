@@ -103,10 +103,50 @@ public class EnglishParseFormat extends NumberParseFormat {
 
 
     @Override
-    public String niceNumber(final double number,
-                             final boolean speech,
-                             final List<Integer> denominators) {
-        return "";
+    public String niceNumber(final MixedFraction mixedFraction, final boolean speech) {
+        if (speech) {
+            final String sign = mixedFraction.negative ? "minus " : "";
+            if (mixedFraction.numerator == 0) {
+                return sign + pronounceNumber(mixedFraction.whole, 0, true, false, false);
+            }
+
+            String denominatorString;
+            if (mixedFraction.denominator == 2) {
+                denominatorString = "half";
+            } else if (mixedFraction.denominator == 4) {
+                denominatorString = "quarter";
+            } else {
+                // use ordinal: only half and quarter are exceptions
+                denominatorString
+                        = pronounceNumber(mixedFraction.denominator, 0, true, false, true);
+            }
+
+            final String numeratorString;
+            if (mixedFraction.numerator == 1) {
+                numeratorString = "a";
+            } else {
+                numeratorString = pronounceNumber(mixedFraction.numerator, 0, true, false, false);
+                denominatorString += "s";
+            }
+
+            if (mixedFraction.whole == 0) {
+                return sign + numeratorString + " " + denominatorString;
+            } else {
+                return sign + pronounceNumber(mixedFraction.whole, 0, true, false, false)
+                        + " and " + numeratorString + " " + denominatorString;
+            }
+
+        } else {
+            final String sign = mixedFraction.negative ? "-" : "";
+            if (mixedFraction.numerator == 0) {
+                return sign + mixedFraction.whole;
+            } else if (mixedFraction.whole == 0) {
+                return sign + mixedFraction.numerator + "/" + mixedFraction.denominator;
+            } else {
+                return sign + mixedFraction.whole + " "
+                        + mixedFraction.numerator + "/" + mixedFraction.denominator;
+            }
+        }
     }
 
     @Override
