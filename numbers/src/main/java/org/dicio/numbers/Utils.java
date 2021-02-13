@@ -6,7 +6,7 @@ import java.util.List;
 public final class Utils {
 
     public static final double WHOLE_NUMBER_ACCURACY = 0.0001f;
-    public static final double WHOLE_FRACTION_ACCURACY = 0.0001f;
+    public static final double WHOLE_FRACTION_ACCURACY = 0.01f;
 
     private Utils() {
     }
