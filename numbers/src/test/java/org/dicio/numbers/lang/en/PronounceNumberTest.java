@@ -3,13 +3,9 @@ package org.dicio.numbers.lang.en;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-
 import static org.junit.Assert.assertEquals;
 
-public class EnglishParseFormatTest {
+public class PronounceNumberTest {
 
     private static EnglishParseFormat pf;
 
@@ -19,7 +15,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberSmallIntegers() {
+    public void smallIntegers() {
         assertEquals("zero", pf.pronounceNumber(0).get());
         assertEquals("one", pf.pronounceNumber(1).get());
         assertEquals("ten", pf.pronounceNumber(10).get());
@@ -31,7 +27,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberNegativeSmallIntegers() {
+    public void negativeSmallIntegers() {
         assertEquals("minus one", pf.pronounceNumber(-1).get());
         assertEquals("minus ten", pf.pronounceNumber(-10).get());
         assertEquals("minus fifteen", pf.pronounceNumber(-15).get());
@@ -42,7 +38,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberDecimals() {
+    public void decimals() {
         assertEquals("zero point zero five", pf.pronounceNumber(0.05).get());
         assertEquals("minus zero point zero five", pf.pronounceNumber(-0.05).get());
         assertEquals("one point two three", pf.pronounceNumber(1.234).get());
@@ -61,7 +57,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberRoundingDecimals() {
+    public void roundingDecimals() {
         assertEquals("zero", pf.pronounceNumber(0.05).places(0).get());
         assertEquals("zero", pf.pronounceNumber(-0.4).places(0).get());
         assertEquals("minus twenty two", pf.pronounceNumber(-21.7).places(0).get());
@@ -79,7 +75,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberHundred() {
+    public void hundred() {
         assertEquals("one hundred", pf.pronounceNumber(100).get());
         assertEquals("six hundred and seventy eight", pf.pronounceNumber(678).get());
 
@@ -92,7 +88,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberYear() {
+    public void year() {
         assertEquals("fourteen fifty six", pf.pronounceNumber(1456).get());
         assertEquals("nineteen eighty four", pf.pronounceNumber(1984).get());
         assertEquals("eighteen oh one", pf.pronounceNumber(1801).get());
@@ -107,7 +103,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberScientificNotation() {
+    public void scientificNotation() {
         assertEquals("zero", pf.pronounceNumber(0.0).scientific(true).get());
         assertEquals("three point three times ten to the power of one",
                 pf.pronounceNumber(33).scientific(true).get());
@@ -131,7 +127,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberLargeNumbers() {
+    public void largeNumbers() {
         assertShortLongScale(1001892,
                 "one million, one thousand, eight hundred and ninety two",
                 "one million, one thousand, eight hundred and ninety two");
@@ -173,17 +169,7 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testPronounceNumberEdgeCases() {
-        assertEquals("zero", pf.pronounceNumber(0.0).get());
-        assertEquals("zero", pf.pronounceNumber(-0.0).get());
-        assertEquals("infinity", pf.pronounceNumber(Double.POSITIVE_INFINITY).get());
-        assertEquals("negative infinity", pf.pronounceNumber(Double.NEGATIVE_INFINITY).scientific(false).get());
-        assertEquals("negative infinity", pf.pronounceNumber(Double.NEGATIVE_INFINITY).scientific(true).get());
-        assertEquals("not a number", pf.pronounceNumber(Double.NaN).get());
-    }
-
-    @Test
-    public void testPronounceNumberOrdinals() {
+    public void ordinals() {
         // small numbers
         assertEquals("first", pf.pronounceNumber(1).ordinals(true).get());
         assertEquals("tenth", pf.pronounceNumber(10).ordinals(true).get());
@@ -219,124 +205,12 @@ public class EnglishParseFormatTest {
     }
 
     @Test
-    public void testNiceNumberSpeech() {
-        assertEquals("thirty four and a half", pf.niceNumber(34.5).get());
-        assertEquals("minus eighteen and three fifths", pf.niceNumber(-18.6).get());
-        assertEquals("ninety eight and eighteen nineteenths", pf.niceNumber(98.947368421).get());
-        assertEquals("minus five and six elevenths", pf.niceNumber(-5.5454545).get());
-        assertEquals("seven ninths", pf.niceNumber(7.0 / 9).get());
-        assertEquals("minus two seventeenths", pf.niceNumber(-2.0 / 17).get());
-        assertEquals("four hundred and sixty five", pf.niceNumber(465).get());
-        assertEquals("minus ninety one", pf.niceNumber(-91).get());
-        assertEquals("zero", pf.niceNumber(0).get());
-    }
-
-    @Test
-    public void testNiceNumberNoSpeech() {
-        assertEquals("34 1/2", pf.niceNumber(34.5).speech(false).get());
-        assertEquals("-18 3/5", pf.niceNumber(-18.6).speech(false).get());
-        assertEquals("98 18/19", pf.niceNumber(98.947368421).speech(false).get());
-        assertEquals("-5 6/11", pf.niceNumber(-5.5454545).speech(false).get());
-        assertEquals("7/9", pf.niceNumber(7.0 / 9).speech(false).get());
-        assertEquals("-2/17", pf.niceNumber(-2.0 / 17).speech(false).get());
-        assertEquals("465", pf.niceNumber(465).speech(false).get());
-        assertEquals("-91", pf.niceNumber(-91).speech(false).get());
-        assertEquals("0", pf.niceNumber(0).speech(false).get());
-    }
-
-    @Test
-    public void testNiceNumberCustomDenominators() {
-        assertEquals("minus four and four tenths", pf.niceNumber(-4.4).denominators(Arrays.asList(2, 3, 4, 6, 7, 8, 9, 10, 11)).get());
-        assertEquals("-64 6/12", pf.niceNumber(-64.5).speech(false).denominators(Collections.singletonList(12)).get());
-        assertEquals("minus three and five hundred thousand millionths", pf.niceNumber(-3.5).denominators(Arrays.asList(1000000, 2000000)).get());
-        assertEquals("9 1000000/2000000", pf.niceNumber(9.5).speech(false).denominators(Arrays.asList(2000000, 1000000)).get());
-        assertEquals("zero point eight", pf.niceNumber(4.0 / 5).denominators(Arrays.asList(2, 3, 4)).get());
-    }
-
-    @Test
-    public void testNiceNumberInvalidFraction() {
-        assertEquals("one point eight four", pf.niceNumber(1.837).get());
-        assertEquals("minus thirty eight point one nine", pf.niceNumber(-38.192).get());
-        assertEquals("3829.48", pf.niceNumber(3829.47832).speech(false).get());
-        assertEquals("-7.19", pf.niceNumber(-7.1928).speech(false).get());
-        assertEquals("-9322.38", pf.niceNumber(-9322 - 8.0 / 21).speech(false).get());
-    }
-
-    @Test
-    public void testNiceTimeRandom() {
-        final LocalDateTime dt = LocalDateTime.of(2017, 1, 31, 13, 22, 3);
-        assertEquals("one twenty two", pf.niceTime(dt).get());
-        assertEquals("one twenty two p.m.", pf.niceTime(dt).showAmPm(true).get());
-        assertEquals("thirteen twenty two", pf.niceTime(dt).use24Hour(true).get());
-        assertEquals("thirteen twenty two", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
-        assertEquals("1:22", pf.niceTime(dt).speech(false).get());
-        assertEquals("1:22 PM", pf.niceTime(dt).speech(false).showAmPm(true).get());
-        assertEquals("13:22", pf.niceTime(dt).speech(false).use24Hour(true).get());
-        assertEquals("13:22", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
-    }
-
-    @Test
-    public void testNiceTimeOClock() {
-        final LocalDateTime dt = LocalDateTime.of(2021, 6, 17, 15, 0, 32);
-        assertEquals("three o'clock", pf.niceTime(dt).get());
-        assertEquals("three p.m.", pf.niceTime(dt).showAmPm(true).get());
-        assertEquals("fifteen hundred", pf.niceTime(dt).use24Hour(true).get());
-        assertEquals("fifteen hundred", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
-        assertEquals("3:00", pf.niceTime(dt).speech(false).get());
-        assertEquals("3:00 PM", pf.niceTime(dt).speech(false).showAmPm(true).get());
-        assertEquals("15:00", pf.niceTime(dt).speech(false).use24Hour(true).get());
-        assertEquals("15:00", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
-    }
-
-    @Test
-    public void testNiceTimeAfterMidnight() {
-        final LocalDateTime dt = LocalDateTime.of(2019, 4, 23, 0, 2, 9);
-        assertEquals("twelve oh two", pf.niceTime(dt).get());
-        assertEquals("twelve oh two a.m.", pf.niceTime(dt).showAmPm(true).get());
-        assertEquals("zero zero zero two", pf.niceTime(dt).use24Hour(true).get());
-        assertEquals("zero zero zero two", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
-        assertEquals("12:02", pf.niceTime(dt).speech(false).get());
-        assertEquals("12:02 AM", pf.niceTime(dt).speech(false).showAmPm(true).get());
-        assertEquals("00:02", pf.niceTime(dt).speech(false).use24Hour(true).get());
-        assertEquals("00:02", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
-    }
-
-    @Test
-    public void testNiceTimeQuarterPast() {
-        final LocalDateTime dt = LocalDateTime.of(2018, 2, 8, 1, 15, 33);
-        assertEquals("quarter past one", pf.niceTime(dt).get());
-        assertEquals("quarter past one a.m.", pf.niceTime(dt).showAmPm(true).get());
-        assertEquals("zero one fifteen", pf.niceTime(dt).use24Hour(true).get());
-        assertEquals("zero one fifteen", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
-        assertEquals("1:15", pf.niceTime(dt).speech(false).get());
-        assertEquals("1:15 AM", pf.niceTime(dt).speech(false).showAmPm(true).get());
-        assertEquals("01:15", pf.niceTime(dt).speech(false).use24Hour(true).get());
-        assertEquals("01:15", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
-    }
-
-    @Test
-    public void testNiceTimeHalf() {
-        final LocalDateTime dt = LocalDateTime.of(2045, 11, 30, 12, 30, 59);
-        assertEquals("half past twelve", pf.niceTime(dt).get());
-        assertEquals("half past twelve p.m.", pf.niceTime(dt).showAmPm(true).get());
-        assertEquals("twelve thirty", pf.niceTime(dt).use24Hour(true).get());
-        assertEquals("twelve thirty", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
-        assertEquals("12:30", pf.niceTime(dt).speech(false).get());
-        assertEquals("12:30 PM", pf.niceTime(dt).speech(false).showAmPm(true).get());
-        assertEquals("12:30", pf.niceTime(dt).speech(false).use24Hour(true).get());
-        assertEquals("12:30", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
-    }
-
-    @Test
-    public void testNiceTimeQuarterTo() {
-        final LocalDateTime dt = LocalDateTime.of(2019, 7, 16, 23, 45, 7);
-        assertEquals("quarter to twelve", pf.niceTime(dt).get());
-        assertEquals("quarter to twelve p.m.", pf.niceTime(dt).showAmPm(true).get());
-        assertEquals("twenty three forty five", pf.niceTime(dt).use24Hour(true).get());
-        assertEquals("twenty three forty five", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
-        assertEquals("11:45", pf.niceTime(dt).speech(false).get());
-        assertEquals("11:45 PM", pf.niceTime(dt).speech(false).showAmPm(true).get());
-        assertEquals("23:45", pf.niceTime(dt).speech(false).use24Hour(true).get());
-        assertEquals("23:45", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
+    public void edgeCases() {
+        assertEquals("zero", pf.pronounceNumber(0.0).get());
+        assertEquals("zero", pf.pronounceNumber(-0.0).get());
+        assertEquals("infinity", pf.pronounceNumber(Double.POSITIVE_INFINITY).get());
+        assertEquals("negative infinity", pf.pronounceNumber(Double.NEGATIVE_INFINITY).scientific(false).get());
+        assertEquals("negative infinity", pf.pronounceNumber(Double.NEGATIVE_INFINITY).scientific(true).get());
+        assertEquals("not a number", pf.pronounceNumber(Double.NaN).get());
     }
 }
