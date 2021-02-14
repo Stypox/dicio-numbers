@@ -2,6 +2,7 @@ package org.dicio.numbers;
 
 import org.dicio.numbers.param.Gender;
 import org.dicio.numbers.param.NiceNumberParameters;
+import org.dicio.numbers.param.NiceTimeParameters;
 import org.dicio.numbers.param.PronounceNumberParameters;
 import org.dicio.numbers.util.MixedFraction;
 
@@ -60,5 +61,9 @@ public abstract class NumberParseFormat {
 
     public final PronounceNumberParameters pronounceNumber(final double number) {
         return new PronounceNumberParameters(this, number);
+    }
+
+    public final NiceTimeParameters niceTime(final LocalDateTime dateTime) {
+        return new NiceTimeParameters(this, dateTime);
     }
 }

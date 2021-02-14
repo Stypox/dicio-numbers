@@ -7,6 +7,7 @@ import org.dicio.numbers.util.Utils;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -339,8 +340,74 @@ public class EnglishParseFormat extends NumberParseFormat {
     public String niceTime(final LocalDateTime dateTime,
                            final boolean speech,
                            final boolean use24Hour,
-                           final boolean useAmPm) {
-        return "";
+                           final boolean showAmPm) {
+        if (speech) {
+            if (use24Hour) {
+                final StringBuilder result = new StringBuilder();
+                if (dateTime.getHour() < 10) {
+                    result.append("zero ");
+                }
+                result.append(pronounceNumber(dateTime.getHour(), 0, true, false, false));
+
+                result.append(" ");
+                if (dateTime.getMinute() == 0) {
+                    result.append("hundred");
+                } else {
+                    if (dateTime.getMinute() < 10) {
+                        result.append("zero ");
+                    }
+                    result.append(pronounceNumber(dateTime.getMinute(), 0, true, false, false));
+                }
+
+                return result.toString();
+            } else {
+                if (dateTime.getHour() == 0 && dateTime.getMinute() == 0) {
+                    return "midnight";
+                } else if (dateTime.getHour() == 12 && dateTime.getMinute() == 0) {
+                    return "noon";
+                }
+
+                final int normalizedHour = (dateTime.getHour() + 11) % 12 + 1; // 1 to 12
+                final StringBuilder result = new StringBuilder();
+                if (dateTime.getMinute() == 15) {
+                    result.append("quarter past ");
+                    result.append(pronounceNumber(normalizedHour, 0, true, false, false));
+                } else if (dateTime.getMinute() == 30) {
+                    result.append("half past ");
+                    result.append(pronounceNumber(normalizedHour, 0, true, false, false));
+                } else if (dateTime.getMinute() == 45) {
+                    result.append("quarter to ");
+                    result.append(pronounceNumber(normalizedHour % 12 + 1, 0, true, false, false));
+                } else {
+                    result.append(pronounceNumber(normalizedHour, 0, true, false, false));
+
+                    if (dateTime.getMinute() == 0) {
+                        if (!showAmPm) {
+                            return result + " o'clock";
+                        }
+                    } else {
+                        if (dateTime.getMinute() < 10) {
+                            result.append(" oh");
+                        }
+                        result.append(" ");
+                        result.append(pronounceNumber(dateTime.getMinute(), 0, true, false, false));
+                    }
+                }
+
+                if (showAmPm) {
+                    result.append(dateTime.getHour() >= 12 ? " p.m." : " a.m.");
+                }
+                return result.toString();
+            }
+
+        } else {
+            if (use24Hour) {
+                return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+            } else {
+                return dateTime.format(DateTimeFormatter.ofPattern(
+                        (showAmPm ? "K:mm a" : "K:mm"))).replace("0:", "12:");
+            }
+        }
     }
 
     @Override
