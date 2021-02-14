@@ -1,4 +1,4 @@
-package org.dicio.numbers.lang;
+package org.dicio.numbers.lang.en;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
