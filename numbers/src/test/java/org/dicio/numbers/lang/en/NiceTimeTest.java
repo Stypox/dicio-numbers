@@ -93,4 +93,17 @@ public class NiceTimeTest {
         assertEquals("23:45", pf.niceTime(dt).speech(false).use24Hour(true).get());
         assertEquals("23:45", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
     }
+
+    @Test
+    public void tenAm() {
+        final LocalDateTime dt = LocalDateTime.of(2038, 9, 28, 10, 3, 44);
+        assertEquals("ten oh three", pf.niceTime(dt).get());
+        assertEquals("ten oh three a.m.", pf.niceTime(dt).showAmPm(true).get());
+        assertEquals("ten zero three", pf.niceTime(dt).use24Hour(true).get());
+        assertEquals("ten zero three", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
+        assertEquals("10:03", pf.niceTime(dt).speech(false).get());
+        assertEquals("10:03 AM", pf.niceTime(dt).speech(false).showAmPm(true).get());
+        assertEquals("10:03", pf.niceTime(dt).speech(false).use24Hour(true).get());
+        assertEquals("10:03", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
+    }
 }
