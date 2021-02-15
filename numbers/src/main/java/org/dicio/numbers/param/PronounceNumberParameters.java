@@ -1,10 +1,10 @@
 package org.dicio.numbers.param;
 
-import org.dicio.numbers.NumberParseFormat;
+import org.dicio.numbers.NumberFormatter;
 
 public class PronounceNumberParameters {
 
-    private final NumberParseFormat numberParseFormat;
+    private final NumberFormatter numberFormatter;
     private final double number;
 
     // default values
@@ -13,8 +13,8 @@ public class PronounceNumberParameters {
     private boolean scientific = false;
     private boolean ordinals = false;
 
-    public PronounceNumberParameters(final NumberParseFormat numberParseFormat, final double number) {
-        this.numberParseFormat = numberParseFormat;
+    public PronounceNumberParameters(final NumberFormatter numberFormatter, final double number) {
+        this.numberFormatter = numberFormatter;
         this.number = number;
     }
 
@@ -39,6 +39,6 @@ public class PronounceNumberParameters {
     }
 
     public String get() {
-        return numberParseFormat.pronounceNumber(number, places, shortScale, scientific, ordinals);
+        return numberFormatter.pronounceNumber(number, places, shortScale, scientific, ordinals);
     }
 }

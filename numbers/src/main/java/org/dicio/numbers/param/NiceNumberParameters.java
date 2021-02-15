@@ -1,6 +1,6 @@
 package org.dicio.numbers.param;
 
-import org.dicio.numbers.NumberParseFormat;
+import org.dicio.numbers.NumberFormatter;
 import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
@@ -10,15 +10,15 @@ import static org.dicio.numbers.util.MixedFraction.DEFAULT_DENOMINATORS;
 
 public class NiceNumberParameters {
 
-    private final NumberParseFormat numberParseFormat;
+    private final NumberFormatter numberFormatter;
     private final double number;
 
     // default values
     private boolean speech = true;
     private List<Integer> denominators = DEFAULT_DENOMINATORS;
 
-    public NiceNumberParameters(final NumberParseFormat numberParseFormat, final double number) {
-        this.numberParseFormat = numberParseFormat;
+    public NiceNumberParameters(final NumberFormatter numberFormatter, final double number) {
+        this.numberFormatter = numberFormatter;
         this.number = number;
     }
 
@@ -37,13 +37,13 @@ public class NiceNumberParameters {
         if (mixedFraction == null) {
             // unable to convert to fraction
             if (speech) {
-                return numberParseFormat.pronounceNumber(number, 2, true, false, false);
+                return numberFormatter.pronounceNumber(number, 2, true, false, false);
             } else {
                 final int realPlaces = Utils.decimalPlacesNoFinalZeros(number, 2);
                 return String.format("%." + realPlaces + "f", number);
             }
         } else {
-            return numberParseFormat.niceNumber(mixedFraction, speech);
+            return numberFormatter.niceNumber(mixedFraction, speech);
         }
     }
 }

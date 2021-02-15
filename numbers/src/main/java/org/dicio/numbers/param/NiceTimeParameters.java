@@ -1,12 +1,12 @@
 package org.dicio.numbers.param;
 
-import org.dicio.numbers.NumberParseFormat;
+import org.dicio.numbers.NumberFormatter;
 
 import java.time.LocalDateTime;
 
 public class NiceTimeParameters {
 
-    private final NumberParseFormat numberParseFormat;
+    private final NumberFormatter numberFormatter;
     private final LocalDateTime dateTime;
 
     // default values
@@ -14,9 +14,9 @@ public class NiceTimeParameters {
     private boolean use24Hour = false;
     private boolean showAmPm = false;
 
-    public NiceTimeParameters(final NumberParseFormat numberParseFormat,
+    public NiceTimeParameters(final NumberFormatter numberFormatter,
                               final LocalDateTime dateTime) {
-        this.numberParseFormat = numberParseFormat;
+        this.numberFormatter = numberFormatter;
         this.dateTime = dateTime;
     }
 
@@ -36,6 +36,6 @@ public class NiceTimeParameters {
     }
 
     public String get() {
-        return numberParseFormat.niceTime(dateTime, speech, use24Hour, showAmPm);
+        return numberFormatter.niceTime(dateTime, speech, use24Hour, showAmPm);
     }
 }

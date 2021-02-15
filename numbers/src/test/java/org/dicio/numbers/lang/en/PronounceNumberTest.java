@@ -7,11 +7,11 @@ import static org.junit.Assert.assertEquals;
 
 public class PronounceNumberTest {
 
-    private static EnglishParseFormat pf;
+    private static EnglishFormatter pf;
 
     @BeforeClass
     public static void setup() {
-        pf = new EnglishParseFormat();
+        pf = new EnglishFormatter();
     }
 
     @Test
