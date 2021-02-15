@@ -404,8 +404,13 @@ public class EnglishParseFormat extends NumberParseFormat {
             if (use24Hour) {
                 return dateTime.format(DateTimeFormatter.ofPattern("HH:mm"));
             } else {
-                return dateTime.format(DateTimeFormatter.ofPattern(
-                        (showAmPm ? "K:mm a" : "K:mm"))).replace("0:", "12:");
+                final String result = dateTime.format(DateTimeFormatter.ofPattern(
+                        (showAmPm ? "K:mm a" : "K:mm")));
+                if (result.startsWith("0:")) {
+                    return "12:" + result.substring(2);
+                } else {
+                    return result;
+                }
             }
         }
     }
