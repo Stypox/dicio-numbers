@@ -1,5 +1,6 @@
 package org.dicio.numbers.lang.en;
 
+import org.dicio.numbers.NumberParserFormatter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -7,11 +8,11 @@ import static org.junit.Assert.assertEquals;
 
 public class PronounceNumberTest {
 
-    private static EnglishFormatter pf;
+    private static NumberParserFormatter pf;
 
     @BeforeClass
     public static void setup() {
-        pf = new EnglishFormatter();
+        pf = new NumberParserFormatter(new EnglishFormatter(), null);
     }
 
     @Test

@@ -26,18 +26,4 @@ public abstract class NumberFormatter {
 
     public abstract String niceDuration(int seconds, boolean speech);
 
-
-    // default parameters
-
-    public final NiceNumberParameters niceNumber(final double number) {
-        return new NiceNumberParameters(this, number);
-    }
-
-    public final PronounceNumberParameters pronounceNumber(final double number) {
-        return new PronounceNumberParameters(this, number);
-    }
-
-    public final NiceTimeParameters niceTime(final LocalDateTime dateTime) {
-        return new NiceTimeParameters(this, dateTime);
-    }
 }
