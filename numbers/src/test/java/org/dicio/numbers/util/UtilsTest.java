@@ -6,6 +6,7 @@ import static org.dicio.numbers.util.Utils.WHOLE_NUMBER_ACCURACY;
 import static org.dicio.numbers.util.Utils.decimalPlacesNoFinalZeros;
 import static org.dicio.numbers.util.Utils.isWhole;
 import static org.dicio.numbers.util.Utils.longPow;
+import static org.dicio.numbers.util.Utils.removeRedundantSpaces;
 import static org.dicio.numbers.util.Utils.roundToLong;
 import static org.dicio.numbers.util.Utils.splitByModulus;
 import static org.junit.Assert.*;
@@ -84,5 +85,16 @@ public class UtilsTest {
         assertSplitByModulus(1234, 10, 4L, 3L, 2L, 1L);
         assertSplitByModulus(101220300040L, 1000, 40L, 300L, 220L, 101L);
         assertSplitByModulus(100001L, 100, 1L, 0L, 10L);
+    }
+
+    @Test
+    public void testRemoveRedundantSpaces() {
+        assertEquals("hello hi", removeRedundantSpaces("hello hi"));
+        assertEquals("hello hi", removeRedundantSpaces("hello hi   "));
+        assertEquals("hello hi", removeRedundantSpaces(" hello hi"));
+        assertEquals("hello hi", removeRedundantSpaces("    hello hi  "));
+        assertEquals("hello hi", removeRedundantSpaces("  hello    hi    "));
+        assertEquals("eight hundred b.c.", removeRedundantSpaces("eight  hundred b.c."));
+        assertEquals("eight hundred", removeRedundantSpaces(" eight hundred "));
     }
 }

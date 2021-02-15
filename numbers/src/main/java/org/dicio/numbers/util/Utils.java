@@ -2,11 +2,14 @@ package org.dicio.numbers.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public final class Utils {
 
     public static final double WHOLE_NUMBER_ACCURACY = 0.0001f;
     public static final double WHOLE_FRACTION_ACCURACY = 0.01f;
+
+    public static final Pattern DUPLICATE_SPACES_PATTERN = Pattern.compile("  +");
 
     private Utils() {
     }
@@ -79,5 +82,13 @@ public final class Utils {
             n /= splitModulus;
         }
         return result;
+    }
+
+    /**
+     * @param s the string to clean
+     * @return the original string but without leading, trailing or duplicate spaces
+     */
+    public static String removeRedundantSpaces(final String s) {
+        return DUPLICATE_SPACES_PATTERN.matcher(s).replaceAll(" ").trim();
     }
 }
