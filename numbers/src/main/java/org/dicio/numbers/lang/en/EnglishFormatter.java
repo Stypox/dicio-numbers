@@ -4,7 +4,6 @@ import org.dicio.numbers.NumberFormatter;
 import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -406,14 +405,6 @@ public class EnglishFormatter extends NumberFormatter {
                 }
             }
         }
-    }
-
-    @Override
-    public String niceDateTime(final LocalDateTime dateTime,
-                               final LocalDateTime now,
-                               final boolean use24Hour,
-                               final boolean showAmPm) {
-        return "";
     }
 
     @Override

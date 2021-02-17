@@ -99,11 +99,14 @@ public abstract class DateTimeTestBase {
         final JsonObject tests = root.getObject("test_nice_date_time");
         for (int i = 1; tests.has(String.valueOf(i)); ++i) {
             final JsonObject test = tests.getObject(String.valueOf(i));
+            final LocalDateTime dateTimeParam
+                    = localDateTimeFrom(test.getString("datetime_param"), false);
             assertEquals("test " + i + " fails", test.getString("assertEqual"), nf.niceDateTime(
-                    localDateTimeFrom(test.getString("datetime_param"), false),
-                    localDateTimeFrom(test.getString("now"), false),
-                    test.getBoolean("use_24hour"),
-                    test.getBoolean("use_ampm")));
+                    dateTimeParam.toLocalDate(),
+                    localDateFrom(test.getString("now"), false),
+                    dateTimeParam.toLocalTime(),
+                    "True".equals(test.getString("use_24hour")),
+                    "True".equals(test.getString("use_ampm"))));
         }
     }
 

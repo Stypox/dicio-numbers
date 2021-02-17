@@ -111,11 +111,16 @@ public abstract class NumberFormatter {
                                     boolean use24Hour,
                                     boolean showAmPm);
 
-    // TODO maybe now should be LocalDate
-    public abstract String niceDateTime(LocalDateTime dateTime,
-                                        LocalDateTime now,
-                                        boolean use24Hour,
-                                        boolean showAmPm);
+    public String niceDateTime(final LocalDate date,
+                               final LocalDate now,
+                               final LocalTime time,
+                               final boolean use24Hour,
+                               final boolean showAmPm) {
+        return config.dateTimeFormat.format(new HashMap<String, String>() {{
+            put("formatted_date", niceDate(date, now));
+            put("formatted_time", niceTime(time, true, use24Hour, showAmPm));
+        }});
+    }
 
     public abstract String niceDuration(int seconds, boolean speech);
 
