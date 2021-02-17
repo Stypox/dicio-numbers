@@ -5,6 +5,7 @@ import org.dicio.numbers.param.NiceTimeParameters;
 import org.dicio.numbers.param.PronounceNumberParameters;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public final class NumberParserFormatter {
     private final NumberFormatter formatter;
@@ -23,7 +24,7 @@ public final class NumberParserFormatter {
         return new PronounceNumberParameters(formatter, number);
     }
 
-    public final NiceTimeParameters niceTime(final LocalDateTime dateTime) {
-        return new NiceTimeParameters(formatter, dateTime);
+    public final NiceTimeParameters niceTime(final LocalTime time) {
+        return new NiceTimeParameters(formatter, time);
     }
 }

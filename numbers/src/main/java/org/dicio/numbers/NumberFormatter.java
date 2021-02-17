@@ -7,6 +7,7 @@ import org.dicio.numbers.util.Utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.util.HashMap;
 
@@ -102,8 +103,7 @@ public abstract class NumberFormatter {
         return Utils.removeRedundantSpaces(formattedYear);
     }
 
-    // TODO dateTime should be LocalTime
-    public abstract String niceTime(LocalDateTime dateTime, boolean speech, boolean use24Hour,
+    public abstract String niceTime(LocalTime time, boolean speech, boolean use24Hour,
                                     boolean showAmPm);
 
     // TODO maybe now should be LocalDate
