@@ -106,6 +106,10 @@ public class EnglishFormatter extends NumberFormatter {
     }};
 
 
+    public EnglishFormatter() {
+        super("config/en-us");
+    }
+
     @Override
     public String niceNumber(final MixedFraction mixedFraction, final boolean speech) {
         if (speech) {
@@ -325,16 +329,6 @@ public class EnglishFormatter extends NumberFormatter {
     }
 
     @Override
-    public String niceDate(final LocalDateTime dateTime, final LocalDateTime now) {
-        return "";
-    }
-
-    @Override
-    public String niceYear(final LocalDateTime dateTime) {
-        return "";
-    }
-
-    @Override
     public String niceTime(final LocalDateTime dateTime,
                            final boolean speech,
                            final boolean use24Hour,
@@ -417,7 +411,7 @@ public class EnglishFormatter extends NumberFormatter {
     public String niceDateTime(final LocalDateTime dateTime,
                                final LocalDateTime now,
                                final boolean use24Hour,
-                               final boolean useAmPm) {
+                               final boolean showAmPm) {
         return "";
     }
 
