@@ -3,6 +3,9 @@ apply plugin: 'java-library'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+System.out.println(sourceSets.test.resources.srcDirs)
 dependencies {
+    implementation 'com.grack:nanojson:1.7'
+
     testImplementation 'junit:junit:4.12'
 }
