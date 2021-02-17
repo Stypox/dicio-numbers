@@ -1,7 +1,7 @@
 package org.dicio.numbers.lang.en;
 
 import org.dicio.numbers.NumberFormatter;
-import org.dicio.numbers.config.DateTimeTestBase;
+import org.dicio.numbers.datetime.DateTimeTestBase;
 
 public class DateTimeTest extends DateTimeTestBase {
     @Override

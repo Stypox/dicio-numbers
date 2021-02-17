@@ -1,4 +1,4 @@
-package org.dicio.numbers.config;
+package org.dicio.numbers.datetime;
 
 import java.util.ArrayList;
 import java.util.List;

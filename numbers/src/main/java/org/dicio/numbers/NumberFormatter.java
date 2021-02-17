@@ -1,7 +1,7 @@
 package org.dicio.numbers;
 
-import org.dicio.numbers.config.FormatString;
-import org.dicio.numbers.config.DateTimeConfig;
+import org.dicio.numbers.datetime.FormatString;
+import org.dicio.numbers.datetime.DateTimeConfig;
 import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 

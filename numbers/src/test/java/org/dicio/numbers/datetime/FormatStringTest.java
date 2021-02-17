@@ -1,4 +1,4 @@
-package org.dicio.numbers.config;
+package org.dicio.numbers.datetime;
 
 import org.junit.Test;
 
