@@ -14,7 +14,8 @@ public abstract class NumberParser {
 
     public abstract long extractDuration(String text);
 
-    public abstract LocalDateTime extractDateTime(String text, boolean anchorDate,
+    public abstract LocalDateTime extractDateTime(String text,
+                                                  boolean anchorDate,
                                                   LocalTime defaultTime);
 
     public abstract String normalize(String text, boolean removeArticles);

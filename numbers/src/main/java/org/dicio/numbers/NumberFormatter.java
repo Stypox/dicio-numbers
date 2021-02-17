@@ -22,8 +22,11 @@ public abstract class NumberFormatter {
 
     public abstract String niceNumber(MixedFraction mixedFraction, boolean speech);
 
-    public abstract String pronounceNumber(double number, int places, boolean shortScale,
-                                           boolean scientific, boolean ordinals);
+    public abstract String pronounceNumber(double number,
+                                           int places,
+                                           boolean shortScale,
+                                           boolean scientific,
+                                           boolean ordinals);
 
     /**
      *
@@ -103,12 +106,16 @@ public abstract class NumberFormatter {
         return Utils.removeRedundantSpaces(formattedYear);
     }
 
-    public abstract String niceTime(LocalTime time, boolean speech, boolean use24Hour,
+    public abstract String niceTime(LocalTime time,
+                                    boolean speech,
+                                    boolean use24Hour,
                                     boolean showAmPm);
 
     // TODO maybe now should be LocalDate
-    public abstract String niceDateTime(LocalDateTime dateTime, LocalDateTime now,
-                                        boolean use24Hour, boolean showAmPm);
+    public abstract String niceDateTime(LocalDateTime dateTime,
+                                        LocalDateTime now,
+                                        boolean use24Hour,
+                                        boolean showAmPm);
 
     public abstract String niceDuration(int seconds, boolean speech);
 
