@@ -2,6 +2,7 @@ package org.dicio.numbers;
 
 import org.dicio.numbers.datetime.FormatString;
 import org.dicio.numbers.datetime.DateTimeConfig;
+import org.dicio.numbers.datetime.NiceYearSubstitutionTableBuilder;
 import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class NumberFormatter {
 
@@ -64,27 +66,9 @@ public abstract class NumberFormatter {
     }
 
     public String niceYear(final LocalDate date) {
+        final Map<String, String> substitutionTable
+                = NiceYearSubstitutionTableBuilder.build(config, date.getYear());
         final int year = Math.abs(date.getYear());
-        // TODO maybe add tests for this table
-        final HashMap<String, String> substitutionTable = new HashMap<String, String>() {{
-            put("x", config.getNumber(year % 10));
-
-            put("xx", config.getNumber(year % 100));
-            put("x0", config.getNumber(year % 100 - year % 10));
-            put("x_in_x0", config.getNumber(year % 100 / 10));
-
-            put("xxx", config.getNumber(year % 1000));
-            put("x00", config.getNumber(year % 1000 - year % 100));
-            put("x_in_x00", config.getNumber(year % 1000 / 100));
-            // duplicate of x_in_x00, keep for compatibility with lingua-franca json files
-            put("x_in_0x00", config.getNumber(year % 1000 / 100));
-
-            put("xx00", config.getNumber(year % 10000 - year % 100));
-            put("xx_in_xx00", config.getNumber(year % 10000 / 100));
-            put("x000", config.getNumber(year % 10000 - year % 1000));
-            put("x_in_x000", config.getNumber(year % 10000 / 1000));
-            put("x0_in_x000", config.getNumber(year % 10000 / 1000 * 10));
-        }};
 
         substitutionTable.put("number", String.valueOf(year % 100));
         substitutionTable.put("formatted_decade", config.decadeFormat
