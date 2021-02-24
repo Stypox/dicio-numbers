@@ -14,8 +14,7 @@ public class NiceTimeParameters {
     private boolean use24Hour = false;
     private boolean showAmPm = false;
 
-    public NiceTimeParameters(final NumberFormatter numberFormatter,
-                              final LocalTime time) {
+    public NiceTimeParameters(final NumberFormatter numberFormatter, final LocalTime time) {
         this.numberFormatter = numberFormatter;
         this.time = time;
     }

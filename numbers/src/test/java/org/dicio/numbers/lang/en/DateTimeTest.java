@@ -6,6 +6,7 @@ import org.dicio.numbers.datetime.DateTimeTestBase;
 import org.junit.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -39,5 +40,12 @@ public class DateTimeTest extends DateTimeTestBase {
         // just check that the NumberParserFormatter functions do their job
         assertEquals("nineteen eighty four", pf.niceYear(LocalDate.of(1984, 4, 28)).get());
         assertEquals("eight hundred ten b.c.", pf.niceYear(LocalDate.of(-810, 8, 13)).get());
+    }
+
+    @Test
+    public void testNiceDateTime() {
+        // just check that the NumberParserFormatter functions do their job
+        assertEquals("wednesday, september twelfth, seventeen sixty four at noon", pf.niceDateTime(LocalDateTime.of(1764, 9, 12, 12, 0)).get());
+        assertEquals("thursday, november third, three hundred twenty eight b.c. at five oh seven", pf.niceDateTime(LocalDateTime.of(-328, 11, 3, 5, 7)).get());
     }
 }
