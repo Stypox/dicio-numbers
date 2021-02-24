@@ -35,7 +35,7 @@ public abstract class DateTimeTestBase {
 
     @Test
     public void testConfigLoadedCorrectly() {
-        final DateTimeConfig config = new DateTimeConfig(configFolder() + "/date_time.json");
+        final DateTimeConfig config = new DateTimeConfig(configFolder());
 
         assertNotNull(config.decadeFormat);
         assertNotNull(config.hundredFormat);

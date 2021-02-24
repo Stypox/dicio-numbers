@@ -18,7 +18,7 @@ public abstract class NumberFormatter {
     protected final DateTimeConfig config;
 
     protected NumberFormatter(final String configFolder) {
-        config = new DateTimeConfig(configFolder + "/date_time.json");
+        config = new DateTimeConfig(configFolder);
     }
 
 

@@ -13,7 +13,7 @@ public class NiceYearSubstitutionTableBuilderTest {
 
     @BeforeClass
     public static void setup() {
-        config = new DateTimeConfig("config/en-us/date_time.json");
+        config = new DateTimeConfig("config/en-us");
     }
 
     private static void assertSubstitutionTableValue(final Map<String, String> substitutionTable,

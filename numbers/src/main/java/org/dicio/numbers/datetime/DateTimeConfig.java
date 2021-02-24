@@ -31,10 +31,10 @@ public class DateTimeConfig {
     public final String[] months;
     public final Map<Integer, String> numbers;
 
-    public DateTimeConfig(final String jsonConfigPath) {
+    public DateTimeConfig(final String configFolder) {
         try {
-            final JsonObject root = JsonParser.object().from(
-                    ClassLoader.getSystemClassLoader().getResourceAsStream(jsonConfigPath));
+            final JsonObject root = JsonParser.object().from(ClassLoader.getSystemClassLoader()
+                    .getResourceAsStream(configFolder + "/date_time.json"));
 
             final JsonObject year = root.getObject("year_format");
             final JsonObject date = root.getObject("date_format");
