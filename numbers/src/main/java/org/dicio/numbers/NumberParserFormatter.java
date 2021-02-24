@@ -1,11 +1,13 @@
 package org.dicio.numbers;
 
+import org.dicio.numbers.param.NiceDateParameters;
 import org.dicio.numbers.param.NiceDurationParameters;
 import org.dicio.numbers.param.NiceNumberParameters;
 import org.dicio.numbers.param.NiceTimeParameters;
 import org.dicio.numbers.param.PronounceNumberParameters;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 public final class NumberParserFormatter {
@@ -23,6 +25,10 @@ public final class NumberParserFormatter {
 
     public final PronounceNumberParameters pronounceNumber(final double number) {
         return new PronounceNumberParameters(formatter, number);
+    }
+
+    public final NiceDateParameters niceDate(final LocalDate date) {
+        return new NiceDateParameters(formatter, date);
     }
 
     public final NiceTimeParameters niceTime(final LocalTime time) {
