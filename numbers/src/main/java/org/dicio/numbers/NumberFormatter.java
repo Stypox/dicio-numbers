@@ -1,14 +1,13 @@
 package org.dicio.numbers;
 
-import org.dicio.numbers.datetime.FormatString;
 import org.dicio.numbers.datetime.DateTimeConfig;
+import org.dicio.numbers.datetime.FormatString;
 import org.dicio.numbers.datetime.NiceYearSubstitutionTableBuilder;
 import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.util.HashMap;

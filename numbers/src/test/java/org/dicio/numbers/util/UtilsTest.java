@@ -9,7 +9,10 @@ import static org.dicio.numbers.util.Utils.longPow;
 import static org.dicio.numbers.util.Utils.removeRedundantSpaces;
 import static org.dicio.numbers.util.Utils.roundToLong;
 import static org.dicio.numbers.util.Utils.splitByModulus;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class UtilsTest {
 
