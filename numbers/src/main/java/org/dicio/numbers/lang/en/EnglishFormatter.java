@@ -407,11 +407,6 @@ public class EnglishFormatter extends NumberFormatter {
         }
     }
 
-    @Override
-    public String niceDuration(final int seconds, final boolean speech) {
-        return "";
-    }
-
 
     /**
      * @param n must be 0 <= n <= 999

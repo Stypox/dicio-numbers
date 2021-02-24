@@ -6,6 +6,7 @@ import org.dicio.numbers.datetime.NiceYearSubstitutionTableBuilder;
 import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -106,6 +107,70 @@ public abstract class NumberFormatter {
         }});
     }
 
-    public abstract String niceDuration(int seconds, boolean speech);
+    public String niceDuration(final Duration duration, final boolean speech) {
+        final long days = duration.toDays();
+        final long hours = duration.toHours() % 24;
+        final long minutes = duration.toMinutes() % 60;
+        final long seconds = duration.getSeconds() % 60;
+
+        final StringBuilder result = new StringBuilder();
+        if (speech) {
+            if (days > 0) {
+                result.append(pronounceNumber(days, 0, true, false, false));
+                result.append(" ");
+                result.append(days == 1 ? config.dayWord : config.daysWord);
+            }
+
+            if (hours > 0) {
+                if (result.length() != 0) {
+                    result.append(" ");
+                }
+                result.append(pronounceNumber(hours, 0, true, false, false));
+                result.append(" ");
+                result.append(hours == 1 ? config.hourWord : config.hoursWord);
+            }
+
+            if (minutes > 0) {
+                if (result.length() != 0) {
+                    result.append(" ");
+                }
+                result.append(pronounceNumber(minutes, 0, true, false, false));
+                result.append(" ");
+                result.append(minutes == 1 ? config.minuteWord : config.minutesWord);
+            }
+
+            if (result.length() != 0) {
+                result.append(" ");
+            }
+            result.append(pronounceNumber(seconds, 0, true, false, false));
+            result.append(" ");
+            result.append(seconds == 1 ? config.secondWord : config.secondsWord);
+
+        } else {
+            if (days > 0) {
+                result.append(days);
+                result.append("d ");
+            }
+
+            if (hours > 0 || days > 0) {
+                result.append(hours);
+                result.append(":");
+            }
+
+            if (minutes < 10 && (hours > 0 || days > 0)) {
+                result.append("0");
+            }
+            result.append(minutes);
+            result.append(":");
+
+            if (seconds < 10) {
+                result.append("0");
+            }
+            result.append(seconds);
+
+        }
+
+        return result.toString();
+    }
 
 }
