@@ -139,12 +139,15 @@ public abstract class NumberFormatter {
                 result.append(minutes == 1 ? config.minuteWord : config.minutesWord);
             }
 
-            if (result.length() != 0) {
+            // if the duration is zero also write "zero seconds"
+            if (seconds > 0 || duration.getSeconds() == 0) {
+                if (result.length() != 0) {
+                    result.append(" ");
+                }
+                result.append(pronounceNumber(seconds, 0, true, false, false));
                 result.append(" ");
+                result.append(seconds == 1 ? config.secondWord : config.secondsWord);
             }
-            result.append(pronounceNumber(seconds, 0, true, false, false));
-            result.append(" ");
-            result.append(seconds == 1 ? config.secondWord : config.secondsWord);
 
         } else {
             if (days > 0) {
