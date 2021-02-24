@@ -4,6 +4,11 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +35,15 @@ public class DateTimeConfig {
     public final String[] days;
     public final String[] months;
     public final Map<Integer, String> numbers;
+
+    public final String dayWord;
+    public final String daysWord;
+    public final String hourWord;
+    public final String hoursWord;
+    public final String minuteWord;
+    public final String minutesWord;
+    public final String secondWord;
+    public final String secondsWord;
 
     public DateTimeConfig(final String configFolder) {
         try {
@@ -81,7 +95,16 @@ public class DateTimeConfig {
             for (final Map.Entry<String, Object> entry : number.entrySet()) {
                 numbers.put(Integer.valueOf(entry.getKey()), (String) entry.getValue());
             }
-        } catch (final JsonParserException e) {
+
+            dayWord = readWordFromFile(configFolder, "day");
+            daysWord = readWordFromFile(configFolder, "days");
+            hourWord = readWordFromFile(configFolder, "hour");
+            hoursWord = readWordFromFile(configFolder, "hours");
+            minuteWord = readWordFromFile(configFolder, "minute");
+            minutesWord = readWordFromFile(configFolder, "minutes");
+            secondWord = readWordFromFile(configFolder, "second");
+            secondsWord = readWordFromFile(configFolder, "seconds");
+        } catch (final IOException | JsonParserException e) {
             throw new RuntimeException(e);
         }
     }
@@ -91,5 +114,22 @@ public class DateTimeConfig {
             return numbers.get(number);
         }
         return String.valueOf(number);
+    }
+
+    private String readWordFromFile(final String configFolder,
+                                    final String word) throws IOException {
+        final InputStream inputStream = ClassLoader.getSystemClassLoader()
+                .getResourceAsStream(configFolder + "/" + word + ".word");
+        if (inputStream == null) {
+            throw new FileNotFoundException();
+        }
+
+        final ByteArrayOutputStream result = new ByteArrayOutputStream();
+        final byte[] buffer = new byte[1024];
+        int length;
+        while ((length = inputStream.read(buffer)) != -1) {
+            result.write(buffer, 0, length);
+        }
+        return result.toString(StandardCharsets.UTF_8.name());
     }
 }

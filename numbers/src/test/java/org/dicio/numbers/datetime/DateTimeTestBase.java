@@ -53,11 +53,27 @@ public abstract class DateTimeTestBase {
         assertNotNull(config.days);
         assertNotNull(config.months);
         assertNotNull(config.numbers);
+        assertNotNull(config.dayWord);
+        assertNotNull(config.daysWord);
+        assertNotNull(config.hourWord);
+        assertNotNull(config.hoursWord);
+        assertNotNull(config.minuteWord);
+        assertNotNull(config.minutesWord);
+        assertNotNull(config.secondWord);
+        assertNotNull(config.secondsWord);
 
         assertFalse(config.bc.isEmpty());
         assertFalse(config.today.isEmpty());
         assertFalse(config.tomorrow.isEmpty());
         assertFalse(config.yesterday.isEmpty());
+        assertFalse(config.dayWord.isEmpty());
+        assertFalse(config.daysWord.isEmpty());
+        assertFalse(config.hourWord.isEmpty());
+        assertFalse(config.hoursWord.isEmpty());
+        assertFalse(config.minuteWord.isEmpty());
+        assertFalse(config.minutesWord.isEmpty());
+        assertFalse(config.secondWord.isEmpty());
+        assertFalse(config.secondsWord.isEmpty());
 
         assertEquals(7, config.weekdays.length);
         assertEquals(31, config.days.length);
