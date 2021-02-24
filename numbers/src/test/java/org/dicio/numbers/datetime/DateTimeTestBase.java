@@ -117,6 +117,8 @@ public abstract class DateTimeTestBase {
             final JsonObject test = tests.getObject(String.valueOf(i));
             final LocalDateTime dateTimeParam
                     = localDateTimeFrom(test.getString("datetime_param"), false);
+            assertNotNull("The json test file did not provide date time param", dateTimeParam);
+
             assertEquals("test " + i + " fails", test.getString("assertEqual"), nf.niceDateTime(
                     dateTimeParam.toLocalDate(),
                     localDateFrom(test.getString("now"), false),
