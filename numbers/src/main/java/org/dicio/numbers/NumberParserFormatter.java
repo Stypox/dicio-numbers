@@ -4,6 +4,7 @@ import org.dicio.numbers.param.NiceDateParameters;
 import org.dicio.numbers.param.NiceDurationParameters;
 import org.dicio.numbers.param.NiceNumberParameters;
 import org.dicio.numbers.param.NiceTimeParameters;
+import org.dicio.numbers.param.NiceYearParameters;
 import org.dicio.numbers.param.PronounceNumberParameters;
 
 import java.time.Duration;
@@ -29,6 +30,12 @@ public final class NumberParserFormatter {
 
     public final NiceDateParameters niceDate(final LocalDate date) {
         return new NiceDateParameters(formatter, date);
+    }
+
+    public final NiceYearParameters niceYear(final LocalDate date) {
+        // note: useless encapsulation, since niceYear has only the mandatory date parameter, but
+        // keep for consistency
+        return new NiceYearParameters(formatter, date);
     }
 
     public final NiceTimeParameters niceTime(final LocalTime time) {
