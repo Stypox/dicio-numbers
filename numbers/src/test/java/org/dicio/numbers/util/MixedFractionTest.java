@@ -92,4 +92,12 @@ public class MixedFractionTest {
         assertNull(MixedFraction.of(1.0 / 25, MixedFraction.DEFAULT_DENOMINATORS));
         assertNull(MixedFraction.of(1.5, Arrays.asList(3, 9, 27)));
     }
+
+    @Test
+    public void testDefaultDenominators() {
+        assertEquals(19, MixedFraction.DEFAULT_DENOMINATORS.size());
+        for (int i = 0; i < 19; ++i) {
+            assertEquals(i + 2, (int) MixedFraction.DEFAULT_DENOMINATORS.get(i));
+        }
+    }
 }
