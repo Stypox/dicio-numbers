@@ -1,7 +1,7 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.NumberParser;
-import org.dicio.numbers.param.Gender;
+import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.param.Gender;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;

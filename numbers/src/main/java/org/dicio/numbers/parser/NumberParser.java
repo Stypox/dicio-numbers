@@ -1,6 +1,6 @@
-package org.dicio.numbers;
+package org.dicio.numbers.parser;
 
-import org.dicio.numbers.param.Gender;
+import org.dicio.numbers.parser.param.Gender;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;

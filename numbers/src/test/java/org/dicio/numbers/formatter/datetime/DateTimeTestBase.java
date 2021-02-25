@@ -1,10 +1,10 @@
-package org.dicio.numbers.datetime;
+package org.dicio.numbers.formatter.datetime;
 
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
-import org.dicio.numbers.NumberFormatter;
+import org.dicio.numbers.formatter.NumberFormatter;
 import org.junit.Before;
 import org.junit.Test;
 

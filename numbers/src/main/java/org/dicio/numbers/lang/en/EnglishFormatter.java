@@ -1,6 +1,6 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.NumberFormatter;
+import org.dicio.numbers.formatter.NumberFormatter;
 import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 

@@ -1,8 +1,8 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.NumberFormatter;
 import org.dicio.numbers.NumberParserFormatter;
-import org.dicio.numbers.datetime.DateTimeTestBase;
+import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.datetime.DateTimeTestBase;
 import org.junit.Test;
 
 import java.time.LocalDate;

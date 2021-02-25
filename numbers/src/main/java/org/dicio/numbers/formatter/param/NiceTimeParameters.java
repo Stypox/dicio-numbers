@@ -1,6 +1,6 @@
-package org.dicio.numbers.param;
+package org.dicio.numbers.formatter.param;
 
-import org.dicio.numbers.NumberFormatter;
+import org.dicio.numbers.formatter.NumberFormatter;
 
 import java.time.LocalTime;
 

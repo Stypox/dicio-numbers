@@ -1,12 +1,14 @@
 package org.dicio.numbers;
 
-import org.dicio.numbers.param.NiceDateParameters;
-import org.dicio.numbers.param.NiceDateTimeParameters;
-import org.dicio.numbers.param.NiceDurationParameters;
-import org.dicio.numbers.param.NiceNumberParameters;
-import org.dicio.numbers.param.NiceTimeParameters;
-import org.dicio.numbers.param.NiceYearParameters;
-import org.dicio.numbers.param.PronounceNumberParameters;
+import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.param.NiceDateParameters;
+import org.dicio.numbers.formatter.param.NiceDateTimeParameters;
+import org.dicio.numbers.formatter.param.NiceDurationParameters;
+import org.dicio.numbers.formatter.param.NiceNumberParameters;
+import org.dicio.numbers.formatter.param.NiceTimeParameters;
+import org.dicio.numbers.formatter.param.NiceYearParameters;
+import org.dicio.numbers.formatter.param.PronounceNumberParameters;
+import org.dicio.numbers.parser.NumberParser;
 import org.dicio.numbers.util.MixedFraction;
 
 import java.time.Duration;

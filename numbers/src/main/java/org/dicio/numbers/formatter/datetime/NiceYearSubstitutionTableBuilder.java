@@ -1,4 +1,4 @@
-package org.dicio.numbers.datetime;
+package org.dicio.numbers.formatter.datetime;
 
 import java.util.HashMap;
 import java.util.Map;
