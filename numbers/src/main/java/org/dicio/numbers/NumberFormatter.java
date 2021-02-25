@@ -22,8 +22,30 @@ public abstract class NumberFormatter {
     }
 
 
+    /**
+     * Format a mixed fraction to a human readable representation. For example, 5 + 3/4 would be
+     * formatted into "five and three quarters" for English.
+     *
+     * @param mixedFraction the mixed fraction to format
+     * @param speech format for speech (true) or display (false)
+     * @return the formatted mixed fraction as a string
+     */
     public abstract String niceNumber(MixedFraction mixedFraction, boolean speech);
 
+    /**
+     * Format a number to a pronounceable representation. For example, -4000619 would be formatted
+     * into "minus four million, six hundred and nineteen" for English.
+     *
+     * @param number the number to pronounce
+     * @param places the number of decimal places to round decimal numbers to
+     * @param shortScale use short (true) or long (false) scale for large numbers (see
+     *                   <a href="https://en.wikipedia.org/wiki/Names_of_large_numbers">
+     *                       Names of large numbers</a>)
+     * @param scientific if true convert and pronounce in scientific notation
+     * @param ordinals if true pronounce in the ordinal form (e.g. "first" instead of "one" for
+     *                 English)
+     * @return the formatted number as a string
+     */
     public abstract String pronounceNumber(double number,
                                            int places,
                                            boolean shortScale,
@@ -31,10 +53,15 @@ public abstract class NumberFormatter {
                                            boolean ordinals);
 
     /**
+     * Format a date to a pronounceable representation. For example, 2021/4/28 would be formatted
+     * as "wednesday, april twenty-eighth, twenty twenty one" for English.
      *
-     * @param date
-     * @param now nullable
-     * @return
+     * @param date the date to format (assumes already in local timezone)
+     * @param now the current date or null. If not null, the returned date for speech will be
+     *            shortened accordingly: no year is returned if now is in the same year as date, no
+     *            month is returned if now is in the same year and in the same month as date.
+     *            Yesterday, today and tomorrow translations are also used.
+     * @return the formatted date string
      */
     public String niceDate(final LocalDate date, final LocalDate now) {
         FormatString formatString = config.dateFormatFull;
@@ -65,6 +92,13 @@ public abstract class NumberFormatter {
         }});
     }
 
+    /**
+     * Format the year from a date to a pronounceable year. For example, year 1984 would be
+     * formatted as "nineteen eighty four" for English.
+     *
+     * @param date the date containing the year to format (assumes already in local timezone)
+     * @return the formatted year string
+     */
     public String niceYear(final LocalDate date) {
         final Map<String, String> substitutionTable
                 = NiceYearSubstitutionTableBuilder.build(config, date.getYear());
@@ -90,11 +124,35 @@ public abstract class NumberFormatter {
         return Utils.removeRedundantSpaces(formattedYear);
     }
 
+    /**
+     * Format a time to a human readable representation. For example, 5:30 would be formatted as
+     * "five thirty" for English.
+     *
+     * @param time the time to format (assumes already in local timezone)
+     * @param speech format for speech (true) or display (false)
+     * @param use24Hour output in 24-hour/military (true) or 12-hour (false) format
+     * @param showAmPm if true include the am/pm for 12-hour format
+     * @return the formatted time string
+     */
     public abstract String niceTime(LocalTime time,
                                     boolean speech,
                                     boolean use24Hour,
                                     boolean showAmPm);
 
+    /**
+     * Format a date time to a pronounceable date and time. For example, 2021/4/28 5:30 would be
+     * formatted as "wednesday, april twenty-eighth, twenty twenty one at five thirty" for English.
+     *
+     * @param date the date to format (assumes already in local timezone)
+     * @param now the current date or null. If not null, the returned date for speech will be
+     *            shortened accordingly: no year is returned if now is in the same year as date, no
+     *            month is returned if now is in the same year and in the same month as date.
+     *            Yesterday, today and tomorrow translations are also used.
+     * @param time the time to format (assumes already in local timezone)
+     * @param use24Hour output in 24-hour/military (true) or 12-hour (false) format
+     * @param showAmPm if true include the am/pm for 12-hour format
+     * @return the formatted date time string
+     */
     public String niceDateTime(final LocalDate date,
                                final LocalDate now,
                                final LocalTime time,
@@ -106,6 +164,14 @@ public abstract class NumberFormatter {
         }});
     }
 
+    /**
+     * Format a duration to a human readable representation. For example, 12 days 3:23:01 would be
+     * formatted as "twelve days three hours twenty three minutes one second".
+     *
+     * @param duration the duration to format
+     * @param speech format for speech (true) or display (false)
+     * @return the formatted time span string
+     */
     public String niceDuration(final Duration duration, final boolean speech) {
         final long days = duration.toDays();
         final long hours = duration.toHours() % 24;
