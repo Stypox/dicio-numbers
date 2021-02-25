@@ -22,16 +22,37 @@ public class NiceNumberParameters {
         this.number = number;
     }
 
+
+    /**
+     * @param speech format for speech (true) or display (false). The default is true.
+     * @return this
+     */
     public NiceNumberParameters speech(final boolean speech) {
         this.speech = speech;
         return this;
     }
 
+    /**
+     * @param denominators the denominators to use to extract the mixed fraction. The default is
+     *                     {@link MixedFraction#DEFAULT_DENOMINATORS}, i.e. a list of all of the
+     *                     numbers from 2 to 20 inclusive.
+     * @return this
+     */
     public NiceNumberParameters denominators(final List<Integer> denominators) {
         this.denominators = denominators;
         return this;
     }
 
+    /**
+     * Tries to extract a mixed fraction from the number provided at the beginning, using the stored
+     * denominators, and calls {@link NumberFormatter#niceNumber(MixedFraction, boolean)} on it,
+     * also providing the stored speech value. If a fraction could not approximate the original
+     * number close enough, the number is instead formatted using {@link
+     * NumberFormatter#pronounceNumber(double, int, boolean, boolean, boolean)} if the stored speech
+     * is true, otherwise it is converted to a string using "%f".
+     *
+     * @return the formatted mixed fraction as a string
+     */
     public String get() {
         final MixedFraction mixedFraction = MixedFraction.of(number, denominators);
         if (mixedFraction == null) {
