@@ -81,7 +81,7 @@ public class NormalizeConfig {
     public final List<String> symbols;
 
     private NormalizeConfig() {
-        // default values for default config
+        // default values for default config, also used in other constructor
 
         shouldLowercase = false;
         shouldNumberToDigits = true;
@@ -106,22 +106,37 @@ public class NormalizeConfig {
             final JsonObject root = JsonParser.object().from(ClassLoader.getSystemClassLoader()
                     .getResourceAsStream(configFolder + "/normalize.json"));
 
-            shouldLowercase = root.getBoolean("lowercase", false);
-            shouldNumberToDigits = root.getBoolean("numbers_to_digits", true);
-            shouldExpandContractions = root.getBoolean("expand_contractions", true);
-            shouldRemoveSymbols = root.getBoolean("remove_symbols", false);
-            shouldRemoveAccents = root.getBoolean("remove_accents", false);
-            shouldRemoveArticles = root.getBoolean("remove_articles", false);
-            shouldRemoveStopWords = root.getBoolean("remove_stopwords", false);
+            // see the other constructor for the default values stored in DEFAULT_CONFIG
+            shouldLowercase = root.getBoolean("lowercase",
+                    DEFAULT_CONFIG.shouldLowercase);
+            shouldNumberToDigits = root.getBoolean("numbers_to_digits",
+                    DEFAULT_CONFIG.shouldNumberToDigits);
+            shouldExpandContractions = root.getBoolean("expand_contractions",
+                    DEFAULT_CONFIG.shouldExpandContractions);
+            shouldRemoveSymbols = root.getBoolean("remove_symbols",
+                    DEFAULT_CONFIG.shouldRemoveSymbols);
+            shouldRemoveAccents = root.getBoolean("remove_accents",
+                    DEFAULT_CONFIG.shouldRemoveAccents);
+            shouldRemoveArticles = root.getBoolean("remove_articles",
+                    DEFAULT_CONFIG.shouldRemoveArticles);
+            shouldRemoveStopWords = root.getBoolean("remove_stopwords",
+                    DEFAULT_CONFIG.shouldRemoveStopWords);
 
-            contractions = getStringMap(root, "contractions", Collections.emptyMap());
-            wordReplacements = getStringMap(root, "word_replacements", Collections.emptyMap());
-            numberReplacements = getStringMap(root, "number_replacements", Collections.emptyMap());
-            accents = getStringMap(root, "accents", DEFAULT_ACCENTS);
+            contractions = getStringMap(root, "contractions",
+                    DEFAULT_CONFIG.contractions);
+            wordReplacements = getStringMap(root, "word_replacements",
+                    DEFAULT_CONFIG.wordReplacements);
+            numberReplacements = getStringMap(root, "number_replacements",
+                    DEFAULT_CONFIG.numberReplacements);
+            accents = getStringMap(root, "accents",
+                    DEFAULT_CONFIG.accents);
 
-            stopWords = getStringList(root, "stopwords", Collections.emptyList());
-            articles = getStringList(root, "articles", Collections.emptyList());
-            symbols = getStringList(root, "symbols", DEFAULT_SYMBOLS);
+            stopWords = getStringList(root, "stopwords",
+                    DEFAULT_CONFIG.stopWords);
+            articles = getStringList(root, "articles",
+                    DEFAULT_CONFIG.articles);
+            symbols = getStringList(root, "symbols",
+                    DEFAULT_CONFIG.symbols);
 
         } catch (final JsonParserException e) {
             throw new RuntimeException(e);
