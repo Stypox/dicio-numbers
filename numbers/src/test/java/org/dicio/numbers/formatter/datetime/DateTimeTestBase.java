@@ -34,61 +34,6 @@ public abstract class DateTimeTestBase {
     }
 
     @Test
-    public void testConfigLoadedCorrectly() {
-        final DateTimeConfig config = new DateTimeConfig(configFolder());
-
-        assertNotNull(config.decadeFormat);
-        assertNotNull(config.hundredFormat);
-        assertNotNull(config.thousandFormat);
-        assertNotNull(config.yearFormat);
-        assertNotNull(config.bc);
-        assertNotNull(config.dateFormatFull);
-        assertNotNull(config.dateFormatFullNoYear);
-        assertNotNull(config.dateFormatFullNoYearMonth);
-        assertNotNull(config.dateTimeFormat);
-        assertNotNull(config.today);
-        assertNotNull(config.tomorrow);
-        assertNotNull(config.yesterday);
-        assertNotNull(config.weekdays);
-        assertNotNull(config.days);
-        assertNotNull(config.months);
-        assertNotNull(config.numbers);
-        assertNotNull(config.dayWord);
-        assertNotNull(config.daysWord);
-        assertNotNull(config.hourWord);
-        assertNotNull(config.hoursWord);
-        assertNotNull(config.minuteWord);
-        assertNotNull(config.minutesWord);
-        assertNotNull(config.secondWord);
-        assertNotNull(config.secondsWord);
-
-        assertFalse(config.bc.isEmpty());
-        assertFalse(config.today.isEmpty());
-        assertFalse(config.tomorrow.isEmpty());
-        assertFalse(config.yesterday.isEmpty());
-        assertFalse(config.dayWord.isEmpty());
-        assertFalse(config.daysWord.isEmpty());
-        assertFalse(config.hourWord.isEmpty());
-        assertFalse(config.hoursWord.isEmpty());
-        assertFalse(config.minuteWord.isEmpty());
-        assertFalse(config.minutesWord.isEmpty());
-        assertFalse(config.secondWord.isEmpty());
-        assertFalse(config.secondsWord.isEmpty());
-
-        assertEquals(7, config.weekdays.length);
-        assertEquals(31, config.days.length);
-        assertEquals(12, config.months.length);
-        assertTrue("numbers list size " + config.numbers.size() + " is not at least 20",
-                config.numbers.size() > 20);
-
-        for (int i = 0; i < 20; ++i) {
-            assertNotNull(config.numbers.get(i));
-            assertFalse(config.numbers.get(i).isEmpty());
-            assertNotEquals(String.valueOf(i), config.getNumber(i));
-        }
-    }
-
-    @Test
     public void testNiceYear() {
         final JsonObject tests = root.getObject("test_nice_year");
         for (int i = 1; tests.has(String.valueOf(i)); ++i) {
