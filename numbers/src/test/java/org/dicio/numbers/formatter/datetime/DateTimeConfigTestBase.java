@@ -21,7 +21,7 @@ public abstract class DateTimeConfigTestBase {
     }
 
     @Test
-    public void nonNull() {
+    public void notNull() {
         assertNotNull(config.decadeFormat);
         assertNotNull(config.hundredFormat);
         assertNotNull(config.thousandFormat);
