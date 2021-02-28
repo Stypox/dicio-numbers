@@ -1,6 +1,5 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.formatter.NumberFormatter;
 import org.dicio.numbers.formatter.datetime.DateTimeTestBase;
 import org.junit.Test;
@@ -12,8 +11,6 @@ import static org.junit.Assert.assertEquals;
 
 public class DateTimeTest extends DateTimeTestBase {
 
-    private static NumberParserFormatter pf;
-
     @Override
     public String configFolder() {
         return "config/en-us";
@@ -21,9 +18,7 @@ public class DateTimeTest extends DateTimeTestBase {
 
     @Override
     public NumberFormatter buildNumberFormatter() {
-        final NumberFormatter numberFormatter = new EnglishFormatter();
-        pf = new NumberParserFormatter(numberFormatter, null);
-        return numberFormatter;
+        return new EnglishFormatter();
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
+import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.formatter.NumberFormatter;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,7 @@ public abstract class DateTimeTestBase {
 
     private JsonObject root;
     protected NumberFormatter nf;
+    protected NumberParserFormatter pf; // useful for overriding classes
 
     public abstract String configFolder();
     public abstract NumberFormatter buildNumberFormatter();
@@ -31,6 +33,7 @@ public abstract class DateTimeTestBase {
         root = JsonParser.object().from(ClassLoader.getSystemClassLoader()
                 .getResourceAsStream(configFolder() + "/date_time_test.json"));
         nf = buildNumberFormatter();
+        pf = new NumberParserFormatter(nf, null);
     }
 
     @Test
