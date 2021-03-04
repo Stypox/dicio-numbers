@@ -3,6 +3,7 @@ package org.dicio.numbers.util;
 import org.junit.Test;
 
 import static org.dicio.numbers.util.Utils.WHOLE_NUMBER_ACCURACY;
+import static org.dicio.numbers.util.Utils.containsCodePoint;
 import static org.dicio.numbers.util.Utils.decimalPlacesNoFinalZeros;
 import static org.dicio.numbers.util.Utils.isWhole;
 import static org.dicio.numbers.util.Utils.longPow;
@@ -99,5 +100,22 @@ public class UtilsTest {
         assertEquals("hello hi", removeRedundantSpaces("  hello    hi    "));
         assertEquals("eight hundred b.c.", removeRedundantSpaces("eight  hundred b.c."));
         assertEquals("eight hundred", removeRedundantSpaces(" eight hundred "));
+    }
+
+    @Test
+    public void testContainsCodePointTrue() {
+        assertTrue(containsCodePoint("abcde", "a".codePointAt(0)));
+        assertTrue(containsCodePoint("625346", "5".codePointAt(0)));
+        assertTrue(containsCodePoint("ç!?'\"", "\"".codePointAt(0)));
+        assertTrue(containsCodePoint("àèìéç", "ì".codePointAt(0)));
+    }
+
+    @Test
+    public void testContainsCodePointFalse() {
+        assertFalse(containsCodePoint("", "@".codePointAt(0)));
+        assertFalse(containsCodePoint("hello", "0".codePointAt(0)));
+        assertFalse(containsCodePoint("ç!?\"", "'".codePointAt(0)));
+        assertFalse(containsCodePoint("@òç", "c".codePointAt(0)));
+        assertFalse(containsCodePoint("àèç", "e".codePointAt(0)));
     }
 }

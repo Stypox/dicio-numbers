@@ -91,4 +91,18 @@ public final class Utils {
     public static String removeRedundantSpaces(final String s) {
         return DUPLICATE_SPACES_PATTERN.matcher(s).replaceAll(" ").trim();
     }
+
+    /**
+     * @param s the string loop through and check
+     * @param codePoint the code point to find
+     * @return whether the code point is present inside the string or not
+     */
+    public static boolean containsCodePoint(final String s, final int codePoint) {
+        for (int i = 0; i < s.length(); ++i) {
+            if (s.codePointAt(i) == codePoint) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
