@@ -1,0 +1,291 @@
+{
+  "spaces": " :;_!?<>|=()[]{}»«*~^`'\"",
+  "characters_as_word": "%#-+.,/",
+  "raw_number_categories": [
+    "number",
+    "raw"
+  ],
+  "word_matches": [
+    {
+      "categories": [
+        "ignore"
+      ],
+      "values": [
+        "a",
+        "an",
+        "and"
+      ]
+    },
+    {
+      "categories": [
+        "ignore",
+        "thousand_separator"
+      ],
+      "values": [
+        ","
+      ]
+    },
+    {
+      "categories": [
+        "ordinal_suffix"
+      ],
+      "values": [
+        "st",
+        "nd",
+        "th"
+      ]
+    },
+    {
+      "categories": [
+        "point"
+      ],
+      "values": [
+        "point",
+        "dot",
+        "."
+      ]
+    },
+    {
+      "categories": [
+        "fraction_separator"
+      ],
+      "values": [
+        "over",
+        "divided",
+        "/"
+      ]
+    },
+    {
+      "categories": [
+        "fraction_separator_secondary"
+      ],
+      "values": [
+        "by"
+      ]
+    },
+    {
+      "categories": [
+        "sign",
+        "positive"
+      ],
+      "values": [
+        "positive",
+        "plus",
+        "+"
+      ]
+    },
+    {
+      "categories": [
+        "sign",
+        "negative"
+      ],
+      "values": [
+        "negative",
+        "minus",
+        "-"
+      ]
+    },
+    {
+      "categories": [
+        "sign",
+        "negative",
+        "ignore"
+      ],
+      "values": [
+        "-"
+      ]
+    }
+  ],
+  "number_mappings": [
+    {
+      "categories": [
+        "number",
+        "digit",
+        "digit_after_point"
+      ],
+      "values": {
+        "nought": 0,
+        "zero": 0,
+        "one": 1,
+        "two": 2,
+        "three": 3,
+        "four": 4,
+        "five": 5,
+        "six": 6,
+        "seven": 7,
+        "eight": 8,
+        "nine": 9
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "digit_after_point"
+      ],
+      "values": {
+        "o": 0,
+        "oh": 0
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "teen"
+      ],
+      "values": {
+        "ten": 10,
+        "eleven": 11,
+        "twelve": 12,
+        "thirteen": 13,
+        "fourteen": 14,
+        "fifteen": 15,
+        "sixteen": 16,
+        "seventeen": 17,
+        "eighteen": 18,
+        "nineteen": 19
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "tens"
+      ],
+      "values": {
+        "twenty": 20,
+        "thirty": 30,
+        "forty": 40,
+        "fifty": 50,
+        "sixty": 60,
+        "seventy": 70,
+        "eighty": 80,
+        "ninety": 90
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "hundred"
+      ],
+      "values": {
+        "hundred": 100
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "multiplier"
+      ],
+      "values": {
+        "thousand": 1000,
+        "million": 1000000,
+        "billion": 1000000000,
+        "trillion": 1000000000000,
+        "quadrillion": 1000000000000000,
+        "quintillion": 1000000000000000000
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "digit"
+      ],
+      "values": {
+        "first": 1,
+        "second": 2,
+        "third": 3,
+        "fourth": 4,
+        "fifth": 5,
+        "sixth": 6,
+        "seventh": 7,
+        "eighth": 8,
+        "ninth": 9
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "teen"
+      ],
+      "values": {
+        "tenth": 10,
+        "eleventh": 11,
+        "twelfth": 12,
+        "thirteenth": 13,
+        "fourteenth": 14,
+        "fifteenth": 15,
+        "sixteenth": 16,
+        "seventeenth": 17,
+        "eighteenth": 18,
+        "nineteenth": 19
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "tens"
+      ],
+      "values": {
+        "twentieth": 20,
+        "thirtieth": 30,
+        "fortieth": 40,
+        "fiftieth": 50,
+        "sixtieth": 60,
+        "seventieth": 70,
+        "eightieth": 80,
+        "ninetieth": 90
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "multiplier"
+      ],
+      "values": {
+        "hundredth": 100,
+        "thousandth": 1000,
+        "millionth": 1000000,
+        "billionth": 100000000,
+        "trillionth": 1000000000000,
+        "quadrillionth": 1000000000000,
+        "quintillionth": 1000000000000000
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "fractional"
+      ],
+      "values": {
+        "half": 0.5,
+        "halves": 0.5,
+        "quarter": 0.25,
+        "quarters": 0.25
+      }
+    },
+    {
+      "categories": [
+        "number"
+      ],
+      "values": {
+        "pair": 2,
+        "pairs": 2,
+        "dozen": 12,
+        "dozens": 12,
+        "score": 20,
+        "scores": 20,
+        "percent": 0.01,
+        "pct": 0.01,
+        "pc": 0.01,
+        "%": 0.01,
+        "permille": 0.001,
+        "permill": 0.001,
+        "permil": 0.001,
+        "‰": 0.001
+      }
+    }
+  ]
+}
