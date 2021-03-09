@@ -99,7 +99,7 @@ public class PronounceNumberTest {
         assertEquals("ten oh six", pf.pronounceNumber(1006).get());
         assertEquals("one thousand", pf.pronounceNumber(1000).get());
         assertEquals("two thousand", pf.pronounceNumber(2000).get());
-        assertEquals("two thousand, fifteen", pf.pronounceNumber(2015).get()); // TODO maybe "twenty fifteen"?
+        assertEquals("two thousand, fifteen", pf.pronounceNumber(2015).get());
         assertEquals("four thousand, eight hundred and twenty seven", pf.pronounceNumber(4827).get());
     }
 
