@@ -206,6 +206,16 @@ public class EnglishNumberParserTest {
         assertNumberShortScale("58 hundred",                     false, 5800, false, 2);
     }
 
+    private int tokensInFormattedString(final String formatted) {
+        int tokensInFormatted = 1;
+        for (int j = 0; j < formatted.length(); ++j) {
+            if (formatted.charAt(j) == ' ' || formatted.charAt(j) == ',') {
+                ++tokensInFormatted;
+            }
+        }
+        return tokensInFormatted;
+    }
+
     @Test
     public void testNumberShortScaleWithFormatter() {
         final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
@@ -218,14 +228,15 @@ public class EnglishNumberParserTest {
                 i += 299527;
             }
 
-            final String formatted = npf.pronounceNumber(i).places(0).get();
-            int tokensInFormatted = 1;
-            for (int j = 0; j < formatted.length(); ++j) {
-                if (formatted.charAt(j) == ' ' || formatted.charAt(j) == ',') {
-                    ++tokensInFormatted;
-                }
-            }
+            // not ordinal
+            String formatted = npf.pronounceNumber(i).places(0).get();
+            int tokensInFormatted = tokensInFormattedString(formatted);
             assertNumberShortScale(formatted, false, i, false, tokensInFormatted);
+
+            // ordinal
+            formatted = npf.pronounceNumber(i).places(0).ordinals(true).get();
+            tokensInFormatted = tokensInFormattedString(formatted);
+            assertNumberShortScale(formatted, true, i, true, tokensInFormatted);
         }
     }
 
