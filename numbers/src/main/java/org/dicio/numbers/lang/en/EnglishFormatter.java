@@ -427,7 +427,8 @@ public class EnglishFormatter extends NumberFormatter {
                     + (n % 10 > 0 ? " " + subThousand(n % 10, ordinals) : "");
         } else {
             return NUMBER_NAMES.get(n / 100) + " hundred"
-                    + (n % 100 > 0 ? " and " + subThousand(n % 100, ordinals) : "");
+                    + (n % 100 > 0 ? " and " + subThousand(n % 100, ordinals)
+                    : (ordinals ? "th" : ""));
         }
     }
 

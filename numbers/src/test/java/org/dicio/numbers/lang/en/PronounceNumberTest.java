@@ -182,6 +182,7 @@ public class PronounceNumberTest {
         assertEquals("hundredth", pf.pronounceNumber(100).ordinals(true).get());
         assertEquals("thousandth", pf.pronounceNumber(1000).ordinals(true).get());
         assertEquals("ten thousandth", pf.pronounceNumber(10000).ordinals(true).get());
+        assertEquals("two hundredth", pf.pronounceNumber(200).ordinals(true).get());
         assertEquals("eighteen thousand, six hundred and ninety first", pf.pronounceNumber(18691).ordinals(true).get());
         assertEquals("one thousand, five hundred and sixty seventh", pf.pronounceNumber(1567).ordinals(true).get());
 
