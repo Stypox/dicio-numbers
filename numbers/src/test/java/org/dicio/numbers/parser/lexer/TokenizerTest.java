@@ -79,11 +79,11 @@ public class TokenizerTest {
         assertToken(tokens.get(3),  "twenTy",  " ",   cat("number", "tens"),               cat("ordinal"),    new Number(20));
         assertToken(tokens.get(4),  "second",  "; ",  cat("number", "ordinal", "digit"),   cat("tens"),       new Number(2));
         assertToken(tokens.get(5),  "plus",    " ",   cat("sign", "positive"),             cat("number"));
-        assertToken(tokens.get(6),  "1928",    "",    cat("number"),                       cat("digit"),      new Number(1928));
+        assertToken(tokens.get(6),  "1928",    "",    cat("raw", "number"),                cat("digit"),      new Number(1928));
         assertToken(tokens.get(7),  "point",   " \"", cat("point"),                        cat("ignore"));
         assertToken(tokens.get(8),  "half",    "\" ", cat("number"),                       cat("multiplier"), new Number(0.5));
         assertToken(tokens.get(9),  "a",       "",    cat("ignore"),                       cat("sign"));
-        assertToken(tokens.get(10), "-",       "",    cat("sign", "negative", "ignore"),   cat("positive"));
+        assertToken(tokens.get(10), "-",       "",    cat("ignore", "sign", "negative"),   cat("positive"));
         assertToken(tokens.get(11), "million", "",    cat("number", "multiplier"),         cat("tens"),       new Number(1000000));
     }
 }
