@@ -8,6 +8,9 @@ public class Number {
     private final long integerValue;
     private final double decimalValue;
 
+    private boolean isOrdinal = false;
+
+
     public Number(final long integerValue) {
         this.isDecimal = false;
         this.integerValue = integerValue;
@@ -35,6 +38,15 @@ public class Number {
 
     public double decimalValue() {
         return decimalValue;
+    }
+
+    public boolean isOrdinal() {
+        return isOrdinal;
+    }
+
+    public Number setOrdinal(final boolean ordinal) {
+        isOrdinal = ordinal;
+        return this;
     }
 
 
@@ -108,7 +120,7 @@ public class Number {
             return false;
         } else {
             final Number number = (Number) o;
-            return isDecimal == number.isDecimal && (isDecimal
+            return isDecimal == number.isDecimal && isOrdinal == number.isOrdinal && (isDecimal
                     ? decimalValue == number.decimalValue : integerValue == number.integerValue);
         }
     }
@@ -120,6 +132,7 @@ public class Number {
 
     @Override
     public String toString() {
-        return isDecimal ? String.valueOf(decimalValue) : String.valueOf(integerValue);
+        return (isDecimal ? String.valueOf(decimalValue) : String.valueOf(integerValue))
+                + (isOrdinal ? "th" : "");
     }
 }
