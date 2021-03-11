@@ -142,6 +142,10 @@ public class EnglishNumberParserTest {
         assertNumberLessThan1000("first hundred",              true,  1,   true,  1);
         assertNumberLessThan1000("seven hundredth ten",        true,  700, true,  2);
         assertNumberLessThan1000("nine hundredth",             false, 9,   false, 1);
+        assertNumberLessThan1000("23 th",                      true,  23,  true,  2);
+        assertNumberLessThan1000("620nd",                      true,  620, true,  2);
+        assertNumberLessThan1000("6st",                        true,  6,   true,  2);
+        assertNumberLessThan1000("8 first",                    true,  8,   false, 1);
         assertNumberLessThan1000Null("seventh", false);
     }
 
