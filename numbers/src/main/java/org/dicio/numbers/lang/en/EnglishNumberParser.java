@@ -25,7 +25,7 @@ public class EnglishNumberParser {
                 ts.movePositionForwardBy(-1); // rewind
                 return null;
             } else {
-                return n.multiply(negative ? -1 : 1);
+                return n.multiply(negative ? -1 : 1).setOrdinal(n.isOrdinal());
             }
 
         }

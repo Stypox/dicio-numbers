@@ -400,10 +400,11 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberSignPointOrdinal() {
-        assertNumberSignPoint("minus twelfth",      true,  -12,      false, 2);
-        assertNumberSignPoint("plus millionth ten", true,  1000000,  false, 2);
-        assertNumberSignPoint("-1843th",            true,  -1843,    false, 3);
-        assertNumberSignPoint("+573,976rd",         true,  573976,   false, 5);
+        assertNumberSignPoint("minus twelfth",      true,  -12,      true,  2);
+        assertNumberSignPoint("-one hundredth",     false, -1,       false, 2);
+        assertNumberSignPoint("plus millionth ten", true,  1000000,  true,  2);
+        assertNumberSignPoint("-1843th",            true,  -1843,    true,  3);
+        assertNumberSignPoint("+573,976rd",         true,  573976,   true,  5);
         assertNumberSignPointNull("minus first", false);
         assertNumberSignPointNull("-1843th",     false);
     }
