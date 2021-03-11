@@ -209,7 +209,13 @@ public class EnglishNumberParser {
 
         if (groupValue != null && groupValue.isOrdinal()) {
             // ordinal numbers can't be followed by a multiplier
-            return groupValue;
+            if (lastMultiplier >= 1000) {
+                return groupValue;
+            } else {
+                // prevent two numbers smaller than 1000 to be one after another
+                ts.setPosition(originalPosition);
+                return null;
+            }
         }
 
         final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);

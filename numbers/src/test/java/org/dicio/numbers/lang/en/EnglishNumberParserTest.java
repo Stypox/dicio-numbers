@@ -179,7 +179,8 @@ public class EnglishNumberParserTest {
         assertNumberGroupShortScale("seven hundred and sixty four millionth", true,  1000000000, 764000000, true,  6);
         assertNumberGroupShortScale("seven hundred and sixty four millionth", false, 1000000000, 764,       false, 5);
         assertNumberGroupShortScale("seven hundred and sixty four millionth", false, 1000,       764,       false, 5);
-        assertNumberGroupShortScale("fifth billionth",                        true,  1000000000, 5,         true,  5);
+        assertNumberGroupShortScale("fifth billionth",                        true,  1000000000, 5,         true,  1);
+        assertNumberGroupShortScale("nineteen hundredth",                     true,  1000000000, 19,        false, 1);
         assertNumberGroupShortScaleNull("seven hundred and sixty four millionth", true,  1000);
         assertNumberGroupShortScaleNull("twelfth thousandth",                     false, 1000000000);
     }
