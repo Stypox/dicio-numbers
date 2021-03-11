@@ -133,6 +133,19 @@ public class EnglishNumberParserTest {
     }
 
     @Test
+    public void testNumberLessThan1000Ordinal() {
+        assertNumberLessThan1000("fifth",                      true,  5,   true,  1);
+        assertNumberLessThan1000("twenty sixth",               true,  26,  true,  2);
+        assertNumberLessThan1000("seventy eighth",             false, 70,  false, 1);
+        assertNumberLessThan1000("fiftieth eighth",            true,  50,  true,  1);
+        assertNumberLessThan1000("one hundred and thirteenth", true,  113, true,  4);
+        assertNumberLessThan1000("first hundred",              true,  1,   true,  1);
+        assertNumberLessThan1000("seven hundredth ten",        true,  700, true,  2);
+        assertNumberLessThan1000("nine hundredth",             false, 9,   false, 1);
+        assertNumberLessThan1000Null("seventh", false);
+    }
+
+    @Test
     public void testNumberLessThan1000Null() {
         assertNumberLessThan1000Null("", false);
         assertNumberLessThan1000Null("hello", true);

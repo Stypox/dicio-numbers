@@ -242,10 +242,19 @@
       "categories": [
         "number",
         "ordinal",
+        "hundred"
+      ],
+      "values": {
+        "hundredth": 100
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
         "multiplier"
       ],
       "values": {
-        "hundredth": 100,
         "thousandth": 1000,
         "millionth": 1000000,
         "billionth": 100000000,
