@@ -257,7 +257,11 @@ public class EnglishNumberParserTest {
         assertNumberShortScale("eighteen twenty first", false, 1820,     false, 2);
         assertNumberShortScale("thirteen sixtieth",     true,  1360,     true,  2);
         assertNumberShortScale("thirteen sixtieth",     false, 13,       false, 1);
+        assertNumberShortScale("sixteenth hundred",     true,  16,       true,  1);
+        assertNumberShortScale("sixteenth oh four",     true,  16,       true,  1);
+        assertNumberShortScale("543789th",              true,  543789,   true,  2);
         assertNumberShortScale("75,483,543 rd",         true,  75483543, true,  6);
+        assertNumberShortScaleNull("2938th",               false);
         assertNumberShortScaleNull("102,321th",            false);
         assertNumberShortScaleNull("thirteenth hundredth", false);
     }

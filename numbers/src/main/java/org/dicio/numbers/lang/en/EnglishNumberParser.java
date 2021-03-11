@@ -132,14 +132,10 @@ public class EnglishNumberParser {
                 final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
                 if (!preferOrdinal && ordinal) {
                     return null; // do not allow ordinals if preferOrdinal is false
-                } else if (ordinal) {
-                    // a big ordinal number in raw form, e.g. 1250067th
-                    ts.movePositionForwardBy(nextNotIgnore + 2);
-                    return ts.get(-1).getNumber().setOrdinal(true);
                 } else {
-                    // a big number in raw form, e.g. 1250067
-                    ts.movePositionForwardBy(nextNotIgnore + 1);
-                    return ts.get(-1).getNumber();
+                    // a big number in raw form, e.g. 1250067, 5839th
+                    ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
+                    return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
                 }
 
             } else {
