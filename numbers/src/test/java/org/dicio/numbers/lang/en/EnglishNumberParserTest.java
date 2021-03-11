@@ -240,6 +240,23 @@ public class EnglishNumberParserTest {
         }
     }
 
+    @Test(timeout = 2000) // 20000 formats + parses take <1s, use 2s timeout just for slower PCs
+    public void testNumberShortScalePerformance() {
+        final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
+        final long startingValue = 54378960497L;
+        for (long i = startingValue; i < startingValue + 10000; ++i) {
+            // not ordinal
+            String formatted = npf.pronounceNumber(i).places(0).get();
+            int tokensInFormatted = tokensInFormattedString(formatted);
+            assertNumberShortScale(formatted, true, i, false, tokensInFormatted);
+
+            // ordinal
+            formatted = npf.pronounceNumber(i).places(0).ordinals(true).get();
+            tokensInFormatted = tokensInFormattedString(formatted);
+            assertNumberShortScale(formatted, true, i, true, tokensInFormatted);
+        }
+    }
+
     @Test
     public void testNumberShortScaleNull() {
         assertNumberShortScaleNull("", true);
