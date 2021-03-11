@@ -147,13 +147,13 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberLessThan1000Null() {
-        assertNumberLessThan1000Null("", false);
-        assertNumberLessThan1000Null("hello", true);
+        assertNumberLessThan1000Null("",                  false);
+        assertNumberLessThan1000Null("hello",             true);
         assertNumberLessThan1000Null("hello how are you", false);
-        assertNumberLessThan1000Null("a hello two and", true);
+        assertNumberLessThan1000Null("a hello two and",   true);
         assertNumberLessThan1000Null("a car and a half,", false);
-        assertNumberLessThan1000Null("a million", true);
-        assertNumberLessThan1000Null(" twenty", false);
+        assertNumberLessThan1000Null("a million",         true);
+        assertNumberLessThan1000Null(" twenty",           false);
     }
 
     @Test
@@ -272,13 +272,13 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberShortScaleNull() {
-        assertNumberShortScaleNull("", true);
+        assertNumberShortScaleNull("",                    true);
         assertNumberShortScaleNull("a hello how are you", false);
-        assertNumberShortScaleNull(", and", true);
-        assertNumberShortScaleNull("oh two", false);
-        assertNumberShortScaleNull(", 123485 and", true);
-        assertNumberShortScaleNull("and 123", false);
-        assertNumberShortScaleNull(" one thousand ", true);
+        assertNumberShortScaleNull(", and",               true);
+        assertNumberShortScaleNull("oh two",              false);
+        assertNumberShortScaleNull(", 123485 and",        true);
+        assertNumberShortScaleNull("and 123",             false);
+        assertNumberShortScaleNull(" one thousand ",      true);
     }
 
     @Test
@@ -317,13 +317,13 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberPointNull() {
-        assertNumberPointNull("", false);
-        assertNumberPointNull("hello world", true);
-        assertNumberPointNull("point", false);
-        assertNumberPointNull("point twenty", true);
-        assertNumberPointNull("point, 1 2 3 4", false);
+        assertNumberPointNull("",                     false);
+        assertNumberPointNull("hello world",          true);
+        assertNumberPointNull("point",                false);
+        assertNumberPointNull("point twenty",         true);
+        assertNumberPointNull("point, 1 2 3 4",       false);
         assertNumberPointNull(". and six four eight", true);
-        assertNumberPointNull("over two", false);
+        assertNumberPointNull("over two",             false);
         assertNumberPointNull(" one divided by five", true);
     }
 
@@ -340,10 +340,10 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberSignPointNull() {
-        assertNumberSignPointNull("", false);
-        assertNumberSignPointNull("hello how are you", true);
+        assertNumberSignPointNull("",                                false);
+        assertNumberSignPointNull("hello how are you",               true);
         assertNumberSignPointNull("minus minus 1 hundred and sixty", false);
-        assertNumberSignPointNull(" plus million", true);
-        assertNumberSignPointNull(" +- 5", false);
+        assertNumberSignPointNull(" plus million",                   true);
+        assertNumberSignPointNull(" +- 5",                           false);
     }
 }
