@@ -241,11 +241,8 @@ public class EnglishNumberParser {
         boolean ordinal = false;
         while (true) {
             final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
-            if (!preferOrdinal && ts.get(nextNotIgnore).hasCategory("ordinal")
-                    && !ts.get(nextNotIgnore).isNumberEqualTo(1)
-                    && !ts.get(nextNotIgnore).isNumberEqualTo(2)) {
-                // prevent ordinal numbers if preferOrdinal is false, but allow first and second,
-                // since those can't mean anything else than ordinal, e.g. twenty first
+            if (!preferOrdinal && ts.get(nextNotIgnore).hasCategory("ordinal")) {
+                // prevent ordinal numbers if preferOrdinal is false
                 break;
             }
 
