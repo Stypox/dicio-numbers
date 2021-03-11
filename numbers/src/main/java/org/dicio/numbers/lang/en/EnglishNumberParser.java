@@ -296,6 +296,10 @@ public class EnglishNumberParser {
                     break;
                 }
 
+                if (!preferOrdinal && ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix")) {
+                    break; // do not allow ordinals if preferOrdinal is false
+                }
+
                 if (rawNumber.lessThan(10)) {
                     if (digit < 0) {
                         digit = rawNumber.integerValue();

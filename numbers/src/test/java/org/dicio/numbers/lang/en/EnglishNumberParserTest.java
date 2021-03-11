@@ -134,19 +134,21 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberLessThan1000Ordinal() {
-        assertNumberLessThan1000("fifth",                      true,  5,   true,  1);
-        assertNumberLessThan1000("twenty sixth",               true,  26,  true,  2);
-        assertNumberLessThan1000("seventy eighth",             false, 70,  false, 1);
-        assertNumberLessThan1000("fiftieth eighth",            true,  50,  true,  1);
-        assertNumberLessThan1000("one hundred and thirteenth", true,  113, true,  4);
-        assertNumberLessThan1000("first hundred",              true,  1,   true,  1);
-        assertNumberLessThan1000("seven hundredth ten",        true,  700, true,  2);
-        assertNumberLessThan1000("nine hundredth",             false, 9,   false, 1);
-        assertNumberLessThan1000("23 th",                      true,  23,  true,  2);
-        assertNumberLessThan1000("620nd",                      true,  620, true,  2);
-        assertNumberLessThan1000("6st",                        true,  6,   true,  2);
-        assertNumberLessThan1000("8 first",                    true,  8,   false, 1);
+        assertNumberLessThan1000("fifth",                      true,  5,          true,  1);
+        assertNumberLessThan1000("twenty sixth",               true,  26,         true,  2);
+        assertNumberLessThan1000("seventy eighth",             false, 70,         false, 1);
+        assertNumberLessThan1000("fiftieth eighth",            true,  50,         true,  1);
+        assertNumberLessThan1000("one hundred and thirteenth", true,  113,        true,  4);
+        assertNumberLessThan1000("first hundred",              true,  1,          true,  1);
+        assertNumberLessThan1000("seven hundredth ten",        true,  700,        true,  2);
+        assertNumberLessThan1000("nine hundredth",             false, 9,          false, 1);
+        assertNumberLessThan1000("23 th",                      true,  23,         true,  2);
+        assertNumberLessThan1000("620nd",                      true,  620,        true,  2);
+        assertNumberLessThan1000("6st",                        true,  6,          true,  2);
+        assertNumberLessThan1000("8 first",                    true,  8,          false, 1);
+        assertNumberLessThan1000("1st hundred",                true,  1,          true,  2);
         assertNumberLessThan1000Null("seventh", false);
+        assertNumberLessThan1000Null("96th",    false);
     }
 
     @Test
