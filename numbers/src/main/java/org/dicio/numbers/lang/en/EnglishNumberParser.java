@@ -124,13 +124,19 @@ public class EnglishNumberParser {
             // try to parse big raw numbers (bigger than 999), e.g. 1207
             final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
             if (isRawNumber(ts.get(nextNotIgnore))) {
-                ts.movePositionForwardBy(nextNotIgnore + 1);
-                groups = ts.get(-1).getNumber(); // just a big number in raw form, e.g. 1250067
-                if (ts.get(0).hasCategory("ordinal_suffix")) {
-                    ts.movePositionForwardBy(1);
-                    return groups.setOrdinal(true);
+                final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
+                if (!preferOrdinal && ordinal) {
+                    return null; // do not allow ordinals if preferOrdinal is false
+                } else if (ordinal) {
+                    // a big ordinal number in raw form, e.g. 1250067th
+                    ts.movePositionForwardBy(nextNotIgnore + 2);
+                    return ts.get(-1).getNumber().setOrdinal(true);
+                } else {
+                    // a big number in raw form, e.g. 1250067
+                    ts.movePositionForwardBy(nextNotIgnore + 1);
+                    return ts.get(-1).getNumber();
                 }
-                return groups;
+
             } else {
                 return null; // nothing was found
             }
@@ -142,38 +148,10 @@ public class EnglishNumberParser {
         }
 
         if (groups.lessThan(21) && groups.moreThan(9)) {
-            // parse years (from 1001 to 2099) in the particular forms (but hundred is below)
-            // use nextNotIgnore to skip -, e.g. nineteen-oh-two
-            final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
-
-            if (ts.get(nextNotIgnore).isNumberEqualTo(0)) {
-                final int digitIndex = ts.indexOfWithoutCategory("ignore", nextNotIgnore + 1);
-                if (ts.get(digitIndex) instanceof NumberToken
-                        && ts.get(digitIndex).getNumber().lessThan(10)) {
-                    // n + o/oh/nought/zero/0 + digit, e.g. sixteen oh one -> 1601
-                    ts.movePositionForwardBy(digitIndex + 1);
-                    return groups.multiply(100).plus(ts.get(-1).getNumber());
-                }
-
-            } else if (ts.get(nextNotIgnore).hasCategory("teen")
-                    || (isRawNumber(ts.get(nextNotIgnore))
-                    && ts.get(0).getNumber().lessThan(100))) {
-                // n + teen, e.g. twenty thirteen -> 2013
-                ts.movePositionForwardBy(nextNotIgnore + 1);
-                return groups.multiply(100).plus(ts.get(-1).getNumber());
-
-            } else if (ts.get(nextNotIgnore).hasCategory("tens")) {
-                // n + tens (+ digit), e.g. nineteen eighty four -> 1984
-                groups = groups.multiply(100).plus(ts.get(nextNotIgnore).getNumber());
-                ts.movePositionForwardBy(nextNotIgnore + 1);
-
-                final int digitIndex = ts.indexOfWithoutCategory("ignore", 0);
-                if (ts.get(digitIndex).hasCategory("digit")) {
-                    // digit is optional (e.g. seventeen fifty -> 1750 would do as well)
-                    groups = groups.plus(ts.get(digitIndex).getNumber());
-                    ts.movePositionForwardBy(digitIndex + 1);
-                }
-                return groups;
+            // parse years (1001 to 2099) in the particular forms (but xx-hundred is handled below)
+            final Number secondGroup = numberYearSecondGroup(preferOrdinal);
+            if (secondGroup != null) {
+                return groups.multiply(100).plus(secondGroup).setOrdinal(secondGroup.isOrdinal());
             }
         }
 
@@ -181,8 +159,12 @@ public class EnglishNumberParser {
             final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
             if (ts.get(nextNotIgnore).hasCategory("hundred")) {
                 // parse numbers suffixed by hundred, e.g. twenty six hundred -> 2600
-                ts.movePositionForwardBy(nextNotIgnore + 1);
-                return groups.multiply(100);
+                final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
+                if (preferOrdinal || !ordinal) {
+                    // prevent ordinal numbers if preferOrdinal is false
+                    ts.movePositionForwardBy(nextNotIgnore + 1);
+                    return groups.multiply(100).setOrdinal(ordinal);
+                }
             }
         }
 
@@ -191,16 +173,95 @@ public class EnglishNumberParser {
             // assuming current position is at the first comma
             if (isRawNumber(ts.get(-1)) && ts.get(0).hasCategory("thousand_separator")
                     && ts.get(1).getValue().length() == 3 && isRawNumber(ts.get(1))) {
+                final int originalPosition = ts.getPosition() - 1;
+
                 while (ts.get(0).hasCategory("thousand_separator") && isRawNumber(ts.get(1))
                         && ts.get(1).getNumber().lessThan(1000)
                         && ts.get(1).getValue().length() == 3) {
                     groups = groups.multiply(1000).plus(ts.get(1).getNumber());
                     ts.movePositionForwardBy(2); // do not allow ignored words in between
                 }
+
+                if (ts.get(0).hasCategory("ordinal_suffix")) {
+                    if (preferOrdinal) {
+                        ts.movePositionForwardBy(1);
+                        return groups.setOrdinal(true); // ordinal number, e.g. 20,056,789th
+                    } else {
+                        ts.setPosition(originalPosition);
+                        return null; // found ordinal number, revert since preferOrdinal is false
+                    }
+                }
             }
         }
 
         return groups; // e.g. six million, three hundred and twenty seven
+    }
+
+    Number numberYearSecondGroup(final boolean preferOrdinal) {
+        // parse the last two digits of a year, e.g. oh five -> 05, nineteen -> 19, eighty two -> 82
+
+        // use nextNotIgnore to skip -, e.g. (nineteen)-oh-two
+        final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
+
+        if (ts.get(nextNotIgnore).isNumberEqualTo(0)) {
+            final int digitIndex = ts.indexOfWithoutCategory("ignore", nextNotIgnore + 1);
+            final boolean ordinal = ts.get(digitIndex).hasCategory("ordinal");
+            if (ts.get(digitIndex) instanceof NumberToken
+                    && ts.get(digitIndex).getNumber().lessThan(10)
+                    && (preferOrdinal || !ordinal)) {
+                // o/oh/nought/zero/0 + digit, e.g. (sixteen) oh one -> (16)01
+                // prevent ordinal number if preferOrdinal is false, e.g. (eighteen) oh second
+                ts.movePositionForwardBy(digitIndex + 1);
+                return ts.get(-1).getNumber().setOrdinal(ordinal);
+            }
+
+        } else if (ts.get(nextNotIgnore).hasCategory("teen")) {
+            // teen, e.g. (twenty) thirteen -> (20)13
+            final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
+            if (!preferOrdinal && ordinal) {
+                return null; // do not allow ordinal number if preferOrdinal is false
+            } else {
+                ts.movePositionForwardBy(nextNotIgnore + 1);
+                return ts.get(-1).getNumber().setOrdinal(ordinal);
+            }
+
+        } else if (isRawNumber(ts.get(nextNotIgnore))
+                && ts.get(nextNotIgnore).getValue().length() == 2) {
+            // raw number with two digits, e.g. (twenty) 41 -> (20)41, (12) 05 th -> (12)05th
+            final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
+            if (!preferOrdinal && ordinal) {
+                return null; // do not allow raw number + st/nd/rd/th if preferOrdinal is false
+            } else {
+                ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
+                return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
+            }
+
+        } else if (ts.get(nextNotIgnore).hasCategory("tens")) {
+            // tens (+ digit), e.g. (nineteen) eighty four -> (19)84
+            final Number tens = ts.get(nextNotIgnore).getNumber();
+            if (ts.get(nextNotIgnore).hasCategory("ordinal")) {
+                if (preferOrdinal) {
+                    // nothing follows an ordinal number, e.g. (twenty) twentieth -> 2020th
+                    ts.movePositionForwardBy(nextNotIgnore + 1);
+                    return tens.setOrdinal(true);
+                } else {
+                    return null; // prevent ordinal numbers if preferOrdinal is false
+                }
+            }
+            ts.movePositionForwardBy(nextNotIgnore + 1);
+
+            final int digitIndex = ts.indexOfWithoutCategory("ignore", 0);
+            final boolean ordinal = ts.get(digitIndex).hasCategory("ordinal");
+            if (ts.get(digitIndex).hasCategory("digit") && (preferOrdinal || !ordinal)) {
+                // do not consider ordinal digit if preferOrdinal is false
+                ts.movePositionForwardBy(digitIndex + 1);
+                return tens.plus(ts.get(-1).getNumber()).setOrdinal(ordinal);
+            } else {
+                return tens; // digit is optional, e.g. (seventeen) fifty -> (17)50
+            }
+        }
+
+        return null; // invalid second year group
     }
 
     Number numberGroupShortScale(final boolean preferOrdinal, final long lastMultiplier) {

@@ -203,6 +203,7 @@ public class EnglishNumberParserTest {
     @Test
     public void testNumberShortScale() {
         assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteen", true, 25164007019L, false, 15);
+        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven billion", true, 25164000000L, false, 10);
         assertNumberShortScale("two thousand, one hundred and ninety one", false, 2191, false, 8);
         assertNumberShortScale("nine hundred and ten",         true,  910,            false, 4);
         assertNumberShortScale("two million",                  false, 2000000,        false, 2);
@@ -235,6 +236,30 @@ public class EnglishNumberParserTest {
         assertNumberShortScale("sixty-four-hundred",             false, 6400, false, 5);
         assertNumberShortScale("two hundred and twelve hundred", true,  212,  false, 4);
         assertNumberShortScale("58 hundred",                     false, 5800, false, 2);
+        assertNumberShortScale("nineteen hundred",               true,  1900, false, 2);
+        assertNumberShortScale("eighteen 1",                     false, 18,   false, 1);
+    }
+
+    @Test
+    public void testNumberShortScaleOrdinal() {
+        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteenth", true,  25164007019L,  true,  15);
+        assertNumberShortScale("73 billion, twenty three millionth, seven thousand and nineteen",                   true,  73023000000L,  true,  6);
+        assertNumberShortScale("one hundred and 6 billion, twenty one million, one billionth",                      true,  106021000000L, false, 9);
+        assertNumberShortScale("one hundred and 6 billion, twenty one million, one thousandth",                     false, 106021000001L, false, 11);
+        assertNumberShortScale("nineteen hundredth",    true,  1900,     true,  2);
+        assertNumberShortScale("twenty oh first",       true,  2001,     true,  3);
+        assertNumberShortScale("twenty oh first",       false, 20,       false, 1);
+        assertNumberShortScale("nineteen 09th",         true,  1909,     true,  3);
+        assertNumberShortScale("nineteen 09th",         false, 19,       false, 1);
+        assertNumberShortScale("eleven sixteenth",      true,  1116,     true,  2);
+        assertNumberShortScale("eleven sixteenth",      false, 11,       false, 1);
+        assertNumberShortScale("eighteen twenty first", true,  1821,     true,  3);
+        assertNumberShortScale("eighteen twenty first", false, 1820,     false, 2);
+        assertNumberShortScale("thirteen sixtieth",     true,  1360,     true,  2);
+        assertNumberShortScale("thirteen sixtieth",     false, 13,       false, 1);
+        assertNumberShortScale("75,483,543 rd",         true,  75483543, true,  6);
+        assertNumberShortScaleNull("102,321th",         false);
+        assertNumberShortScaleNull("thirteenth hundredth", false);
     }
 
     private int tokensInFormattedString(final String formatted) {
