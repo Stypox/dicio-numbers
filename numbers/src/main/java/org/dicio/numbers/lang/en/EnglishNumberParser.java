@@ -41,7 +41,9 @@ public class EnglishNumberParser {
         if (ts.get(0).hasCategory("point")) {
             // parse point indicator from e.g. "twenty one point four five three"
 
-            if (!ts.get(1).hasCategory("digit_after_point") && !isRawNumber(ts.get(1))) {
+            if (!ts.get(1).hasCategory("digit_after_point")
+                    && (!isRawNumber(ts.get(1)) || ts.get(2).hasCategory("ordinal_suffix"))) {
+                // also return if next up is an ordinal raw number, i.e. followed by st/nd/rd/th
                 return n; // there is an only point at the end of the number: it is not part of it
             }
 
@@ -64,11 +66,14 @@ public class EnglishNumberParser {
                 // read as many digits as possible, e.g. point one six 5 one 0 three
                 while (true) {
                     if (ts.get(0).hasCategory("digit_after_point")
-                            || (ts.get(0).getValue().length() == 1 && isRawNumber(ts.get(0)))) {
+                            || (ts.get(0).getValue().length() == 1 && isRawNumber(ts.get(0))
+                            && !ts.get(1).hasCategory("ordinal_suffix"))) {
+                        // do not allow ordinal raw numbers, i.e. followed by st/nd/rd/th
+
                         n = n.plus(ts.get(0).getNumber().multiply(magnitude));
                         magnitude /= 10;
                     } else {
-                        break; // reached a word that is not a digit
+                        break; // reached a word that is not a valid digit
                     }
                     ts.movePositionForwardBy(1);
                 }

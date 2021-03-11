@@ -258,7 +258,7 @@ public class EnglishNumberParserTest {
         assertNumberShortScale("thirteen sixtieth",     true,  1360,     true,  2);
         assertNumberShortScale("thirteen sixtieth",     false, 13,       false, 1);
         assertNumberShortScale("75,483,543 rd",         true,  75483543, true,  6);
-        assertNumberShortScaleNull("102,321th",         false);
+        assertNumberShortScaleNull("102,321th",            false);
         assertNumberShortScaleNull("thirteenth hundredth", false);
     }
 
@@ -356,6 +356,19 @@ public class EnglishNumberParserTest {
         assertNumberPoint("nine over, two",              false, 9,                 false, 1);
         assertNumberPoint("eight divided five",          true,  8.0 / 5.0,         false, 3);
         assertNumberPoint("six by nineteen",             false, 6,                 false, 1);
+    }
+
+    @Test
+    public void testNumberPointOrdinal() {
+        assertNumberPoint("fifth point six",                     true,  5,     true,  1);
+        assertNumberPoint("3 thousand 7 hundred tenth over six", true,  3710,  true,  5);
+        assertNumberPoint("3 thousand 7 hundred tenth over six", false, 3700,  false, 4);
+        assertNumberPoint("eight point one second",              false, 8.1,   false, 3);
+        assertNumberPoint("eight point one third",               true,  8.1,   false, 3);
+        assertNumberPoint("six over fifth",                      true,  6,     false, 1);
+        assertNumberPoint("nine over thirty ninth",              true,  0.3,   false, 3);
+        assertNumberPoint("nine over thirty ninth",              false, 0.3,   false, 3);
+        assertNumberPoint("thirteen point 1 2 3 th",             true,  13.12, false, 4);
     }
 
     @Test
