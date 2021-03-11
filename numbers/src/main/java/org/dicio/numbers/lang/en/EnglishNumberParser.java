@@ -328,7 +328,7 @@ public class EnglishNumberParser {
                 ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
                 if (ordinal) {
                     ts.movePositionForwardBy(nextNotIgnore + 2);
-                    break; // raw number followed by th/nd/st, nothing else allowed, e.g. 407th
+                    break; // raw number followed by st/nd/rd/th, nothing else allowed, e.g. 407th
                 }
 
             } else {
