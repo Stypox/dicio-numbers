@@ -213,11 +213,11 @@ public class EnglishNumberParser {
         }
 
         final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
-        if (ts.get(nextNotIgnore).hasCategory("multiplier")) {
+        final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
+        if (ts.get(nextNotIgnore).hasCategory("multiplier") && (preferOrdinal || !ordinal)) {
+            // prevent ordinal multiplier if preferOrdinal is false
             final Number multiplier = ts.get(nextNotIgnore).getNumber();
-            final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
-            if (multiplier.lessThan(lastMultiplier) && (preferOrdinal || !ordinal)) {
-                // prevent ordinal numbers if preferOrdinal is false
+            if (multiplier.lessThan(lastMultiplier)) {
                 ts.movePositionForwardBy(nextNotIgnore + 1);
                 if (groupValue == null) {
                     // the multiplier alone, e.g. a million
