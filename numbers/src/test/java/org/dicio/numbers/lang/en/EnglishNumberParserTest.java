@@ -113,6 +113,7 @@ public class EnglishNumberParserTest {
         assertNumberLessThan1000("hundred 4 7",      false, 104, false, 2);
         assertNumberLessThan1000("19 hundred",       true,  19,  false, 1);
         assertNumberLessThan1000("sixty 7",          false, 67,  false, 2);
+        assertNumberLessThan1000("30 6",             true,  30,  false, 1);
     }
 
     @Test
