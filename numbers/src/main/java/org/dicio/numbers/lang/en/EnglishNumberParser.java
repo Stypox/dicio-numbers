@@ -175,9 +175,8 @@ public class EnglishNumberParser {
                     && ts.get(1).getValue().length() == 3 && isRawNumber(ts.get(1))) {
                 final int originalPosition = ts.getPosition() - 1;
 
-                while (ts.get(0).hasCategory("thousand_separator") && isRawNumber(ts.get(1))
-                        && ts.get(1).getNumber().lessThan(1000)
-                        && ts.get(1).getValue().length() == 3) {
+                while (ts.get(0).hasCategory("thousand_separator")
+                        && ts.get(1).getValue().length() == 3 && isRawNumber(ts.get(1))) {
                     groups = groups.multiply(1000).plus(ts.get(1).getNumber());
                     ts.movePositionForwardBy(2); // do not allow ignored words in between
                 }
@@ -225,8 +224,8 @@ public class EnglishNumberParser {
                 return ts.get(-1).getNumber().setOrdinal(ordinal);
             }
 
-        } else if (isRawNumber(ts.get(nextNotIgnore))
-                && ts.get(nextNotIgnore).getValue().length() == 2) {
+        } else if (ts.get(nextNotIgnore).getValue().length() == 2
+                && isRawNumber(ts.get(nextNotIgnore))) {
             // raw number with two digits, e.g. (twenty) 41 -> (20)41, (12) 05 th -> (12)05th
             final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
             if (!preferOrdinal && ordinal) {
