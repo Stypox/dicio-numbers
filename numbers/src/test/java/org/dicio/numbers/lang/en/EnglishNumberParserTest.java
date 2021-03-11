@@ -393,9 +393,19 @@ public class EnglishNumberParserTest {
         assertNumberSignPoint("minus twelve",        false, -12,      false, 2);
         assertNumberSignPoint("plus million",        true,  1000000,  false, 2);
         assertNumberSignPoint("-1843",               false, -1843,    false, 2);
-        assertNumberSignPoint("+573976",             true,  573976,   false, 2);
+        assertNumberSignPoint("+573,976",            true,  573976,   false, 4);
         assertNumberSignPoint("minus 42903.5",       false, -42903.5, false, 4);
         assertNumberSignPoint("minus point oh four", true,  -.04,     false, 4);
+    }
+
+    @Test
+    public void testNumberSignPointOrdinal() {
+        assertNumberSignPoint("minus twelfth",      true,  -12,      false, 2);
+        assertNumberSignPoint("plus millionth ten", true,  1000000,  false, 2);
+        assertNumberSignPoint("-1843th",            true,  -1843,    false, 3);
+        assertNumberSignPoint("+573,976rd",         true,  573976,   false, 5);
+        assertNumberSignPointNull("minus first", false);
+        assertNumberSignPointNull("-1843th",     false);
     }
 
     @Test
