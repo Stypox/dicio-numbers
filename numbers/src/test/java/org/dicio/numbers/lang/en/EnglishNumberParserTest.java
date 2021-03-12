@@ -11,6 +11,8 @@ import static org.junit.Assert.assertEquals;
 
 public class EnglishNumberParserTest {
 
+    private static final boolean T = true, F = false;
+    
     private static Tokenizer tokenizer;
 
     @BeforeClass
@@ -87,185 +89,185 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberLessThan1000() {
-        assertNumberLessThan1000("zero",                   true,  0,   false, 1);
-        assertNumberLessThan1000("one",                    false, 1,   false, 1);
-        assertNumberLessThan1000("five",                   true,  5,   false, 1);
-        assertNumberLessThan1000("nineteen",               false, 19,  false, 1);
-        assertNumberLessThan1000("hundred",                true,  100, false, 1);
-        assertNumberLessThan1000("one hundred",            false, 100, false, 2);
-        assertNumberLessThan1000("three hundred",          true,  300, false, 2);
-        assertNumberLessThan1000("twenty six",             false, 26,  false, 2);
-        assertNumberLessThan1000("thirty-seven",           true,  37,  false, 3);
-        assertNumberLessThan1000("seven hundred six",      false, 706, false, 3);
-        assertNumberLessThan1000("eight hundred eighteen", true,  818, false, 3);
+        assertNumberLessThan1000("zero",                   T, 0,   F, 1);
+        assertNumberLessThan1000("one",                    F, 1,   F, 1);
+        assertNumberLessThan1000("five",                   T, 5,   F, 1);
+        assertNumberLessThan1000("nineteen",               F, 19,  F, 1);
+        assertNumberLessThan1000("hundred",                T, 100, F, 1);
+        assertNumberLessThan1000("one hundred",            F, 100, F, 2);
+        assertNumberLessThan1000("three hundred",          T, 300, F, 2);
+        assertNumberLessThan1000("twenty six",             F, 26,  F, 2);
+        assertNumberLessThan1000("thirty-seven",           T, 37,  F, 3);
+        assertNumberLessThan1000("seven hundred six",      F, 706, F, 3);
+        assertNumberLessThan1000("eight hundred eighteen", T, 818, F, 3);
     }
 
     @Test
     public void testNumberLessThan1000Digits() {
-        assertNumberLessThan1000("0",                false, 0,   false, 1);
-        assertNumberLessThan1000("1",                true,  1,   false, 1);
-        assertNumberLessThan1000("6",                false, 6,   false, 1);
-        assertNumberLessThan1000("15",               true,  15,  false, 1);
-        assertNumberLessThan1000("100 nineteen",     false, 100, false, 1);
-        assertNumberLessThan1000("3 hundred 8",      true,  308, false, 3);
-        assertNumberLessThan1000("72",               false, 72,  false, 1);
-        assertNumberLessThan1000("912",              true,  912, false, 1);
-        assertNumberLessThan1000("8 hundred and 18", false, 818, false, 4);
-        assertNumberLessThan1000("7 hundred 3 9",    true,  703, false, 3);
-        assertNumberLessThan1000("hundred 4 7",      false, 104, false, 2);
-        assertNumberLessThan1000("19 hundred",       true,  19,  false, 1);
-        assertNumberLessThan1000("sixty 7",          false, 67,  false, 2);
-        assertNumberLessThan1000("30 6",             true,  30,  false, 1);
+        assertNumberLessThan1000("0",                F, 0,   F, 1);
+        assertNumberLessThan1000("1",                T, 1,   F, 1);
+        assertNumberLessThan1000("6",                F, 6,   F, 1);
+        assertNumberLessThan1000("15",               T, 15,  F, 1);
+        assertNumberLessThan1000("100 nineteen",     F, 100, F, 1);
+        assertNumberLessThan1000("3 hundred 8",      T, 308, F, 3);
+        assertNumberLessThan1000("72",               F, 72,  F, 1);
+        assertNumberLessThan1000("912",              T, 912, F, 1);
+        assertNumberLessThan1000("8 hundred and 18", F, 818, F, 4);
+        assertNumberLessThan1000("7 hundred 3 9",    T, 703, F, 3);
+        assertNumberLessThan1000("hundred 4 7",      F, 104, F, 2);
+        assertNumberLessThan1000("19 hundred",       T, 19,  F, 1);
+        assertNumberLessThan1000("sixty 7",          F, 67,  F, 2);
+        assertNumberLessThan1000("30 6",             T, 30,  F, 1);
     }
 
     @Test
     public void testNumberLessThan1000EdgeCases() {
-        assertNumberLessThan1000("four five",                          true,  4,   false, 1);
-        assertNumberLessThan1000("a two and",                          false, 2,   false, 2);
-        assertNumberLessThan1000("one thirteen",                       true,  1,   false, 1);
-        assertNumberLessThan1000("sixteen eight",                      false, 16,  false, 1);
-        assertNumberLessThan1000("eighteen hundred",                   true,  18,  false, 1);
-        assertNumberLessThan1000("zero hundred",                       false, 0,   false, 1);
-        assertNumberLessThan1000("sixty nought",                       true,  60,  false, 1);
-        assertNumberLessThan1000("a hundred",                          false, 100, false, 2);
-        assertNumberLessThan1000("one, and a hundred",                 true,  100, false, 5);
-        assertNumberLessThan1000("seven hundred and six",              false, 706, false, 4);
-        assertNumberLessThan1000("one hundred and ninety one",         true,  191, false, 5);
-        assertNumberLessThan1000("eight and a hundred and fifteen",    false, 815, false, 6);
-        assertNumberLessThan1000("a a one a a hundred a a eleven a a", true,  111, false, 9);
+        assertNumberLessThan1000("four five",                          T, 4,   F, 1);
+        assertNumberLessThan1000("a two and",                          F, 2,   F, 2);
+        assertNumberLessThan1000("one thirteen",                       T, 1,   F, 1);
+        assertNumberLessThan1000("sixteen eight",                      F, 16,  F, 1);
+        assertNumberLessThan1000("eighteen hundred",                   T, 18,  F, 1);
+        assertNumberLessThan1000("zero hundred",                       F, 0,   F, 1);
+        assertNumberLessThan1000("sixty nought",                       T, 60,  F, 1);
+        assertNumberLessThan1000("a hundred",                          F, 100, F, 2);
+        assertNumberLessThan1000("one, and a hundred",                 T, 100, F, 5);
+        assertNumberLessThan1000("seven hundred and six",              F, 706, F, 4);
+        assertNumberLessThan1000("one hundred and ninety one",         T, 191, F, 5);
+        assertNumberLessThan1000("eight and a hundred and fifteen",    F, 815, F, 6);
+        assertNumberLessThan1000("a a one a a hundred a a eleven a a", T, 111, F, 9);
     }
 
     @Test
     public void testNumberLessThan1000Ordinal() {
-        assertNumberLessThan1000("fifth",                      true,  5,          true,  1);
-        assertNumberLessThan1000("twenty sixth",               true,  26,         true,  2);
-        assertNumberLessThan1000("seventy eighth",             false, 70,         false, 1);
-        assertNumberLessThan1000("fiftieth eighth",            true,  50,         true,  1);
-        assertNumberLessThan1000("one hundred and thirteenth", true,  113,        true,  4);
-        assertNumberLessThan1000("first hundred",              true,  1,          true,  1);
-        assertNumberLessThan1000("seven hundredth ten",        true,  700,        true,  2);
-        assertNumberLessThan1000("nine hundredth",             false, 9,          false, 1);
-        assertNumberLessThan1000("23 th",                      true,  23,         true,  2);
-        assertNumberLessThan1000("620nd",                      true,  620,        true,  2);
-        assertNumberLessThan1000("6st",                        true,  6,          true,  2);
-        assertNumberLessThan1000("8 first",                    true,  8,          false, 1);
-        assertNumberLessThan1000("1st hundred",                true,  1,          true,  2);
-        assertNumberLessThan1000Null("seventh", false);
-        assertNumberLessThan1000Null("96th",    false);
+        assertNumberLessThan1000("fifth",                      T, 5,          T, 1);
+        assertNumberLessThan1000("twenty sixth",               T, 26,         T, 2);
+        assertNumberLessThan1000("seventy eighth",             F, 70,         F, 1);
+        assertNumberLessThan1000("fiftieth eighth",            T, 50,         T, 1);
+        assertNumberLessThan1000("one hundred and thirteenth", T, 113,        T, 4);
+        assertNumberLessThan1000("first hundred",              T, 1,          T, 1);
+        assertNumberLessThan1000("seven hundredth ten",        T, 700,        T, 2);
+        assertNumberLessThan1000("nine hundredth",             F, 9,          F, 1);
+        assertNumberLessThan1000("23 th",                      T, 23,         T, 2);
+        assertNumberLessThan1000("620nd",                      T, 620,        T, 2);
+        assertNumberLessThan1000("6st",                        T, 6,          T, 2);
+        assertNumberLessThan1000("8 first",                    T, 8,          F, 1);
+        assertNumberLessThan1000("1st hundred",                T, 1,          T, 2);
+        assertNumberLessThan1000Null("seventh", F);
+        assertNumberLessThan1000Null("96th",    F);
     }
 
     @Test
     public void testNumberLessThan1000Null() {
-        assertNumberLessThan1000Null("",                  false);
-        assertNumberLessThan1000Null("hello",             true);
-        assertNumberLessThan1000Null("hello how are you", false);
-        assertNumberLessThan1000Null("a hello two and",   true);
-        assertNumberLessThan1000Null("a car and a half,", false);
-        assertNumberLessThan1000Null("a million",         true);
-        assertNumberLessThan1000Null(" twenty",           false);
+        assertNumberLessThan1000Null("",                  F);
+        assertNumberLessThan1000Null("hello",             T);
+        assertNumberLessThan1000Null("hello how are you", F);
+        assertNumberLessThan1000Null("a hello two and",   T);
+        assertNumberLessThan1000Null("a car and a half,", F);
+        assertNumberLessThan1000Null("a million",         T);
+        assertNumberLessThan1000Null(" twenty",           F);
     }
 
     @Test
     public void testNumberGroupShortScale() {
-        assertNumberGroupShortScale("one hundred and twenty million", false, 1000000000, 120000000, false, 5);
-        assertNumberGroupShortScale("three thousand and six",         true,  1000000000, 3000,      false, 2);
-        assertNumberGroupShortScale("a hundred thousand",             false, 1000000,    100000,    false, 3);
-        assertNumberGroupShortScale("hundred 70 thousand",            true,  1000000,    170000,    false, 3);
-        assertNumberGroupShortScale("572 million",                    false, 1000000000, 572000000, false, 2);
-        assertNumberGroupShortScale("3 million",                      true,  1000000000, 3000000,   false, 2);
-        assertNumberGroupShortScale(", one hundred and ninety one",   false, 1000,       191,       false, 6);
+        assertNumberGroupShortScale("one hundred and twenty million", F, 1000000000, 120000000, F, 5);
+        assertNumberGroupShortScale("three thousand and six",         T, 1000000000, 3000,      F, 2);
+        assertNumberGroupShortScale("a hundred thousand",             F, 1000000,    100000,    F, 3);
+        assertNumberGroupShortScale("hundred 70 thousand",            T, 1000000,    170000,    F, 3);
+        assertNumberGroupShortScale("572 million",                    F, 1000000000, 572000000, F, 2);
+        assertNumberGroupShortScale("3 million",                      T, 1000000000, 3000000,   F, 2);
+        assertNumberGroupShortScale(", one hundred and ninety one",   F, 1000,       191,       F, 6);
     }
 
     @Test
     public void testNumberGroupShortScaleOrdinal() {
-        assertNumberGroupShortScale("seven hundred and sixty four millionth", true,  1000000000, 764000000, true,  6);
-        assertNumberGroupShortScale("seven hundred and sixty four millionth", false, 1000000000, 764,       false, 5);
-        assertNumberGroupShortScale("seven hundred and sixty four millionth", false, 1000,       764,       false, 5);
-        assertNumberGroupShortScale("fifth billionth",                        true,  1000000000, 5,         true,  1);
-        assertNumberGroupShortScale("nineteen hundredth",                     true,  1000000000, 19,        false, 1);
-        assertNumberGroupShortScaleNull("seven hundred and sixty four millionth", true,  1000);
-        assertNumberGroupShortScaleNull("twelfth thousandth",                     false, 1000000000);
+        assertNumberGroupShortScale("seven hundred and sixty four millionth", T, 1000000000, 764000000, T, 6);
+        assertNumberGroupShortScale("seven hundred and sixty four millionth", F, 1000000000, 764,       F, 5);
+        assertNumberGroupShortScale("seven hundred and sixty four millionth", F, 1000,       764,       F, 5);
+        assertNumberGroupShortScale("fifth billionth",                        T, 1000000000, 5,         T, 1);
+        assertNumberGroupShortScale("nineteen hundredth",                     T, 1000000000, 19,        F, 1);
+        assertNumberGroupShortScaleNull("seven hundred and sixty four millionth", T, 1000);
+        assertNumberGroupShortScaleNull("twelfth thousandth",                     F, 1000000000);
     }
 
     @Test
     public void testNumberGroupShortScaleNull() {
-        assertNumberGroupShortScaleNull("",                      true,  1000000000);
-        assertNumberGroupShortScaleNull("hello",                 false, 1000000);
-        assertNumberGroupShortScaleNull("hello how are you",     true,  1000);
-        assertNumberGroupShortScaleNull("129000",                false, 1000000000);
-        assertNumberGroupShortScaleNull("5000000",               true,  1000000000);
-        assertNumberGroupShortScaleNull("one hundred and six",   false, 999);
-        assertNumberGroupShortScaleNull("twelve",                true,  0);
-        assertNumberGroupShortScaleNull("seven billion",         false, 1000);
-        assertNumberGroupShortScaleNull("nine thousand and one", true,  1000);
-        assertNumberGroupShortScaleNull("eight million people",  false, 1000000);
-        assertNumberGroupShortScaleNull(" ten ",                 true,  1000000);
+        assertNumberGroupShortScaleNull("",                      T, 1000000000);
+        assertNumberGroupShortScaleNull("hello",                 F, 1000000);
+        assertNumberGroupShortScaleNull("hello how are you",     T, 1000);
+        assertNumberGroupShortScaleNull("129000",                F, 1000000000);
+        assertNumberGroupShortScaleNull("5000000",               T, 1000000000);
+        assertNumberGroupShortScaleNull("one hundred and six",   F, 999);
+        assertNumberGroupShortScaleNull("twelve",                T, 0);
+        assertNumberGroupShortScaleNull("seven billion",         F, 1000);
+        assertNumberGroupShortScaleNull("nine thousand and one", T, 1000);
+        assertNumberGroupShortScaleNull("eight million people",  F, 1000000);
+        assertNumberGroupShortScaleNull(" ten ",                 T, 1000000);
     }
 
     @Test
     public void testNumberShortScale() {
-        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteen", true, 25164007019L, false, 15);
-        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven billion", true, 25164000000L, false, 10);
-        assertNumberShortScale("two thousand, one hundred and ninety one", false, 2191, false, 8);
-        assertNumberShortScale("nine hundred and ten",         true,  910,            false, 4);
-        assertNumberShortScale("two million",                  false, 2000000,        false, 2);
-        assertNumberShortScale("one thousand and ten",         true,  1010,           false, 4);
-        assertNumberShortScale("1234567890123",                false, 1234567890123L, false, 1);
-        assertNumberShortScale("654 and",                      true,  654,            false, 1);
-        assertNumberShortScale("a hundred four,",              false, 104,            false, 3);
-        assertNumberShortScale("nine thousand, three million", true,  9000,           false, 2);
+        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteen", T, 25164007019L, F, 15);
+        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven billion", T, 25164000000L, F, 10);
+        assertNumberShortScale("two thousand, one hundred and ninety one", F, 2191, F, 8);
+        assertNumberShortScale("nine hundred and ten",         T, 910,            F, 4);
+        assertNumberShortScale("two million",                  F, 2000000,        F, 2);
+        assertNumberShortScale("one thousand and ten",         T, 1010,           F, 4);
+        assertNumberShortScale("1234567890123",                F, 1234567890123L, F, 1);
+        assertNumberShortScale("654 and",                      T, 654,            F, 1);
+        assertNumberShortScale("a hundred four,",              F, 104,            F, 3);
+        assertNumberShortScale("nine thousand, three million", T, 9000,           F, 2);
     }
 
     @Test
     public void testNumberShortScaleThousandSeparator() {
-        assertNumberShortScale("23,001",               false, 23001,      false, 3);
-        assertNumberShortScale("a 167,42",             true,  167,        false, 2);
-        assertNumberShortScale("1,234,023,054, hello", false, 1234023054, false, 7);
-        assertNumberShortScale("23,001, a 500",        true,  23001,      false, 3);
-        assertNumberShortScale("5,030,two",            false, 5030,       false, 3);
-        assertNumberShortScale("67,104,23",            true,  67104,      false, 3);
+        assertNumberShortScale("23,001",               F, 23001,      F, 3);
+        assertNumberShortScale("a 167,42",             T, 167,        F, 2);
+        assertNumberShortScale("1,234,023,054, hello", F, 1234023054, F, 7);
+        assertNumberShortScale("23,001, a 500",        T, 23001,      F, 3);
+        assertNumberShortScale("5,030,two",            F, 5030,       F, 3);
+        assertNumberShortScale("67,104,23",            T, 67104,      F, 3);
     }
 
     @Test
     public void testNumberShortScaleYear() {
-        assertNumberShortScale("two twenty-one",                 true,  2,    false, 1);
-        assertNumberShortScale("nineteen 745",                   false, 19,   false, 1);
-        assertNumberShortScale("ten 21",                         true,  1021, false, 2);
-        assertNumberShortScale("nineteen oh 6 and two",          false, 1906, false, 3);
-        assertNumberShortScale("twenty-nought-oh",               true,  2000, false, 5);
-        assertNumberShortScale("eleven zero 0",                  false, 1100, false, 3);
-        assertNumberShortScale("seventeen 0 0",                  true,  1700, false, 3);
-        assertNumberShortScale("sixty-four-hundred",             false, 6400, false, 5);
-        assertNumberShortScale("two hundred and twelve hundred", true,  212,  false, 4);
-        assertNumberShortScale("58 hundred",                     false, 5800, false, 2);
-        assertNumberShortScale("nineteen hundred",               true,  1900, false, 2);
-        assertNumberShortScale("eighteen 1",                     false, 18,   false, 1);
+        assertNumberShortScale("two twenty-one",                 T, 2,    F, 1);
+        assertNumberShortScale("nineteen 745",                   F, 19,   F, 1);
+        assertNumberShortScale("ten 21",                         T, 1021, F, 2);
+        assertNumberShortScale("nineteen oh 6 and two",          F, 1906, F, 3);
+        assertNumberShortScale("twenty-nought-oh",               T, 2000, F, 5);
+        assertNumberShortScale("eleven zero 0",                  F, 1100, F, 3);
+        assertNumberShortScale("seventeen 0 0",                  T, 1700, F, 3);
+        assertNumberShortScale("sixty-four-hundred",             F, 6400, F, 5);
+        assertNumberShortScale("two hundred and twelve hundred", T, 212,  F, 4);
+        assertNumberShortScale("58 hundred",                     F, 5800, F, 2);
+        assertNumberShortScale("nineteen hundred",               T, 1900, F, 2);
+        assertNumberShortScale("eighteen 1",                     F, 18,   F, 1);
     }
 
     @Test
     public void testNumberShortScaleOrdinal() {
-        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteenth", true,  25164007019L,  true,  15);
-        assertNumberShortScale("73 billion, twenty three millionth, seven thousand and nineteen",                   true,  73023000000L,  true,  6);
-        assertNumberShortScale("one hundred and 6 billion, twenty one million, one billionth",                      true,  106021000000L, false, 9);
-        assertNumberShortScale("one hundred and 6 billion, twenty one million, one thousandth",                     false, 106021000001L, false, 11);
-        assertNumberShortScale("nineteen hundredth",    true,  1900,     true,  2);
-        assertNumberShortScale("twenty oh first",       true,  2001,     true,  3);
-        assertNumberShortScale("twenty oh first",       false, 20,       false, 1);
-        assertNumberShortScale("nineteen 09th",         true,  1909,     true,  3);
-        assertNumberShortScale("nineteen 09th",         false, 19,       false, 1);
-        assertNumberShortScale("eleven sixteenth",      true,  1116,     true,  2);
-        assertNumberShortScale("eleven sixteenth",      false, 11,       false, 1);
-        assertNumberShortScale("eighteen twenty first", true,  1821,     true,  3);
-        assertNumberShortScale("eighteen twenty first", false, 1820,     false, 2);
-        assertNumberShortScale("thirteen sixtieth",     true,  1360,     true,  2);
-        assertNumberShortScale("thirteen sixtieth",     false, 13,       false, 1);
-        assertNumberShortScale("sixteenth hundred",     true,  16,       true,  1);
-        assertNumberShortScale("sixteenth oh four",     true,  16,       true,  1);
-        assertNumberShortScale("543789th",              true,  543789,   true,  2);
-        assertNumberShortScale("75,483,543 rd",         true,  75483543, true,  6);
-        assertNumberShortScaleNull("2938th",               false);
-        assertNumberShortScaleNull("102,321th",            false);
-        assertNumberShortScaleNull("thirteenth hundredth", false);
+        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteenth", T, 25164007019L,  T, 15);
+        assertNumberShortScale("73 billion, twenty three millionth, seven thousand and nineteen",                   T, 73023000000L,  T, 6);
+        assertNumberShortScale("one hundred and 6 billion, twenty one million, one billionth",                      T, 106021000000L, F, 9);
+        assertNumberShortScale("one hundred and 6 billion, twenty one million, one thousandth",                     F, 106021000001L, F, 11);
+        assertNumberShortScale("nineteen hundredth",    T, 1900,     T, 2);
+        assertNumberShortScale("twenty oh first",       T, 2001,     T, 3);
+        assertNumberShortScale("twenty oh first",       F, 20,       F, 1);
+        assertNumberShortScale("nineteen 09th",         T, 1909,     T, 3);
+        assertNumberShortScale("nineteen 09th",         F, 19,       F, 1);
+        assertNumberShortScale("eleven sixteenth",      T, 1116,     T, 2);
+        assertNumberShortScale("eleven sixteenth",      F, 11,       F, 1);
+        assertNumberShortScale("eighteen twenty first", T, 1821,     T, 3);
+        assertNumberShortScale("eighteen twenty first", F, 1820,     F, 2);
+        assertNumberShortScale("thirteen sixtieth",     T, 1360,     T, 2);
+        assertNumberShortScale("thirteen sixtieth",     F, 13,       F, 1);
+        assertNumberShortScale("sixteenth hundred",     T, 16,       T, 1);
+        assertNumberShortScale("sixteenth oh four",     T, 16,       T, 1);
+        assertNumberShortScale("543789th",              T, 543789,   T, 2);
+        assertNumberShortScale("75,483,543 rd",         T, 75483543, T, 6);
+        assertNumberShortScaleNull("2938th",               F);
+        assertNumberShortScaleNull("102,321th",            F);
+        assertNumberShortScaleNull("thirteenth hundredth", F);
     }
 
     private int tokensInFormattedString(final String formatted) {
@@ -293,12 +295,12 @@ public class EnglishNumberParserTest {
             // not ordinal
             String formatted = npf.pronounceNumber(i).places(0).get();
             int tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, true, i, false, tokensInFormatted);
+            assertNumberShortScale(formatted, T, i, F, tokensInFormatted);
 
             // ordinal
-            formatted = npf.pronounceNumber(i).places(0).ordinal(true).get();
+            formatted = npf.pronounceNumber(i).places(0).ordinal(T).get();
             tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, true, i, true, tokensInFormatted);
+            assertNumberShortScale(formatted, T, i, T, tokensInFormatted);
         }
     }
 
@@ -310,113 +312,113 @@ public class EnglishNumberParserTest {
             // not ordinal
             String formatted = npf.pronounceNumber(i).places(0).get();
             int tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, true, i, false, tokensInFormatted);
+            assertNumberShortScale(formatted, T, i, F, tokensInFormatted);
 
             // ordinal
-            formatted = npf.pronounceNumber(i).places(0).ordinal(true).get();
+            formatted = npf.pronounceNumber(i).places(0).ordinal(T).get();
             tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, true, i, true, tokensInFormatted);
+            assertNumberShortScale(formatted, T, i, T, tokensInFormatted);
         }
     }
 
     @Test
     public void testNumberShortScaleNull() {
-        assertNumberShortScaleNull("",                    true);
-        assertNumberShortScaleNull("a hello how are you", false);
-        assertNumberShortScaleNull(", and",               true);
-        assertNumberShortScaleNull("oh two",              false);
-        assertNumberShortScaleNull(", 123485 and",        true);
-        assertNumberShortScaleNull("and 123",             false);
-        assertNumberShortScaleNull(" one thousand ",      true);
+        assertNumberShortScaleNull("",                    T);
+        assertNumberShortScaleNull("a hello how are you", F);
+        assertNumberShortScaleNull(", and",               T);
+        assertNumberShortScaleNull("oh two",              F);
+        assertNumberShortScaleNull(", 123485 and",        T);
+        assertNumberShortScaleNull("and 123",             F);
+        assertNumberShortScaleNull(" one thousand ",      T);
     }
 
     @Test
     public void testNumberPoint() {
-        assertNumberPoint("one thousand, five hundred and seventy four point nine one two oh nought o zero", true, 1574.912, false, 16);
-        assertNumberPoint("twenty three point nought 1 oh 2 three, five hundred", true, 23.01023, false, 8);
-        assertNumberPoint("fifteen-oh-nine point eight four five", false, 1509.845, false, 9);
-        assertNumberPoint("twenty three thousand point sixteen", true, 23000, false, 3);
-        assertNumberPoint("3645.7183",                  false, 3645.7183, false, 3);
-        assertNumberPoint("twenty five.2",              true,  25.2,      false, 4);
-        assertNumberPoint("eighty point 6745",          false, 80.6745,   false, 3);
-        assertNumberPoint("4 point 67 45",              true,  4.67,      false, 3);
-        assertNumberPoint("4000 point 6 63",            false, 4000.6,    false, 3);
-        assertNumberPoint("74567 point six",            true,  74567.6,   false, 3);
-        assertNumberPoint("nought . 6 8 2 zero twenty", false, 0.682,     false, 6);
-        assertNumberPoint("74567 point six",            true,  74567.6,   false, 3);
-        assertNumberPoint("point 800",                  false, .8,        false, 2);
-        assertNumberPoint("one point twenty",           true,  1,         false, 1);
+        assertNumberPoint("one thousand, five hundred and seventy four point nine one two oh nought o zero", T, 1574.912, F, 16);
+        assertNumberPoint("twenty three point nought 1 oh 2 three, five hundred", T, 23.01023, F, 8);
+        assertNumberPoint("fifteen-oh-nine point eight four five", F, 1509.845, F, 9);
+        assertNumberPoint("twenty three thousand point sixteen", T, 23000, F, 3);
+        assertNumberPoint("3645.7183",                  F, 3645.7183, F, 3);
+        assertNumberPoint("twenty five.2",              T, 25.2,      F, 4);
+        assertNumberPoint("eighty point 6745",          F, 80.6745,   F, 3);
+        assertNumberPoint("4 point 67 45",              T, 4.67,      F, 3);
+        assertNumberPoint("4000 point 6 63",            F, 4000.6,    F, 3);
+        assertNumberPoint("74567 point six",            T, 74567.6,   F, 3);
+        assertNumberPoint("nought . 6 8 2 zero twenty", F, 0.682,     F, 6);
+        assertNumberPoint("74567 point six",            T, 74567.6,   F, 3);
+        assertNumberPoint("point 800",                  F, .8,        F, 2);
+        assertNumberPoint("one point twenty",           T, 1,         F, 1);
     }
 
     @Test
     public void testNumberPointFraction() {
-        assertNumberPoint("twenty three million, one hundred thousand and sixty four over sixteen", false, 1443754, false, 12);
-        assertNumberPoint("sixteen over twenty three million, one hundred thousand and sixty four", true,  1.0 / 1443754.0, false, 12);
-        assertNumberPoint("8 thousand and, 192 divided by 4 thousand 96 eight", false, 2, false, 10);
-        assertNumberPoint("ninety eight hundred / one hundred", true,  98, false, 6);
-        assertNumberPoint("twenty four over sixty five", true,  24.0 / 65.0,       false, 5);
-        assertNumberPoint("one over five and a half",    false, 1.0 / 5.0,         false, 3);
-        assertNumberPoint("twenty six divided by seven", true,  26.0 / 7.0,        false, 5);
-        assertNumberPoint("47328 over 12093",            false, 47328.0 / 12093.0, false, 3);
-        assertNumberPoint("five / six nine two",         true,  5.0 / 6.0,         false, 3);
-        assertNumberPoint("nine over, two",              false, 9,                 false, 1);
-        assertNumberPoint("eight divided five",          true,  8.0 / 5.0,         false, 3);
-        assertNumberPoint("six by nineteen",             false, 6,                 false, 1);
+        assertNumberPoint("twenty three million, one hundred thousand and sixty four over sixteen", F, 1443754, F, 12);
+        assertNumberPoint("sixteen over twenty three million, one hundred thousand and sixty four", T, 1.0 / 1443754.0, F, 12);
+        assertNumberPoint("8 thousand and, 192 divided by 4 thousand 96 eight", F, 2, F, 10);
+        assertNumberPoint("ninety eight hundred / one hundred", T, 98, F, 6);
+        assertNumberPoint("twenty four over sixty five", T, 24.0 / 65.0,       F, 5);
+        assertNumberPoint("one over five and a half",    F, 1.0 / 5.0,         F, 3);
+        assertNumberPoint("twenty six divided by seven", T, 26.0 / 7.0,        F, 5);
+        assertNumberPoint("47328 over 12093",            F, 47328.0 / 12093.0, F, 3);
+        assertNumberPoint("five / six nine two",         T, 5.0 / 6.0,         F, 3);
+        assertNumberPoint("nine over, two",              F, 9,                 F, 1);
+        assertNumberPoint("eight divided five",          T, 8.0 / 5.0,         F, 3);
+        assertNumberPoint("six by nineteen",             F, 6,                 F, 1);
     }
 
     @Test
     public void testNumberPointOrdinal() {
-        assertNumberPoint("fifth point six",                     true,  5,     true,  1);
-        assertNumberPoint("3 thousand 7 hundred tenth over six", true,  3710,  true,  5);
-        assertNumberPoint("3 thousand 7 hundred tenth over six", false, 3700,  false, 4);
-        assertNumberPoint("eight point one second",              false, 8.1,   false, 3);
-        assertNumberPoint("eight point one third",               true,  8.1,   false, 3);
-        assertNumberPoint("six over fifth",                      true,  6,     false, 1);
-        assertNumberPoint("nine over thirty ninth",              true,  0.3,   false, 3);
-        assertNumberPoint("nine over thirty ninth",              false, 0.3,   false, 3);
-        assertNumberPoint("thirteen point 1 2 3 th",             true,  13.12, false, 4);
+        assertNumberPoint("fifth point six",                     T, 5,     T, 1);
+        assertNumberPoint("3 thousand 7 hundred tenth over six", T, 3710,  T, 5);
+        assertNumberPoint("3 thousand 7 hundred tenth over six", F, 3700,  F, 4);
+        assertNumberPoint("eight point one second",              F, 8.1,   F, 3);
+        assertNumberPoint("eight point one third",               T, 8.1,   F, 3);
+        assertNumberPoint("six over fifth",                      T, 6,     F, 1);
+        assertNumberPoint("nine over thirty ninth",              T, 0.3,   F, 3);
+        assertNumberPoint("nine over thirty ninth",              F, 0.3,   F, 3);
+        assertNumberPoint("thirteen point 1 2 3 th",             T, 13.12, F, 4);
     }
 
     @Test
     public void testNumberPointNull() {
-        assertNumberPointNull("",                     false);
-        assertNumberPointNull("hello world",          true);
-        assertNumberPointNull("point",                false);
-        assertNumberPointNull("point twenty",         true);
-        assertNumberPointNull("point, 1 2 3 4",       false);
-        assertNumberPointNull(". and six four eight", true);
-        assertNumberPointNull("over two",             false);
-        assertNumberPointNull(" one divided by five", true);
+        assertNumberPointNull("",                     F);
+        assertNumberPointNull("hello world",          T);
+        assertNumberPointNull("point",                F);
+        assertNumberPointNull("point twenty",         T);
+        assertNumberPointNull("point, 1 2 3 4",       F);
+        assertNumberPointNull(". and six four eight", T);
+        assertNumberPointNull("over two",             F);
+        assertNumberPointNull(" one divided by five", T);
     }
 
     @Test
     public void testNumberSignPoint() {
-        assertNumberSignPoint("minus seventy six thousand, three hundred and fifty six over 23", true,  -76356.0 / 23.0, false, 12);
-        assertNumberSignPoint("minus twelve",        false, -12,      false, 2);
-        assertNumberSignPoint("plus million",        true,  1000000,  false, 2);
-        assertNumberSignPoint("-1843",               false, -1843,    false, 2);
-        assertNumberSignPoint("+573,976",            true,  573976,   false, 4);
-        assertNumberSignPoint("minus 42903.5",       false, -42903.5, false, 4);
-        assertNumberSignPoint("minus point oh four", true,  -.04,     false, 4);
+        assertNumberSignPoint("minus seventy six thousand, three hundred and fifty six over 23", T, -76356.0 / 23.0, F, 12);
+        assertNumberSignPoint("minus twelve",        F, -12,      F, 2);
+        assertNumberSignPoint("plus million",        T, 1000000,  F, 2);
+        assertNumberSignPoint("-1843",               F, -1843,    F, 2);
+        assertNumberSignPoint("+573,976",            T, 573976,   F, 4);
+        assertNumberSignPoint("minus 42903.5",       F, -42903.5, F, 4);
+        assertNumberSignPoint("minus point oh four", T, -.04,     F, 4);
     }
 
     @Test
     public void testNumberSignPointOrdinal() {
-        assertNumberSignPoint("minus twelfth",      true,  -12,      true,  2);
-        assertNumberSignPoint("-one hundredth",     false, -1,       false, 2);
-        assertNumberSignPoint("plus millionth ten", true,  1000000,  true,  2);
-        assertNumberSignPoint("-1843th",            true,  -1843,    true,  3);
-        assertNumberSignPoint("+573,976rd",         true,  573976,   true,  5);
-        assertNumberSignPointNull("minus first", false);
-        assertNumberSignPointNull("-1843th",     false);
+        assertNumberSignPoint("minus twelfth",      T, -12,      T, 2);
+        assertNumberSignPoint("-one hundredth",     F, -1,       F, 2);
+        assertNumberSignPoint("plus millionth ten", T, 1000000,  T, 2);
+        assertNumberSignPoint("-1843th",            T, -1843,    T, 3);
+        assertNumberSignPoint("+573,976rd",         T, 573976,   T, 5);
+        assertNumberSignPointNull("minus first", F);
+        assertNumberSignPointNull("-1843th",     F);
     }
 
     @Test
     public void testNumberSignPointNull() {
-        assertNumberSignPointNull("",                                false);
-        assertNumberSignPointNull("hello how are you",               true);
-        assertNumberSignPointNull("minus minus 1 hundred and sixty", false);
-        assertNumberSignPointNull(" plus million",                   true);
-        assertNumberSignPointNull(" +- 5",                           false);
+        assertNumberSignPointNull("",                                F);
+        assertNumberSignPointNull("hello how are you",               T);
+        assertNumberSignPointNull("minus minus 1 hundred and sixty", F);
+        assertNumberSignPointNull(" plus million",                   T);
+        assertNumberSignPointNull(" +- 5",                           F);
     }
 }
