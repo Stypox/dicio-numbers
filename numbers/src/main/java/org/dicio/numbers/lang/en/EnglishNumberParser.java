@@ -8,9 +8,11 @@ import org.dicio.numbers.util.Number;
 public class EnglishNumberParser {
 
     private final TokenStream ts;
+    private final boolean shortScale;
 
-    EnglishNumberParser(final TokenStream tokenStream) {
+    EnglishNumberParser(final TokenStream tokenStream, final boolean shortScale) {
         this.ts = tokenStream;
+        this.shortScale = shortScale;
     }
 
     Number numberSignPoint(final boolean allowOrdinal) {
@@ -105,7 +107,13 @@ public class EnglishNumberParser {
             return null; // do not eat ignored words at the beginning, expect a (see e.g. a hundred)
         }
 
-        Number n = numberShortScale(allowOrdinal);
+        Number n;
+        if (shortScale) {
+            n = numberShortScale(allowOrdinal);
+        } else {
+            n = null; // TODO long scale
+        }
+
         if (n == null) {
             return numberBigRaw(allowOrdinal); // try to parse big raw numbers (>=1000), e.g. 1207
         } else if (n.isOrdinal()) {
