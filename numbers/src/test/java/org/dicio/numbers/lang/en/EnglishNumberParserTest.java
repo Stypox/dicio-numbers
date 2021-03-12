@@ -350,47 +350,47 @@ public class EnglishNumberParserTest {
     @Test
     public void testNumberPoint() {
         assertNumberPoint("one thousand, five hundred and seventy four point nine one two oh nought o zero", T, T, 1574.912, F, 16);
-        assertNumberPoint("twenty three point nought 1 oh 2 three, five hundred", T, T, 23.01023, F, 8);
-        assertNumberPoint("fifteen-oh-nine point eight four five", T, F, 1509.845, F, 9);
+        assertNumberPoint("twenty three point nought 1 oh 2 three, five hundred", F, T, 23.01023, F, 8);
+        assertNumberPoint("fifteen-oh-nine point eight four five", F, F, 1509.845, F, 9);
         assertNumberPoint("twenty three thousand point sixteen", T, T, 23000, F, 3);
         assertNumberPoint("3645.7183",                  T, F, 3645.7183, F, 3);
-        assertNumberPoint("twenty five.2",              T, T, 25.2,      F, 4);
-        assertNumberPoint("eighty point 6745",          T, F, 80.6745,   F, 3);
+        assertNumberPoint("twenty five.2",              F, T, 25.2,      F, 4);
+        assertNumberPoint("eighty point 6745",          F, F, 80.6745,   F, 3);
         assertNumberPoint("4 point 67 45",              T, T, 4.67,      F, 3);
         assertNumberPoint("4000 point 6 63",            T, F, 4000.6,    F, 3);
-        assertNumberPoint("74567 point six",            T, T, 74567.6,   F, 3);
-        assertNumberPoint("nought . 6 8 2 zero twenty", T, F, 0.682,     F, 6);
+        assertNumberPoint("74567 point six",            F, T, 74567.6,   F, 3);
+        assertNumberPoint("nought . 6 8 2 zero twenty", F, F, 0.682,     F, 6);
         assertNumberPoint("74567 point six",            T, T, 74567.6,   F, 3);
         assertNumberPoint("point 800",                  T, F, .8,        F, 2);
-        assertNumberPoint("one point twenty",           T, T, 1,         F, 1);
+        assertNumberPoint("one point twenty",           F, T, 1,         F, 1);
     }
 
     @Test
     public void testNumberPointFraction() {
-        assertNumberPoint("twenty three million, one hundred thousand and sixty four over sixteen", T, F, 1443754, F, 12);
+        assertNumberPoint("twenty three million, one hundred thousand and sixty four over sixteen", F, F, 1443754, F, 12);
         assertNumberPoint("sixteen over twenty three million, one hundred thousand and sixty four", T, T, 1.0 / 1443754.0, F, 12);
         assertNumberPoint("8 thousand and, 192 divided by 4 thousand 96 eight", T, F, 2, F, 10);
-        assertNumberPoint("ninety eight hundred / one hundred", T, T, 98, F, 6);
-        assertNumberPoint("twenty four over sixty five", T, T, 24.0 / 65.0,       F, 5);
+        assertNumberPoint("ninety eight hundred / one hundred", F, T, 98, F, 6);
+        assertNumberPoint("twenty four over sixty five", F, T, 24.0 / 65.0,       F, 5);
         assertNumberPoint("one over five and a half",    T, F, 1.0 / 5.0,         F, 3);
         assertNumberPoint("twenty six divided by seven", T, T, 26.0 / 7.0,        F, 5);
-        assertNumberPoint("47328 over 12093",            T, F, 47328.0 / 12093.0, F, 3);
-        assertNumberPoint("five / six nine two",         T, T, 5.0 / 6.0,         F, 3);
+        assertNumberPoint("47328 over 12093",            F, F, 47328.0 / 12093.0, F, 3);
+        assertNumberPoint("five / six nine two",         F, T, 5.0 / 6.0,         F, 3);
         assertNumberPoint("nine over, two",              T, F, 9,                 F, 1);
         assertNumberPoint("eight divided five",          T, T, 8.0 / 5.0,         F, 3);
-        assertNumberPoint("six by nineteen",             T, F, 6,                 F, 1);
+        assertNumberPoint("six by nineteen",             F, F, 6,                 F, 1);
     }
 
     @Test
     public void testNumberPointOrdinal() {
         assertNumberPoint("fifth point six",                     T, T, 5,     T, 1);
-        assertNumberPoint("3 thousand 7 hundred tenth over six", T, T, 3710,  T, 5);
+        assertNumberPoint("3 thousand 7 hundred tenth over six", F, T, 3710,  T, 5);
         assertNumberPoint("3 thousand 7 hundred tenth over six", T, F, 3700,  F, 4);
-        assertNumberPoint("eight point one second",              T, F, 8.1,   F, 3);
+        assertNumberPoint("eight point one second",              F, F, 8.1,   F, 3);
         assertNumberPoint("eight point one third",               T, T, 8.1,   F, 3);
-        assertNumberPoint("six over fifth",                      T, T, 6,     F, 1);
+        assertNumberPoint("six over fifth",                      F, T, 6,     F, 1);
         assertNumberPoint("nine over thirty ninth",              T, T, 0.3,   F, 3);
-        assertNumberPoint("nine over thirty ninth",              T, F, 0.3,   F, 3);
+        assertNumberPoint("nine over thirty ninth",              F, F, 0.3,   F, 3);
         assertNumberPoint("thirteen point 1 2 3 th",             T, T, 13.12, F, 4);
     }
 
@@ -410,18 +410,18 @@ public class EnglishNumberParserTest {
     public void testNumberSignPoint() {
         assertNumberSignPoint("minus seventy six thousand, three hundred and fifty six over 23", T, T, -76356.0 / 23.0, F, 12);
         assertNumberSignPoint("minus twelve",        T, F, -12,      F, 2);
-        assertNumberSignPoint("plus million",        T, T, 1000000,  F, 2);
-        assertNumberSignPoint("-1843",               T, F, -1843,    F, 2);
+        assertNumberSignPoint("plus million",        F, T, 1000000,  F, 2);
+        assertNumberSignPoint("-1843",               F, F, -1843,    F, 2);
         assertNumberSignPoint("+573,976",            T, T, 573976,   F, 4);
         assertNumberSignPoint("minus 42903.5",       T, F, -42903.5, F, 4);
-        assertNumberSignPoint("minus point oh four", T, T, -.04,     F, 4);
+        assertNumberSignPoint("minus point oh four", F, T, -.04,     F, 4);
     }
 
     @Test
     public void testNumberSignPointOrdinal() {
         assertNumberSignPoint("minus twelfth",      T, T, -12,      T, 2);
-        assertNumberSignPoint("-one hundredth",     T, F, -1,       F, 2);
-        assertNumberSignPoint("plus millionth ten", T, T, 1000000,  T, 2);
+        assertNumberSignPoint("-one hundredth",     F, F, -1,       F, 2);
+        assertNumberSignPoint("plus millionth ten", F, T, 1000000,  T, 2);
         assertNumberSignPoint("-1843th",            T, T, -1843,    T, 3);
         assertNumberSignPoint("+573,976rd",         T, T, 573976,   T, 5);
         assertNumberSignPointNull("minus first", F);
