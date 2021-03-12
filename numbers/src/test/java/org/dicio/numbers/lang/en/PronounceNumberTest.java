@@ -170,40 +170,40 @@ public class PronounceNumberTest {
     }
 
     @Test
-    public void ordinals() {
+    public void ordinal() {
         // small numbers
-        assertEquals("first", pf.pronounceNumber(1).ordinals(true).get());
-        assertEquals("tenth", pf.pronounceNumber(10).ordinals(true).get());
-        assertEquals("fifteenth", pf.pronounceNumber(15).ordinals(true).get());
-        assertEquals("twentieth", pf.pronounceNumber(20).ordinals(true).get());
-        assertEquals("twenty seventh", pf.pronounceNumber(27).ordinals(true).get());
-        assertEquals("thirtieth", pf.pronounceNumber(30).ordinals(true).get());
-        assertEquals("thirty third", pf.pronounceNumber(33).ordinals(true).get());
-        assertEquals("hundredth", pf.pronounceNumber(100).ordinals(true).get());
-        assertEquals("thousandth", pf.pronounceNumber(1000).ordinals(true).get());
-        assertEquals("ten thousandth", pf.pronounceNumber(10000).ordinals(true).get());
-        assertEquals("two hundredth", pf.pronounceNumber(200).ordinals(true).get());
-        assertEquals("eighteen thousand, six hundred and ninety first", pf.pronounceNumber(18691).ordinals(true).get());
-        assertEquals("one thousand, five hundred and sixty seventh", pf.pronounceNumber(1567).ordinals(true).get());
+        assertEquals("first", pf.pronounceNumber(1).ordinal(true).get());
+        assertEquals("tenth", pf.pronounceNumber(10).ordinal(true).get());
+        assertEquals("fifteenth", pf.pronounceNumber(15).ordinal(true).get());
+        assertEquals("twentieth", pf.pronounceNumber(20).ordinal(true).get());
+        assertEquals("twenty seventh", pf.pronounceNumber(27).ordinal(true).get());
+        assertEquals("thirtieth", pf.pronounceNumber(30).ordinal(true).get());
+        assertEquals("thirty third", pf.pronounceNumber(33).ordinal(true).get());
+        assertEquals("hundredth", pf.pronounceNumber(100).ordinal(true).get());
+        assertEquals("thousandth", pf.pronounceNumber(1000).ordinal(true).get());
+        assertEquals("ten thousandth", pf.pronounceNumber(10000).ordinal(true).get());
+        assertEquals("two hundredth", pf.pronounceNumber(200).ordinal(true).get());
+        assertEquals("eighteen thousand, six hundred and ninety first", pf.pronounceNumber(18691).ordinal(true).get());
+        assertEquals("one thousand, five hundred and sixty seventh", pf.pronounceNumber(1567).ordinal(true).get());
 
         // big numbers
-        assertEquals("eighteen millionth", pf.pronounceNumber(18000000).ordinals(true).get());
-        assertEquals("eighteen million, hundredth", pf.pronounceNumber(18000100).ordinals(true).get());
-        assertEquals("one hundred and twenty seven billionth", pf.pronounceNumber(127000000000.0).ordinals(true).shortScale(true).get());
-        assertEquals("two hundred and one thousand millionth", pf.pronounceNumber(201000000000.0).ordinals(true).shortScale(false).get());
-        assertEquals("nine hundred and thirteen billion, eighty million, six hundred thousand, sixty fourth", pf.pronounceNumber(913080600064.0).ordinals(true).shortScale(true).get());
-        assertEquals("nine hundred and thirteen thousand eighty million, six hundred thousand, sixty fourth", pf.pronounceNumber(913080600064.0).ordinals(true).shortScale(false).get());
-        assertEquals("one trillion, two millionth", pf.pronounceNumber(1000002000000.0).ordinals(true).shortScale(true).get());
-        assertEquals("one billion, two millionth", pf.pronounceNumber(1000002000000.0).ordinals(true).shortScale(false).get());
-        assertEquals("four trillion, millionth", pf.pronounceNumber(4000001000000.0).ordinals(true).shortScale(true).get());
-        assertEquals("four billion, millionth", pf.pronounceNumber(4000001000000.0).ordinals(true).shortScale(false).get());
+        assertEquals("eighteen millionth", pf.pronounceNumber(18000000).ordinal(true).get());
+        assertEquals("eighteen million, hundredth", pf.pronounceNumber(18000100).ordinal(true).get());
+        assertEquals("one hundred and twenty seven billionth", pf.pronounceNumber(127000000000.0).ordinal(true).shortScale(true).get());
+        assertEquals("two hundred and one thousand millionth", pf.pronounceNumber(201000000000.0).ordinal(true).shortScale(false).get());
+        assertEquals("nine hundred and thirteen billion, eighty million, six hundred thousand, sixty fourth", pf.pronounceNumber(913080600064.0).ordinal(true).shortScale(true).get());
+        assertEquals("nine hundred and thirteen thousand eighty million, six hundred thousand, sixty fourth", pf.pronounceNumber(913080600064.0).ordinal(true).shortScale(false).get());
+        assertEquals("one trillion, two millionth", pf.pronounceNumber(1000002000000.0).ordinal(true).shortScale(true).get());
+        assertEquals("one billion, two millionth", pf.pronounceNumber(1000002000000.0).ordinal(true).shortScale(false).get());
+        assertEquals("four trillion, millionth", pf.pronounceNumber(4000001000000.0).ordinal(true).shortScale(true).get());
+        assertEquals("four billion, millionth", pf.pronounceNumber(4000001000000.0).ordinal(true).shortScale(false).get());
 
-        // decimal numbers and scientific notation: the behaviour should be the same as with ordinals=false
-        assertEquals("two point seven eight", pf.pronounceNumber(2.78).ordinals(true).get());
-        assertEquals("third", pf.pronounceNumber(2.78).places(0).ordinals(true).get());
-        assertEquals("nineteenth", pf.pronounceNumber(19.004).ordinals(true).get());
-        assertEquals("eight hundred and thirty million, four hundred and thirty eight thousand, ninety two point one eight three", pf.pronounceNumber(830438092.1829).places(3).ordinals(true).get());
-        assertEquals("two point five four times ten to the power of six", pf.pronounceNumber(2.54e6).ordinals(true).scientific(true).get());
+        // decimal numbers and scientific notation: the behaviour should be the same as with ordinal=false
+        assertEquals("two point seven eight", pf.pronounceNumber(2.78).ordinal(true).get());
+        assertEquals("third", pf.pronounceNumber(2.78).places(0).ordinal(true).get());
+        assertEquals("nineteenth", pf.pronounceNumber(19.004).ordinal(true).get());
+        assertEquals("eight hundred and thirty million, four hundred and thirty eight thousand, ninety two point one eight three", pf.pronounceNumber(830438092.1829).places(3).ordinal(true).get());
+        assertEquals("two point five four times ten to the power of six", pf.pronounceNumber(2.54e6).ordinal(true).scientific(true).get());
     }
 
     @Test

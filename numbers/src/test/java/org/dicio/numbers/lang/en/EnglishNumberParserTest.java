@@ -294,7 +294,7 @@ public class EnglishNumberParserTest {
             assertNumberShortScale(formatted, true, i, false, tokensInFormatted);
 
             // ordinal
-            formatted = npf.pronounceNumber(i).places(0).ordinals(true).get();
+            formatted = npf.pronounceNumber(i).places(0).ordinal(true).get();
             tokensInFormatted = tokensInFormattedString(formatted);
             assertNumberShortScale(formatted, true, i, true, tokensInFormatted);
         }
@@ -311,7 +311,7 @@ public class EnglishNumberParserTest {
             assertNumberShortScale(formatted, true, i, false, tokensInFormatted);
 
             // ordinal
-            formatted = npf.pronounceNumber(i).places(0).ordinals(true).get();
+            formatted = npf.pronounceNumber(i).places(0).ordinal(true).get();
             tokensInFormatted = tokensInFormattedString(formatted);
             assertNumberShortScale(formatted, true, i, true, tokensInFormatted);
         }

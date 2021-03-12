@@ -11,7 +11,7 @@ public class PronounceNumberParameters {
     private int places = 2;
     private boolean shortScale = true;
     private boolean scientific = false;
-    private boolean ordinals = false;
+    private boolean ordinal = false;
 
     public PronounceNumberParameters(final NumberFormatter numberFormatter, final double number) {
         this.numberFormatter = numberFormatter;
@@ -49,12 +49,12 @@ public class PronounceNumberParameters {
     }
 
     /**
-     * @param ordinals if true pronounce in the ordinal form (e.g. "first" instead of "one" for
+     * @param ordinal if true pronounce in the ordinal form (e.g. "first" instead of "one" for
      *                 English). The default is false.
      * @return this
      */
-    public PronounceNumberParameters ordinals(final boolean ordinals) {
-        this.ordinals = ordinals;
+    public PronounceNumberParameters ordinal(final boolean ordinal) {
+        this.ordinal = ordinal;
         return this;
     }
 
@@ -65,6 +65,6 @@ public class PronounceNumberParameters {
      * @return the formatted number as a string
      */
     public String get() {
-        return numberFormatter.pronounceNumber(number, places, shortScale, scientific, ordinals);
+        return numberFormatter.pronounceNumber(number, places, shortScale, scientific, ordinal);
     }
 }

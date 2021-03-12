@@ -162,7 +162,7 @@ public class EnglishFormatter extends NumberFormatter {
                                   final int places,
                                   final boolean shortScale,
                                   final boolean scientific,
-                                  final boolean ordinals) {
+                                  final boolean ordinal) {
 
         if (number == Double.POSITIVE_INFINITY) {
             return "infinity";
@@ -207,7 +207,7 @@ public class EnglishFormatter extends NumberFormatter {
         // if no decimal places to be printed, numberLong should be the rounded number
         final long numberLong = (long) number + (number % 1 >= 0.5 && numberIsWhole ? 1 : 0);
 
-        if (!ordinals && numberIsWhole && numberLong > 1000 && numberLong < 2000) {
+        if (!ordinal && numberIsWhole && numberLong > 1000 && numberLong < 2000) {
             // deal with 4 digits that can be said like a date, i.e. 1972 => nineteen seventy two
 
             result.append(NUMBER_NAMES.get(numberLong / 100));
@@ -232,14 +232,14 @@ public class EnglishFormatter extends NumberFormatter {
             return result.toString();
         }
 
-        if (!ordinals && NUMBER_NAMES.containsKey(numberLong)) {
+        if (!ordinal && NUMBER_NAMES.containsKey(numberLong)) {
             if (number > 90) {
                 result.append("one ");
             }
             result.append(NUMBER_NAMES.get(numberLong));
 
         } else if (shortScale) {
-            boolean ordi = ordinals && numberIsWhole; // not ordinals if not whole
+            boolean ordi = ordinal && numberIsWhole; // not ordinal if not whole
             final List<Long> groups = Utils.splitByModulus(numberLong, 1000);
             final List<String> groupNames = new ArrayList<>();
             for (int i = 0; i < groups.size(); ++i) {
@@ -271,7 +271,7 @@ public class EnglishFormatter extends NumberFormatter {
             appendSplitGroups(result, groupNames);
 
         } else {
-            boolean ordi = ordinals && numberIsWhole; // not ordinals if not whole
+            boolean ordi = ordinal && numberIsWhole; // not ordinal if not whole
             final List<Long> groups = Utils.splitByModulus(numberLong, 1000000);
             final List<String> groupNames = new ArrayList<>();
             for (int i = 0; i < groups.size(); ++i) {
@@ -410,25 +410,25 @@ public class EnglishFormatter extends NumberFormatter {
 
     /**
      * @param n must be 0 <= n <= 999
-     * @param ordinals whether to return an ordinal number (usually with -th)
+     * @param ordinal whether to return an ordinal number (usually with -th)
      * @return the string representation of a number smaller than 1000
      */
-    private String subThousand(final long n, final boolean ordinals) {
-        // this function calls itself inside if branches to make sure `ordinals` is respected
-        if (ordinals && ORDINAL_NAMES.containsKey(n)) {
+    private String subThousand(final long n, final boolean ordinal) {
+        // this function calls itself inside if branches to make sure `ordinal` is respected
+        if (ordinal && ORDINAL_NAMES.containsKey(n)) {
             return ORDINAL_NAMES.get(n);
         } else if (n < 100) {
-            if (!ordinals && NUMBER_NAMES.containsKey(n)) {
+            if (!ordinal && NUMBER_NAMES.containsKey(n)) {
                 return NUMBER_NAMES.get(n);
             }
             // n is surely => 20 from here on, since all n < 20 are in (ORDINAL|NUMBER)_NAMES
 
             return NUMBER_NAMES.get(n - n % 10)
-                    + (n % 10 > 0 ? " " + subThousand(n % 10, ordinals) : "");
+                    + (n % 10 > 0 ? " " + subThousand(n % 10, ordinal) : "");
         } else {
             return NUMBER_NAMES.get(n / 100) + " hundred"
-                    + (n % 100 > 0 ? " and " + subThousand(n % 100, ordinals)
-                    : (ordinals ? "th" : ""));
+                    + (n % 100 > 0 ? " and " + subThousand(n % 100, ordinal)
+                    : (ordinal ? "th" : ""));
         }
     }
 

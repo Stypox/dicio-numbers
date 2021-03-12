@@ -11,14 +11,14 @@ public class EnglishParser extends NumberParser {
     @Override
     public double extractNumber(final String text,
                                 final boolean shortScale,
-                                final boolean ordinals) {
+                                final boolean ordinal) {
         return 0;
     }
 
     @Override
     public List<Double> extractNumbers(final String text,
                                        final boolean shortScale,
-                                       final boolean ordinals) {
+                                       final boolean ordinal) {
         return null;
     }
 

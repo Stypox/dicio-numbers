@@ -8,9 +8,9 @@ import java.util.List;
 
 public abstract class NumberParser {
 
-    public abstract double extractNumber(String text, boolean shortScale, boolean ordinals);
+    public abstract double extractNumber(String text, boolean shortScale, boolean ordinal);
 
-    public abstract List<Double> extractNumbers(String text, boolean shortScale, boolean ordinals);
+    public abstract List<Double> extractNumbers(String text, boolean shortScale, boolean ordinal);
 
     public abstract long extractDuration(String text);
 

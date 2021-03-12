@@ -191,7 +191,7 @@ public class EnglishNumberParser {
         if (isRawNumber(ts.get(nextNotIgnore))) {
             final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
             if (!allowOrdinal && ordinal) {
-                return null; // do not allow ordinals if allowOrdinal is false
+                return null; // do not allow ordinal if allowOrdinal is false
             } else {
                 // a big number in raw form, e.g. 1250067, 5839th
                 ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
@@ -367,7 +367,7 @@ public class EnglishNumberParser {
                 }
 
                 if (!allowOrdinal && ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix")) {
-                    break; // do not allow ordinals if allowOrdinal is false
+                    break; // do not allow ordinal if allowOrdinal is false
                 }
 
                 if (rawNumber.lessThan(10)) {

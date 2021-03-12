@@ -42,7 +42,7 @@ public abstract class NumberFormatter {
      *                   <a href="https://en.wikipedia.org/wiki/Names_of_large_numbers">
      *                       Names of large numbers</a>)
      * @param scientific if true convert and pronounce in scientific notation
-     * @param ordinals if true pronounce in the ordinal form (e.g. "first" instead of "one" for
+     * @param ordinal if true pronounce in the ordinal form (e.g. "first" instead of "one" for
      *                 English)
      * @return the formatted number as a string
      */
@@ -50,7 +50,7 @@ public abstract class NumberFormatter {
                                            int places,
                                            boolean shortScale,
                                            boolean scientific,
-                                           boolean ordinals);
+                                           boolean ordinal);
 
     /**
      * Format a date to a pronounceable representation. For example, 2021/4/28 would be formatted
