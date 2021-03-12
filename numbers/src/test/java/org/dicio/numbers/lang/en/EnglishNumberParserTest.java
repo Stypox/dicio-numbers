@@ -20,8 +20,18 @@ public class EnglishNumberParserTest {
         tokenizer = new Tokenizer("config/en-us");
     }
 
+
     private interface NumberFunction {
         Number call(final EnglishNumberParser enp);
+    }
+
+
+    private static Number numberDeduceType(final double value) {
+        if (((long) value) == value) {
+            return new Number((long) value);
+        } else {
+            return new Number(value);
+        }
     }
 
     private static void assertNumberFunction(final String s,
@@ -59,31 +69,34 @@ public class EnglishNumberParserTest {
         assertNumberFunctionNull(s, true, enp -> enp.numberGroupShortScale(allowOrdinal, lastMultiplier));
     }
 
-    private static void assertNumberShortScale(final String s, final boolean allowOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, true, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+    private static void assertNumberInteger(final String s, final boolean shortScale, final boolean allowOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+        assertNumberFunction(s, shortScale, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
                 (enp) -> enp.numberInteger(allowOrdinal));
     }
 
-    private static void assertNumberShortScaleNull(final String s, final boolean allowOrdinal) {
+    private static void assertNumberIntegerNull(final String s, final boolean allowOrdinal) {
         assertNumberFunctionNull(s, true, (enp) -> enp.numberInteger(allowOrdinal));
+        assertNumberFunctionNull(s, false, (enp) -> enp.numberInteger(allowOrdinal));
     }
 
-    private static void assertNumberPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, true, (((long) value) == value ? new Number((long) value) : new Number(value)).setOrdinal(isOrdinal),
+    private static void assertNumberPoint(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp) -> enp.numberPoint(allowOrdinal));
     }
 
     private static void assertNumberPointNull(final String s, final boolean allowOrdinal) {
         assertNumberFunctionNull(s, true, (enp) -> enp.numberPoint(allowOrdinal));
+        assertNumberFunctionNull(s, false, (enp) -> enp.numberPoint(allowOrdinal));
     }
 
-    private static void assertNumberSignPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, true, (((long) value) == value ? new Number((long) value) : new Number(value)).setOrdinal(isOrdinal),
+    private static void assertNumberSignPoint(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp) -> enp.numberSignPoint(allowOrdinal));
     }
 
     private static void assertNumberSignPointNull(final String s, final boolean allowOrdinal) {
         assertNumberFunctionNull(s, true, (enp) -> enp.numberSignPoint(allowOrdinal));
+        assertNumberFunctionNull(s, false, (enp) -> enp.numberSignPoint(allowOrdinal));
     }
 
 
@@ -206,68 +219,70 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberShortScale() {
-        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteen", T, 25164007019L, F, 15);
-        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven billion", T, 25164000000L, F, 10);
-        assertNumberShortScale("two thousand, one hundred and ninety one", F, 2191, F, 8);
-        assertNumberShortScale("nine hundred and ten",         T, 910,            F, 4);
-        assertNumberShortScale("two million",                  F, 2000000,        F, 2);
-        assertNumberShortScale("one thousand and ten",         T, 1010,           F, 4);
-        assertNumberShortScale("1234567890123",                F, 1234567890123L, F, 1);
-        assertNumberShortScale("654 and",                      T, 654,            F, 1);
-        assertNumberShortScale("a hundred four,",              F, 104,            F, 3);
-        assertNumberShortScale("nine thousand, three million", T, 9000,           F, 2);
-    }
-
-    @Test
-    public void testNumberShortScaleThousandSeparator() {
-        assertNumberShortScale("23,001",               F, 23001,      F, 3);
-        assertNumberShortScale("a 167,42",             T, 167,        F, 2);
-        assertNumberShortScale("1,234,023,054, hello", F, 1234023054, F, 7);
-        assertNumberShortScale("23,001, a 500",        T, 23001,      F, 3);
-        assertNumberShortScale("5,030,two",            F, 5030,       F, 3);
-        assertNumberShortScale("67,104,23",            T, 67104,      F, 3);
-    }
-
-    @Test
-    public void testNumberShortScaleYear() {
-        assertNumberShortScale("two twenty-one",                 T, 2,    F, 1);
-        assertNumberShortScale("nineteen 745",                   F, 19,   F, 1);
-        assertNumberShortScale("ten 21",                         T, 1021, F, 2);
-        assertNumberShortScale("nineteen oh 6 and two",          F, 1906, F, 3);
-        assertNumberShortScale("twenty-nought-oh",               T, 2000, F, 5);
-        assertNumberShortScale("eleven zero 0",                  F, 1100, F, 3);
-        assertNumberShortScale("seventeen 0 0",                  T, 1700, F, 3);
-        assertNumberShortScale("sixty-four-hundred",             F, 6400, F, 5);
-        assertNumberShortScale("two hundred and twelve hundred", T, 212,  F, 4);
-        assertNumberShortScale("58 hundred",                     F, 5800, F, 2);
-        assertNumberShortScale("nineteen hundred",               T, 1900, F, 2);
-        assertNumberShortScale("eighteen 1",                     F, 18,   F, 1);
+        assertNumberInteger("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteen", T, T, 25164007019L, F, 15);
+        assertNumberInteger("twenty 5 billion, 1 hundred and sixty four million, seven billion", T, T, 25164000000L, F, 10);
+        assertNumberInteger("two thousand, one hundred and ninety one", T, F, 2191, F, 8);
+        assertNumberInteger("nine hundred and ten",         T, T, 910,            F, 4);
+        assertNumberInteger("two million",                  T, F, 2000000,        F, 2);
+        assertNumberInteger("one thousand and ten",         T, T, 1010,           F, 4);
+        assertNumberInteger("1234567890123",                T, F, 1234567890123L, F, 1);
+        assertNumberInteger("654 and",                      T, T, 654,            F, 1);
+        assertNumberInteger("a hundred four,",              T, F, 104,            F, 3);
+        assertNumberInteger("nine thousand, three million", T, T, 9000,           F, 2);
     }
 
     @Test
     public void testNumberShortScaleOrdinal() {
-        assertNumberShortScale("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteenth", T, 25164007019L,  T, 15);
-        assertNumberShortScale("73 billion, twenty three millionth, seven thousand and nineteen",                   T, 73023000000L,  T, 6);
-        assertNumberShortScale("one hundred and 6 billion, twenty one million, one billionth",                      T, 106021000000L, F, 9);
-        assertNumberShortScale("one hundred and 6 billion, twenty one million, one thousandth",                     F, 106021000001L, F, 11);
-        assertNumberShortScale("nineteen hundredth",    T, 1900,     T, 2);
-        assertNumberShortScale("twenty oh first",       T, 2001,     T, 3);
-        assertNumberShortScale("twenty oh first",       F, 20,       F, 1);
-        assertNumberShortScale("nineteen 09th",         T, 1909,     T, 3);
-        assertNumberShortScale("nineteen 09th",         F, 19,       F, 1);
-        assertNumberShortScale("eleven sixteenth",      T, 1116,     T, 2);
-        assertNumberShortScale("eleven sixteenth",      F, 11,       F, 1);
-        assertNumberShortScale("eighteen twenty first", T, 1821,     T, 3);
-        assertNumberShortScale("eighteen twenty first", F, 1820,     F, 2);
-        assertNumberShortScale("thirteen sixtieth",     T, 1360,     T, 2);
-        assertNumberShortScale("thirteen sixtieth",     F, 13,       F, 1);
-        assertNumberShortScale("sixteenth hundred",     T, 16,       T, 1);
-        assertNumberShortScale("sixteenth oh four",     T, 16,       T, 1);
-        assertNumberShortScale("543789th",              T, 543789,   T, 2);
-        assertNumberShortScale("75,483,543 rd",         T, 75483543, T, 6);
-        assertNumberShortScaleNull("2938th",               F);
-        assertNumberShortScaleNull("102,321th",            F);
-        assertNumberShortScaleNull("thirteenth hundredth", F);
+        assertNumberInteger("twenty 5 billion, 1 hundred and sixty four million, seven thousand and nineteenth", T, T, 25164007019L,  T, 15);
+        assertNumberInteger("73 billion, twenty three millionth, seven thousand and nineteen",                   T, T, 73023000000L,  T, 6);
+        assertNumberInteger("one hundred and 6 billion, twenty one million, one billionth",                      T, T, 106021000000L, F, 9);
+        assertNumberInteger("one hundred and 6 billion, twenty one million, one thousandth",                     T, F, 106021000001L, F, 11);
+        assertNumberInteger("nineteen hundredth",    T, T, 1900,     T, 2);
+        assertNumberInteger("twenty oh first",       T, T, 2001,     T, 3);
+        assertNumberInteger("twenty oh first",       T, F, 20,       F, 1);
+        assertNumberInteger("nineteen 09th",         T, T, 1909,     T, 3);
+        assertNumberInteger("nineteen 09th",         T, F, 19,       F, 1);
+        assertNumberInteger("eleven sixteenth",      T, T, 1116,     T, 2);
+        assertNumberInteger("eleven sixteenth",      T, F, 11,       F, 1);
+        assertNumberInteger("eighteen twenty first", T, T, 1821,     T, 3);
+        assertNumberInteger("eighteen twenty first", T, F, 1820,     F, 2);
+        assertNumberInteger("thirteen sixtieth",     T, T, 1360,     T, 2);
+        assertNumberInteger("thirteen sixtieth",     T, F, 13,       F, 1);
+        assertNumberInteger("sixteenth hundred",     T, T, 16,       T, 1);
+        assertNumberInteger("sixteenth oh four",     T, T, 16,       T, 1);
+        assertNumberInteger("543789th",              T, T, 543789,   T, 2);
+        assertNumberInteger("75,483,543 rd",         T, T, 75483543, T, 6);
+        assertNumberIntegerNull("2938th",               F);
+        assertNumberIntegerNull("102,321th",            F);
+        assertNumberIntegerNull("thirteenth hundredth", F);
+    }
+
+    @Test
+    public void testNumberIntegerThousandSeparator() {
+        // independent of short/long scale and of ordinal mode
+        assertNumberInteger("23,001",               T, F, 23001,      F, 3);
+        assertNumberInteger("a 167,42",             F, T, 167,        F, 2);
+        assertNumberInteger("1,234,023,054, hello", F, F, 1234023054, F, 7);
+        assertNumberInteger("23,001, a 500",        T, T, 23001,      F, 3);
+        assertNumberInteger("5,030,two",            F, F, 5030,       F, 3);
+        assertNumberInteger("67,104,23",            F, T, 67104,      F, 3);
+    }
+
+    @Test
+    public void testNumberIntegerYear() {
+        // independent of short/long scale and of ordinal mode
+        assertNumberInteger("two twenty-one",                 T, T, 2,    F, 1);
+        assertNumberInteger("nineteen 745",                   F, F, 19,   F, 1);
+        assertNumberInteger("ten 21",                         F, T, 1021, F, 2);
+        assertNumberInteger("nineteen oh 6 and two",          T, F, 1906, F, 3);
+        assertNumberInteger("twenty-nought-oh",               T, T, 2000, F, 5);
+        assertNumberInteger("eleven zero 0",                  F, F, 1100, F, 3);
+        assertNumberInteger("seventeen 0 0",                  F, T, 1700, F, 3);
+        assertNumberInteger("sixty-four-hundred",             T, F, 6400, F, 5);
+        assertNumberInteger("two hundred and twelve hundred", T, T, 212,  F, 4);
+        assertNumberInteger("58 hundred",                     F, F, 5800, F, 2);
+        assertNumberInteger("nineteen hundred",               F, T, 1900, F, 2);
+        assertNumberInteger("eighteen 1",                     T, F, 18,   F, 1);
     }
 
     private int tokensInFormattedString(final String formatted) {
@@ -295,12 +310,12 @@ public class EnglishNumberParserTest {
             // not ordinal
             String formatted = npf.pronounceNumber(i).places(0).get();
             int tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, T, i, F, tokensInFormatted);
+            assertNumberInteger(formatted, T, T, i, F, tokensInFormatted);
 
             // ordinal
             formatted = npf.pronounceNumber(i).places(0).ordinal(T).get();
             tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, T, i, T, tokensInFormatted);
+            assertNumberInteger(formatted, T, T, i, T, tokensInFormatted);
         }
     }
 
@@ -312,71 +327,71 @@ public class EnglishNumberParserTest {
             // not ordinal
             String formatted = npf.pronounceNumber(i).places(0).get();
             int tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, T, i, F, tokensInFormatted);
+            assertNumberInteger(formatted, T, T, i, F, tokensInFormatted);
 
             // ordinal
             formatted = npf.pronounceNumber(i).places(0).ordinal(T).get();
             tokensInFormatted = tokensInFormattedString(formatted);
-            assertNumberShortScale(formatted, T, i, T, tokensInFormatted);
+            assertNumberInteger(formatted, T, T, i, T, tokensInFormatted);
         }
     }
 
     @Test
-    public void testNumberShortScaleNull() {
-        assertNumberShortScaleNull("",                    T);
-        assertNumberShortScaleNull("a hello how are you", F);
-        assertNumberShortScaleNull(", and",               T);
-        assertNumberShortScaleNull("oh two",              F);
-        assertNumberShortScaleNull(", 123485 and",        T);
-        assertNumberShortScaleNull("and 123",             F);
-        assertNumberShortScaleNull(" one thousand ",      T);
+    public void testNumberIntegerNull() {
+        assertNumberIntegerNull("",                    T);
+        assertNumberIntegerNull("a hello how are you", F);
+        assertNumberIntegerNull(", and",               T);
+        assertNumberIntegerNull("oh two",              F);
+        assertNumberIntegerNull(", 123485 and",        T);
+        assertNumberIntegerNull("and 123",             F);
+        assertNumberIntegerNull(" one thousand ",      T);
     }
 
     @Test
     public void testNumberPoint() {
-        assertNumberPoint("one thousand, five hundred and seventy four point nine one two oh nought o zero", T, 1574.912, F, 16);
-        assertNumberPoint("twenty three point nought 1 oh 2 three, five hundred", T, 23.01023, F, 8);
-        assertNumberPoint("fifteen-oh-nine point eight four five", F, 1509.845, F, 9);
-        assertNumberPoint("twenty three thousand point sixteen", T, 23000, F, 3);
-        assertNumberPoint("3645.7183",                  F, 3645.7183, F, 3);
-        assertNumberPoint("twenty five.2",              T, 25.2,      F, 4);
-        assertNumberPoint("eighty point 6745",          F, 80.6745,   F, 3);
-        assertNumberPoint("4 point 67 45",              T, 4.67,      F, 3);
-        assertNumberPoint("4000 point 6 63",            F, 4000.6,    F, 3);
-        assertNumberPoint("74567 point six",            T, 74567.6,   F, 3);
-        assertNumberPoint("nought . 6 8 2 zero twenty", F, 0.682,     F, 6);
-        assertNumberPoint("74567 point six",            T, 74567.6,   F, 3);
-        assertNumberPoint("point 800",                  F, .8,        F, 2);
-        assertNumberPoint("one point twenty",           T, 1,         F, 1);
+        assertNumberPoint("one thousand, five hundred and seventy four point nine one two oh nought o zero", T, T, 1574.912, F, 16);
+        assertNumberPoint("twenty three point nought 1 oh 2 three, five hundred", T, T, 23.01023, F, 8);
+        assertNumberPoint("fifteen-oh-nine point eight four five", T, F, 1509.845, F, 9);
+        assertNumberPoint("twenty three thousand point sixteen", T, T, 23000, F, 3);
+        assertNumberPoint("3645.7183",                  T, F, 3645.7183, F, 3);
+        assertNumberPoint("twenty five.2",              T, T, 25.2,      F, 4);
+        assertNumberPoint("eighty point 6745",          T, F, 80.6745,   F, 3);
+        assertNumberPoint("4 point 67 45",              T, T, 4.67,      F, 3);
+        assertNumberPoint("4000 point 6 63",            T, F, 4000.6,    F, 3);
+        assertNumberPoint("74567 point six",            T, T, 74567.6,   F, 3);
+        assertNumberPoint("nought . 6 8 2 zero twenty", T, F, 0.682,     F, 6);
+        assertNumberPoint("74567 point six",            T, T, 74567.6,   F, 3);
+        assertNumberPoint("point 800",                  T, F, .8,        F, 2);
+        assertNumberPoint("one point twenty",           T, T, 1,         F, 1);
     }
 
     @Test
     public void testNumberPointFraction() {
-        assertNumberPoint("twenty three million, one hundred thousand and sixty four over sixteen", F, 1443754, F, 12);
-        assertNumberPoint("sixteen over twenty three million, one hundred thousand and sixty four", T, 1.0 / 1443754.0, F, 12);
-        assertNumberPoint("8 thousand and, 192 divided by 4 thousand 96 eight", F, 2, F, 10);
-        assertNumberPoint("ninety eight hundred / one hundred", T, 98, F, 6);
-        assertNumberPoint("twenty four over sixty five", T, 24.0 / 65.0,       F, 5);
-        assertNumberPoint("one over five and a half",    F, 1.0 / 5.0,         F, 3);
-        assertNumberPoint("twenty six divided by seven", T, 26.0 / 7.0,        F, 5);
-        assertNumberPoint("47328 over 12093",            F, 47328.0 / 12093.0, F, 3);
-        assertNumberPoint("five / six nine two",         T, 5.0 / 6.0,         F, 3);
-        assertNumberPoint("nine over, two",              F, 9,                 F, 1);
-        assertNumberPoint("eight divided five",          T, 8.0 / 5.0,         F, 3);
-        assertNumberPoint("six by nineteen",             F, 6,                 F, 1);
+        assertNumberPoint("twenty three million, one hundred thousand and sixty four over sixteen", T, F, 1443754, F, 12);
+        assertNumberPoint("sixteen over twenty three million, one hundred thousand and sixty four", T, T, 1.0 / 1443754.0, F, 12);
+        assertNumberPoint("8 thousand and, 192 divided by 4 thousand 96 eight", T, F, 2, F, 10);
+        assertNumberPoint("ninety eight hundred / one hundred", T, T, 98, F, 6);
+        assertNumberPoint("twenty four over sixty five", T, T, 24.0 / 65.0,       F, 5);
+        assertNumberPoint("one over five and a half",    T, F, 1.0 / 5.0,         F, 3);
+        assertNumberPoint("twenty six divided by seven", T, T, 26.0 / 7.0,        F, 5);
+        assertNumberPoint("47328 over 12093",            T, F, 47328.0 / 12093.0, F, 3);
+        assertNumberPoint("five / six nine two",         T, T, 5.0 / 6.0,         F, 3);
+        assertNumberPoint("nine over, two",              T, F, 9,                 F, 1);
+        assertNumberPoint("eight divided five",          T, T, 8.0 / 5.0,         F, 3);
+        assertNumberPoint("six by nineteen",             T, F, 6,                 F, 1);
     }
 
     @Test
     public void testNumberPointOrdinal() {
-        assertNumberPoint("fifth point six",                     T, 5,     T, 1);
-        assertNumberPoint("3 thousand 7 hundred tenth over six", T, 3710,  T, 5);
-        assertNumberPoint("3 thousand 7 hundred tenth over six", F, 3700,  F, 4);
-        assertNumberPoint("eight point one second",              F, 8.1,   F, 3);
-        assertNumberPoint("eight point one third",               T, 8.1,   F, 3);
-        assertNumberPoint("six over fifth",                      T, 6,     F, 1);
-        assertNumberPoint("nine over thirty ninth",              T, 0.3,   F, 3);
-        assertNumberPoint("nine over thirty ninth",              F, 0.3,   F, 3);
-        assertNumberPoint("thirteen point 1 2 3 th",             T, 13.12, F, 4);
+        assertNumberPoint("fifth point six",                     T, T, 5,     T, 1);
+        assertNumberPoint("3 thousand 7 hundred tenth over six", T, T, 3710,  T, 5);
+        assertNumberPoint("3 thousand 7 hundred tenth over six", T, F, 3700,  F, 4);
+        assertNumberPoint("eight point one second",              T, F, 8.1,   F, 3);
+        assertNumberPoint("eight point one third",               T, T, 8.1,   F, 3);
+        assertNumberPoint("six over fifth",                      T, T, 6,     F, 1);
+        assertNumberPoint("nine over thirty ninth",              T, T, 0.3,   F, 3);
+        assertNumberPoint("nine over thirty ninth",              T, F, 0.3,   F, 3);
+        assertNumberPoint("thirteen point 1 2 3 th",             T, T, 13.12, F, 4);
     }
 
     @Test
@@ -393,22 +408,22 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testNumberSignPoint() {
-        assertNumberSignPoint("minus seventy six thousand, three hundred and fifty six over 23", T, -76356.0 / 23.0, F, 12);
-        assertNumberSignPoint("minus twelve",        F, -12,      F, 2);
-        assertNumberSignPoint("plus million",        T, 1000000,  F, 2);
-        assertNumberSignPoint("-1843",               F, -1843,    F, 2);
-        assertNumberSignPoint("+573,976",            T, 573976,   F, 4);
-        assertNumberSignPoint("minus 42903.5",       F, -42903.5, F, 4);
-        assertNumberSignPoint("minus point oh four", T, -.04,     F, 4);
+        assertNumberSignPoint("minus seventy six thousand, three hundred and fifty six over 23", T, T, -76356.0 / 23.0, F, 12);
+        assertNumberSignPoint("minus twelve",        T, F, -12,      F, 2);
+        assertNumberSignPoint("plus million",        T, T, 1000000,  F, 2);
+        assertNumberSignPoint("-1843",               T, F, -1843,    F, 2);
+        assertNumberSignPoint("+573,976",            T, T, 573976,   F, 4);
+        assertNumberSignPoint("minus 42903.5",       T, F, -42903.5, F, 4);
+        assertNumberSignPoint("minus point oh four", T, T, -.04,     F, 4);
     }
 
     @Test
     public void testNumberSignPointOrdinal() {
-        assertNumberSignPoint("minus twelfth",      T, -12,      T, 2);
-        assertNumberSignPoint("-one hundredth",     F, -1,       F, 2);
-        assertNumberSignPoint("plus millionth ten", T, 1000000,  T, 2);
-        assertNumberSignPoint("-1843th",            T, -1843,    T, 3);
-        assertNumberSignPoint("+573,976rd",         T, 573976,   T, 5);
+        assertNumberSignPoint("minus twelfth",      T, T, -12,      T, 2);
+        assertNumberSignPoint("-one hundredth",     T, F, -1,       F, 2);
+        assertNumberSignPoint("plus millionth ten", T, T, 1000000,  T, 2);
+        assertNumberSignPoint("-1843th",            T, T, -1843,    T, 3);
+        assertNumberSignPoint("+573,976rd",         T, T, 573976,   T, 5);
         assertNumberSignPointNull("minus first", F);
         assertNumberSignPointNull("-1843th",     F);
     }
