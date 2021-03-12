@@ -107,13 +107,7 @@ public class EnglishNumberParser {
             return null; // do not eat ignored words at the beginning, expect a (see e.g. a hundred)
         }
 
-        Number n;
-        if (shortScale) {
-            n = numberShortScale(allowOrdinal);
-        } else {
-            n = null; // TODO long scale
-        }
-
+        Number n = numberShortLongScale(allowOrdinal);
         if (n == null) {
             return numberBigRaw(allowOrdinal); // try to parse big raw numbers (>=1000), e.g. 1207
         } else if (n.isOrdinal()) {
@@ -168,29 +162,6 @@ public class EnglishNumberParser {
         }
 
         return n; // e.g. six million, three hundred and twenty seven
-    }
-
-    Number numberShortScale(final boolean allowOrdinal) {
-        // read as many groups as possible (e.g. 123 billion + 45 million + 6 thousand + 78)
-        Number groups = null;
-        long lastMultiplier = Long.MAX_VALUE;
-        while (true) {
-            final Number group = numberGroupShortScale(allowOrdinal, lastMultiplier);
-            if (group == null) {
-                break; // either nothing else was found or next multiplier is bigger than last one
-            } else if (groups == null) {
-                groups = group; // first group
-            } else {
-                groups = groups.plus(group); // e.g. seven hundred thousand + thirteen
-            }
-
-            if (group.isOrdinal()) {
-                groups.setOrdinal(true);
-                break; // ordinal numbers terminate at the ordinal group
-            }
-            lastMultiplier = group.integerValue();
-        }
-        return groups;
     }
 
     Number numberBigRaw(final boolean allowOrdinal) {
@@ -278,19 +249,45 @@ public class EnglishNumberParser {
         return null; // invalid second year group
     }
 
+    Number numberShortLongScale(final boolean allowOrdinal) {
+        // read as many groups as possible (e.g. 123 billion + 45 million + 6 thousand + 78)
+        Number groups = null;
+        long lastMultiplier = Long.MAX_VALUE;
+        while (true) {
+            final Number group;
+            if (shortScale) {
+                group = numberGroupShortScale(allowOrdinal, lastMultiplier);
+            } else {
+                group = numberGroupLongScale(allowOrdinal, lastMultiplier);
+            }
+
+            if (group == null) {
+                break; // either nothing else was found or next multiplier is bigger than last one
+            } else if (groups == null) {
+                groups = group; // first group
+            } else {
+                groups = groups.plus(group); // e.g. seven hundred thousand + thirteen
+            }
+
+            if (group.isOrdinal()) {
+                groups.setOrdinal(true);
+                break; // ordinal numbers terminate at the ordinal group
+            }
+            lastMultiplier = group.integerValue();
+        }
+        return groups;
+    }
+
     Number numberGroupShortScale(final boolean allowOrdinal, final long lastMultiplier) {
+        if (lastMultiplier < 1000) {
+            return null; // prevent two numbers smaller than 1000 to be one after another
+        }
+
         final int originalPosition = ts.getPosition();
         final Number groupValue = numberLessThan1000(allowOrdinal); // e.g. one hundred and twelve
-
         if (groupValue != null && groupValue.isOrdinal()) {
             // ordinal numbers can't be followed by a multiplier
-            if (lastMultiplier >= 1000) {
-                return groupValue;
-            } else {
-                // prevent two numbers smaller than 1000 to be one after another
-                ts.setPosition(originalPosition);
-                return null;
-            }
+            return groupValue;
         }
 
         final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
@@ -308,13 +305,80 @@ public class EnglishNumberParser {
                     return multiplier.multiply(groupValue).setOrdinal(ordinal);
                 }
             }
-        } else if (lastMultiplier >= 1000) {
-            return groupValue; // no multiplier for this last number group, e.g. one hundred and two
+        } else {
+            // no multiplier for this last number group, e.g. one hundred and two
+            // also here if the multiplier is ordinal, but allowOrdinal is false
+            return groupValue;
+        }
+
+        // multiplier is too big, reset to previous position
+        ts.setPosition(originalPosition);
+        return null;
+    }
+
+    Number numberGroupLongScale(final boolean allowOrdinal, final long lastMultiplier) {
+        if (lastMultiplier < 1000000) {
+            return null; // prevent two numbers smaller than 1000000 to be one after another
+        }
+
+        final int originalPosition = ts.getPosition();
+        Number first = numberGroupShortScale(allowOrdinal, 1000000);
+        if (first != null) {
+            if (first.isOrdinal() || first.lessThan(1000)) {
+                // nothing else follows an ordinal number; the number does not end with thousand
+                return first;
+            }
+
+            final Number second = numberLessThan1000(allowOrdinal);
+            if (second != null) {
+                first = first.plus(second);
+                if (second.isOrdinal()) {
+                    return first.setOrdinal(true); // nothing else follows an ordinal number
+                }
+            }
+        }
+
+        final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
+        final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
+        if (ts.get(nextNotIgnore).hasCategory("multiplier") && (allowOrdinal || !ordinal)
+                && ts.get(nextNotIgnore).getNumber().moreThan(1000)) {
+            // prevent ordinal multiplier if allowOrdinal is false; prevent thousand multiplier
+            final Number multiplier = shortMultiplierToLongScale(ts.get(nextNotIgnore).getNumber());
+            if (multiplier.lessThan(lastMultiplier)) {
+                ts.movePositionForwardBy(nextNotIgnore + 1);
+                if (first == null) {
+                    // the multiplier alone, e.g. a million
+                    return multiplier.setOrdinal(ordinal);
+                } else {
+                    // number smaller than 1000000 followed by a multiplier,
+                    // e.g. thirteen thousand billion
+                    return multiplier.multiply(first).setOrdinal(ordinal);
+                }
+            }
+        } else {
+            // no multiplier for this last number group, e.g. one thousand, three hundred and two
+            // also here if the multiplier is ordinal, but allowOrdinal is false
+            // also here if there is a thousand multiplier (happens e.g. in one thousand thousand)
+            return first;
         }
 
         // invalid multiplier or missing multiplier with big group value, reset to previous position
         ts.setPosition(originalPosition);
         return null;
+    }
+
+    final Number shortMultiplierToLongScale(final Number shortScaleMultiplier) {
+        if (shortScaleMultiplier.integerValue() == 1000000000L) {
+            return new Number(1000000000000L); // billion
+        } else if (shortScaleMultiplier.integerValue() == 1000000000000L) {
+            return new Number(1000000000000000000L); // trillion
+        } else if (shortScaleMultiplier.integerValue() == 1000000000000000L) {
+            return new Number(1e24d); // quadrillion
+        } else if (shortScaleMultiplier.integerValue() == 1000000000000000000L) {
+            return new Number(1e30d); // quintillion
+        } else {
+            return shortScaleMultiplier; // million
+        }
     }
 
     final Number numberLessThan1000(final boolean allowOrdinal) {
