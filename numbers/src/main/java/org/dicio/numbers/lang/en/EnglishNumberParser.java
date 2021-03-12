@@ -13,14 +13,14 @@ public class EnglishNumberParser {
         this.ts = tokenStream;
     }
 
-    Number numberSignPoint(final boolean preferOrdinal) {
+    Number numberSignPoint(final boolean allowOrdinal) {
         if (ts.get(0).hasCategory("sign")) {
             // parse sign from e.g. "minus twelve"
 
             boolean negative = ts.get(0).hasCategory("negative");
             ts.movePositionForwardBy(1);
 
-            final Number n = numberPoint(preferOrdinal);
+            final Number n = numberPoint(allowOrdinal);
             if (n == null) {
                 ts.movePositionForwardBy(-1); // rewind
                 return null;
@@ -29,11 +29,11 @@ public class EnglishNumberParser {
             }
 
         }
-        return numberPoint(preferOrdinal);
+        return numberPoint(allowOrdinal);
     }
 
-    Number numberPoint(final boolean preferOrdinal) {
-        Number n = numberInteger(preferOrdinal);
+    Number numberPoint(final boolean allowOrdinal) {
+        Number n = numberInteger(allowOrdinal);
         if (n != null && n.isOrdinal()) {
             return n; // no point or fraction separator can appear after an ordinal number
         }
@@ -99,15 +99,15 @@ public class EnglishNumberParser {
         return n;
     }
 
-    Number numberInteger(final boolean preferOrdinal) {
+    Number numberInteger(final boolean allowOrdinal) {
         if (ts.get(0).hasCategory("ignore")
                 && (!ts.get(0).isValue("a") || ts.get(1).hasCategory("ignore"))) {
             return null; // do not eat ignored words at the beginning, expect a (see e.g. a hundred)
         }
 
-        Number n = numberShortScale(preferOrdinal);
+        Number n = numberShortScale(allowOrdinal);
         if (n == null) {
-            return numberBigRaw(preferOrdinal); // try to parse big raw numbers (>=1000), e.g. 1207
+            return numberBigRaw(allowOrdinal); // try to parse big raw numbers (>=1000), e.g. 1207
         } else if (n.isOrdinal()) {
             return n; // no more checks, as the ordinal word comes last, e.g. million twelfth
         }
@@ -115,7 +115,7 @@ public class EnglishNumberParser {
 
         if (n.lessThan(21) && n.moreThan(9)) {
             // parse years (1001 to 2099) in the particular forms (but xx-hundred is handled below)
-            final Number secondGroup = numberYearSecondGroup(preferOrdinal);
+            final Number secondGroup = numberYearSecondGroup(allowOrdinal);
             if (secondGroup != null) {
                 return n.multiply(100).plus(secondGroup).setOrdinal(secondGroup.isOrdinal());
             }
@@ -126,8 +126,8 @@ public class EnglishNumberParser {
             if (ts.get(nextNotIgnore).hasCategory("hundred")) {
                 // parse numbers suffixed by hundred, e.g. twenty six hundred -> 2600
                 final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
-                if (preferOrdinal || !ordinal) {
-                    // prevent ordinal numbers if preferOrdinal is false
+                if (allowOrdinal || !ordinal) {
+                    // prevent ordinal numbers if allowOrdinal is false
                     ts.movePositionForwardBy(nextNotIgnore + 1);
                     return n.multiply(100).setOrdinal(ordinal);
                 }
@@ -148,12 +148,12 @@ public class EnglishNumberParser {
                 }
 
                 if (ts.get(0).hasCategory("ordinal_suffix")) {
-                    if (preferOrdinal) {
+                    if (allowOrdinal) {
                         ts.movePositionForwardBy(1);
                         return n.setOrdinal(true); // ordinal number, e.g. 20,056,789th
                     } else {
                         ts.setPosition(originalPosition);
-                        return null; // found ordinal number, revert since preferOrdinal is false
+                        return null; // found ordinal number, revert since allowOrdinal is false
                     }
                 }
             }
@@ -162,12 +162,12 @@ public class EnglishNumberParser {
         return n; // e.g. six million, three hundred and twenty seven
     }
 
-    Number numberShortScale(final boolean preferOrdinal) {
+    Number numberShortScale(final boolean allowOrdinal) {
         // read as many groups as possible (e.g. 123 billion + 45 million + 6 thousand + 78)
         Number groups = null;
         long lastMultiplier = Long.MAX_VALUE;
         while (true) {
-            final Number group = numberGroupShortScale(preferOrdinal, lastMultiplier);
+            final Number group = numberGroupShortScale(allowOrdinal, lastMultiplier);
             if (group == null) {
                 break; // either nothing else was found or next multiplier is bigger than last one
             } else if (groups == null) {
@@ -185,13 +185,13 @@ public class EnglishNumberParser {
         return groups;
     }
 
-    Number numberBigRaw(final boolean preferOrdinal) {
+    Number numberBigRaw(final boolean allowOrdinal) {
         // try to parse big raw numbers (bigger than 999), e.g. 1207, 57378th
         final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
         if (isRawNumber(ts.get(nextNotIgnore))) {
             final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
-            if (!preferOrdinal && ordinal) {
-                return null; // do not allow ordinals if preferOrdinal is false
+            if (!allowOrdinal && ordinal) {
+                return null; // do not allow ordinals if allowOrdinal is false
             } else {
                 // a big number in raw form, e.g. 1250067, 5839th
                 ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
@@ -203,7 +203,7 @@ public class EnglishNumberParser {
         }
     }
 
-    Number numberYearSecondGroup(final boolean preferOrdinal) {
+    Number numberYearSecondGroup(final boolean allowOrdinal) {
         // parse the last two digits of a year, e.g. oh five -> 05, nineteen -> 19, eighty two -> 82
 
         // use nextNotIgnore to skip -, e.g. (nineteen)-oh-two
@@ -214,9 +214,9 @@ public class EnglishNumberParser {
             final boolean ordinal = ts.get(digitIndex).hasCategory("ordinal");
             if (ts.get(digitIndex) instanceof NumberToken
                     && ts.get(digitIndex).getNumber().lessThan(10)
-                    && (preferOrdinal || !ordinal)) {
+                    && (allowOrdinal || !ordinal)) {
                 // o/oh/nought/zero/0 + digit, e.g. (sixteen) oh one -> (16)01
-                // prevent ordinal number if preferOrdinal is false, e.g. (eighteen) oh second
+                // prevent ordinal number if allowOrdinal is false, e.g. (eighteen) oh second
                 ts.movePositionForwardBy(digitIndex + 1);
                 return ts.get(-1).getNumber().setOrdinal(ordinal);
             }
@@ -224,8 +224,8 @@ public class EnglishNumberParser {
         } else if (ts.get(nextNotIgnore).hasCategory("teen")) {
             // teen, e.g. (twenty) thirteen -> (20)13
             final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
-            if (!preferOrdinal && ordinal) {
-                return null; // do not allow ordinal number if preferOrdinal is false
+            if (!allowOrdinal && ordinal) {
+                return null; // do not allow ordinal number if allowOrdinal is false
             } else {
                 ts.movePositionForwardBy(nextNotIgnore + 1);
                 return ts.get(-1).getNumber().setOrdinal(ordinal);
@@ -235,8 +235,8 @@ public class EnglishNumberParser {
                 && isRawNumber(ts.get(nextNotIgnore))) {
             // raw number with two digits, e.g. (twenty) 41 -> (20)41, (12) 05 th -> (12)05th
             final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
-            if (!preferOrdinal && ordinal) {
-                return null; // do not allow raw number + st/nd/rd/th if preferOrdinal is false
+            if (!allowOrdinal && ordinal) {
+                return null; // do not allow raw number + st/nd/rd/th if allowOrdinal is false
             } else {
                 ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
                 return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
@@ -246,20 +246,20 @@ public class EnglishNumberParser {
             // tens (+ digit), e.g. (nineteen) eighty four -> (19)84
             final Number tens = ts.get(nextNotIgnore).getNumber();
             if (ts.get(nextNotIgnore).hasCategory("ordinal")) {
-                if (preferOrdinal) {
+                if (allowOrdinal) {
                     // nothing follows an ordinal number, e.g. (twenty) twentieth -> 2020th
                     ts.movePositionForwardBy(nextNotIgnore + 1);
                     return tens.setOrdinal(true);
                 } else {
-                    return null; // prevent ordinal numbers if preferOrdinal is false
+                    return null; // prevent ordinal numbers if allowOrdinal is false
                 }
             }
             ts.movePositionForwardBy(nextNotIgnore + 1);
 
             final int digitIndex = ts.indexOfWithoutCategory("ignore", 0);
             final boolean ordinal = ts.get(digitIndex).hasCategory("ordinal");
-            if (ts.get(digitIndex).hasCategory("digit") && (preferOrdinal || !ordinal)) {
-                // do not consider ordinal digit if preferOrdinal is false
+            if (ts.get(digitIndex).hasCategory("digit") && (allowOrdinal || !ordinal)) {
+                // do not consider ordinal digit if allowOrdinal is false
                 ts.movePositionForwardBy(digitIndex + 1);
                 return tens.plus(ts.get(-1).getNumber()).setOrdinal(ordinal);
             } else {
@@ -270,9 +270,9 @@ public class EnglishNumberParser {
         return null; // invalid second year group
     }
 
-    Number numberGroupShortScale(final boolean preferOrdinal, final long lastMultiplier) {
+    Number numberGroupShortScale(final boolean allowOrdinal, final long lastMultiplier) {
         final int originalPosition = ts.getPosition();
-        final Number groupValue = numberLessThan1000(preferOrdinal); // e.g. one hundred and twelve
+        final Number groupValue = numberLessThan1000(allowOrdinal); // e.g. one hundred and twelve
 
         if (groupValue != null && groupValue.isOrdinal()) {
             // ordinal numbers can't be followed by a multiplier
@@ -287,8 +287,8 @@ public class EnglishNumberParser {
 
         final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
         final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
-        if (ts.get(nextNotIgnore).hasCategory("multiplier") && (preferOrdinal || !ordinal)) {
-            // prevent ordinal multiplier if preferOrdinal is false
+        if (ts.get(nextNotIgnore).hasCategory("multiplier") && (allowOrdinal || !ordinal)) {
+            // prevent ordinal multiplier if allowOrdinal is false
             final Number multiplier = ts.get(nextNotIgnore).getNumber();
             if (multiplier.lessThan(lastMultiplier)) {
                 ts.movePositionForwardBy(nextNotIgnore + 1);
@@ -309,13 +309,13 @@ public class EnglishNumberParser {
         return null;
     }
 
-    final Number numberLessThan1000(final boolean preferOrdinal) {
+    final Number numberLessThan1000(final boolean allowOrdinal) {
         long hundred = -1, ten = -1, digit = -1;
         boolean ordinal = false;
         while (true) {
             final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
-            if (!preferOrdinal && ts.get(nextNotIgnore).hasCategory("ordinal")) {
-                // prevent ordinal numbers if preferOrdinal is false
+            if (!allowOrdinal && ts.get(nextNotIgnore).hasCategory("ordinal")) {
+                // prevent ordinal numbers if allowOrdinal is false
                 break;
             }
 
@@ -366,8 +366,8 @@ public class EnglishNumberParser {
                     break;
                 }
 
-                if (!preferOrdinal && ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix")) {
-                    break; // do not allow ordinals if preferOrdinal is false
+                if (!allowOrdinal && ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix")) {
+                    break; // do not allow ordinals if allowOrdinal is false
                 }
 
                 if (rawNumber.lessThan(10)) {

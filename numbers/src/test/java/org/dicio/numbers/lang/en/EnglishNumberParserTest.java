@@ -37,49 +37,49 @@ public class EnglishNumberParserTest {
         assertNumberFunction(s, null, 0, numberFunction);
     }
 
-    private static void assertNumberLessThan1000(final String s, final boolean preferOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+    private static void assertNumberLessThan1000(final String s, final boolean allowOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
-                (enp) -> enp.numberLessThan1000(preferOrdinal));
+                (enp) -> enp.numberLessThan1000(allowOrdinal));
     }
 
-    private static void assertNumberLessThan1000Null(final String s, final boolean preferOrdinal) {
-        assertNumberFunctionNull(s, (enp) -> enp.numberLessThan1000(preferOrdinal));
+    private static void assertNumberLessThan1000Null(final String s, final boolean allowOrdinal) {
+        assertNumberFunctionNull(s, (enp) -> enp.numberLessThan1000(allowOrdinal));
     }
 
-    private static void assertNumberGroupShortScale(final String s, final boolean preferOrdinal, final long lastMultiplier, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+    private static void assertNumberGroupShortScale(final String s, final boolean allowOrdinal, final long lastMultiplier, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
-                enp -> enp.numberGroupShortScale(preferOrdinal, lastMultiplier));
+                enp -> enp.numberGroupShortScale(allowOrdinal, lastMultiplier));
     }
 
-    private static void assertNumberGroupShortScaleNull(final String s, final boolean preferOrdinal, final long lastMultiplier) {
-        assertNumberFunctionNull(s, enp -> enp.numberGroupShortScale(preferOrdinal, lastMultiplier));
+    private static void assertNumberGroupShortScaleNull(final String s, final boolean allowOrdinal, final long lastMultiplier) {
+        assertNumberFunctionNull(s, enp -> enp.numberGroupShortScale(allowOrdinal, lastMultiplier));
     }
 
-    private static void assertNumberShortScale(final String s, final boolean preferOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+    private static void assertNumberShortScale(final String s, final boolean allowOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
-                (enp) -> enp.numberInteger(preferOrdinal));
+                (enp) -> enp.numberInteger(allowOrdinal));
     }
 
-    private static void assertNumberShortScaleNull(final String s, final boolean preferOrdinal) {
-        assertNumberFunctionNull(s, (enp) -> enp.numberInteger(preferOrdinal));
+    private static void assertNumberShortScaleNull(final String s, final boolean allowOrdinal) {
+        assertNumberFunctionNull(s, (enp) -> enp.numberInteger(allowOrdinal));
     }
 
-    private static void assertNumberPoint(final String s, final boolean preferOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+    private static void assertNumberPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, (((long) value) == value ? new Number((long) value) : new Number(value)).setOrdinal(isOrdinal),
-                finalTokenStreamPosition, (enp) -> enp.numberPoint(preferOrdinal));
+                finalTokenStreamPosition, (enp) -> enp.numberPoint(allowOrdinal));
     }
 
-    private static void assertNumberPointNull(final String s, final boolean preferOrdinal) {
-        assertNumberFunctionNull(s, (enp) -> enp.numberPoint(preferOrdinal));
+    private static void assertNumberPointNull(final String s, final boolean allowOrdinal) {
+        assertNumberFunctionNull(s, (enp) -> enp.numberPoint(allowOrdinal));
     }
 
-    private static void assertNumberSignPoint(final String s, final boolean preferOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+    private static void assertNumberSignPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, (((long) value) == value ? new Number((long) value) : new Number(value)).setOrdinal(isOrdinal),
-                finalTokenStreamPosition, (enp) -> enp.numberSignPoint(preferOrdinal));
+                finalTokenStreamPosition, (enp) -> enp.numberSignPoint(allowOrdinal));
     }
 
-    private static void assertNumberSignPointNull(final String s, final boolean preferOrdinal) {
-        assertNumberFunctionNull(s, (enp) -> enp.numberSignPoint(preferOrdinal));
+    private static void assertNumberSignPointNull(final String s, final boolean allowOrdinal) {
+        assertNumberFunctionNull(s, (enp) -> enp.numberSignPoint(allowOrdinal));
     }
 
 
