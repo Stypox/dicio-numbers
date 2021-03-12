@@ -126,24 +126,9 @@ public class EnglishNumberParser {
         }
 
         if (groups == null) {
-            // try to parse big raw numbers (bigger than 999), e.g. 1207
-            final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
-            if (isRawNumber(ts.get(nextNotIgnore))) {
-                final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
-                if (!preferOrdinal && ordinal) {
-                    return null; // do not allow ordinals if preferOrdinal is false
-                } else {
-                    // a big number in raw form, e.g. 1250067, 5839th
-                    ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
-                    return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
-                }
-
-            } else {
-                return null; // nothing was found
-            }
+            return numberBigRaw(preferOrdinal); // try to parse big raw numbers (>=1000), e.g. 1207
         }
         // groups != null from here on
-
         if (groups.isOrdinal()) {
             return groups; // no more checks, as the ordinal word comes last, e.g. million twelfth
         }
@@ -195,6 +180,24 @@ public class EnglishNumberParser {
         }
 
         return groups; // e.g. six million, three hundred and twenty seven
+    }
+
+    Number numberBigRaw(final boolean preferOrdinal) {
+        // try to parse big raw numbers (bigger than 999), e.g. 1207, 57378th
+        final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
+        if (isRawNumber(ts.get(nextNotIgnore))) {
+            final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
+            if (!preferOrdinal && ordinal) {
+                return null; // do not allow ordinals if preferOrdinal is false
+            } else {
+                // a big number in raw form, e.g. 1250067, 5839th
+                ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
+                return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
+            }
+
+        } else {
+            return null; // nothing was found
+        }
     }
 
     Number numberYearSecondGroup(final boolean preferOrdinal) {
