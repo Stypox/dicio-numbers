@@ -33,7 +33,7 @@ public class EnglishNumberParser {
     }
 
     Number numberPoint(final boolean preferOrdinal) {
-        Number n = numberShortScale(preferOrdinal);
+        Number n = numberInteger(preferOrdinal);
         if (n != null && n.isOrdinal()) {
             return n; // no point or fraction separator can appear after an ordinal number
         }
@@ -88,7 +88,7 @@ public class EnglishNumberParser {
             }
 
             ts.movePositionForwardBy(separatorLength);
-            final Number denominator = numberShortScale(false);
+            final Number denominator = numberInteger(false);
             if (denominator == null) {
                 ts.movePositionForwardBy(-separatorLength); // not a fraction, reset
             } else {
@@ -99,12 +99,70 @@ public class EnglishNumberParser {
         return n;
     }
 
-    Number numberShortScale(final boolean preferOrdinal) {
+    Number numberInteger(final boolean preferOrdinal) {
         if (ts.get(0).hasCategory("ignore")
                 && (!ts.get(0).isValue("a") || ts.get(1).hasCategory("ignore"))) {
             return null; // do not eat ignored words at the beginning, expect a (see e.g. a hundred)
         }
 
+        Number n = numberShortScale(preferOrdinal);
+        if (n == null) {
+            return numberBigRaw(preferOrdinal); // try to parse big raw numbers (>=1000), e.g. 1207
+        } else if (n.isOrdinal()) {
+            return n; // no more checks, as the ordinal word comes last, e.g. million twelfth
+        }
+        // n != null from here on
+
+        if (n.lessThan(21) && n.moreThan(9)) {
+            // parse years (1001 to 2099) in the particular forms (but xx-hundred is handled below)
+            final Number secondGroup = numberYearSecondGroup(preferOrdinal);
+            if (secondGroup != null) {
+                return n.multiply(100).plus(secondGroup).setOrdinal(secondGroup.isOrdinal());
+            }
+        }
+
+        if (n.lessThan(100)) {
+            final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
+            if (ts.get(nextNotIgnore).hasCategory("hundred")) {
+                // parse numbers suffixed by hundred, e.g. twenty six hundred -> 2600
+                final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
+                if (preferOrdinal || !ordinal) {
+                    // prevent ordinal numbers if preferOrdinal is false
+                    ts.movePositionForwardBy(nextNotIgnore + 1);
+                    return n.multiply(100).setOrdinal(ordinal);
+                }
+            }
+        }
+
+        if (n.lessThan(1000)) {
+            // parse raw number n separated by comma, e.g. 123,045,006
+            // assuming current position is at the first comma
+            if (isRawNumber(ts.get(-1)) && ts.get(0).hasCategory("thousand_separator")
+                    && ts.get(1).getValue().length() == 3 && isRawNumber(ts.get(1))) {
+                final int originalPosition = ts.getPosition() - 1;
+
+                while (ts.get(0).hasCategory("thousand_separator")
+                        && ts.get(1).getValue().length() == 3 && isRawNumber(ts.get(1))) {
+                    n = n.multiply(1000).plus(ts.get(1).getNumber());
+                    ts.movePositionForwardBy(2); // do not allow ignored words in between
+                }
+
+                if (ts.get(0).hasCategory("ordinal_suffix")) {
+                    if (preferOrdinal) {
+                        ts.movePositionForwardBy(1);
+                        return n.setOrdinal(true); // ordinal number, e.g. 20,056,789th
+                    } else {
+                        ts.setPosition(originalPosition);
+                        return null; // found ordinal number, revert since preferOrdinal is false
+                    }
+                }
+            }
+        }
+
+        return n; // e.g. six million, three hundred and twenty seven
+    }
+
+    Number numberShortScale(final boolean preferOrdinal) {
         // read as many groups as possible (e.g. 123 billion + 45 million + 6 thousand + 78)
         Number groups = null;
         long lastMultiplier = Long.MAX_VALUE;
@@ -124,62 +182,7 @@ public class EnglishNumberParser {
             }
             lastMultiplier = group.integerValue();
         }
-
-        if (groups == null) {
-            return numberBigRaw(preferOrdinal); // try to parse big raw numbers (>=1000), e.g. 1207
-        }
-        // groups != null from here on
-        if (groups.isOrdinal()) {
-            return groups; // no more checks, as the ordinal word comes last, e.g. million twelfth
-        }
-
-        if (groups.lessThan(21) && groups.moreThan(9)) {
-            // parse years (1001 to 2099) in the particular forms (but xx-hundred is handled below)
-            final Number secondGroup = numberYearSecondGroup(preferOrdinal);
-            if (secondGroup != null) {
-                return groups.multiply(100).plus(secondGroup).setOrdinal(secondGroup.isOrdinal());
-            }
-        }
-
-        if (groups.lessThan(100)) {
-            final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
-            if (ts.get(nextNotIgnore).hasCategory("hundred")) {
-                // parse numbers suffixed by hundred, e.g. twenty six hundred -> 2600
-                final boolean ordinal = ts.get(nextNotIgnore).hasCategory("ordinal");
-                if (preferOrdinal || !ordinal) {
-                    // prevent ordinal numbers if preferOrdinal is false
-                    ts.movePositionForwardBy(nextNotIgnore + 1);
-                    return groups.multiply(100).setOrdinal(ordinal);
-                }
-            }
-        }
-
-        if (groups.lessThan(1000)) {
-            // parse raw number groups separated by comma, e.g. 123,045,006
-            // assuming current position is at the first comma
-            if (isRawNumber(ts.get(-1)) && ts.get(0).hasCategory("thousand_separator")
-                    && ts.get(1).getValue().length() == 3 && isRawNumber(ts.get(1))) {
-                final int originalPosition = ts.getPosition() - 1;
-
-                while (ts.get(0).hasCategory("thousand_separator")
-                        && ts.get(1).getValue().length() == 3 && isRawNumber(ts.get(1))) {
-                    groups = groups.multiply(1000).plus(ts.get(1).getNumber());
-                    ts.movePositionForwardBy(2); // do not allow ignored words in between
-                }
-
-                if (ts.get(0).hasCategory("ordinal_suffix")) {
-                    if (preferOrdinal) {
-                        ts.movePositionForwardBy(1);
-                        return groups.setOrdinal(true); // ordinal number, e.g. 20,056,789th
-                    } else {
-                        ts.setPosition(originalPosition);
-                        return null; // found ordinal number, revert since preferOrdinal is false
-                    }
-                }
-            }
-        }
-
-        return groups; // e.g. six million, three hundred and twenty seven
+        return groups;
     }
 
     Number numberBigRaw(final boolean preferOrdinal) {

@@ -57,11 +57,11 @@ public class EnglishNumberParserTest {
 
     private static void assertNumberShortScale(final String s, final boolean preferOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
-                (enp) -> enp.numberShortScale(preferOrdinal));
+                (enp) -> enp.numberInteger(preferOrdinal));
     }
 
     private static void assertNumberShortScaleNull(final String s, final boolean preferOrdinal) {
-        assertNumberFunctionNull(s, (enp) -> enp.numberShortScale(preferOrdinal));
+        assertNumberFunctionNull(s, (enp) -> enp.numberInteger(preferOrdinal));
     }
 
     private static void assertNumberPoint(final String s, final boolean preferOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
