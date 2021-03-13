@@ -296,7 +296,7 @@ public class EnglishNumberParserTest {
     }
 
     @Test
-    public void testNumberShortScaleWithFormatter() {
+    public void testNumberIntegerWithFormatter() {
         final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
         for (int i = 0; i < 1100000000;) {
             if (i < 2200) {
@@ -316,23 +316,43 @@ public class EnglishNumberParserTest {
             formatted = npf.pronounceNumber(i).places(0).ordinal(T).get();
             tokensInFormatted = tokensInFormattedString(formatted);
             assertNumberInteger(formatted, T, T, i, T, tokensInFormatted);
+
+            // long scale not ordinal
+            formatted = npf.pronounceNumber(i).places(0).shortScale(false).get();
+            tokensInFormatted = tokensInFormattedString(formatted);
+            assertNumberInteger(formatted, F, T, i, F, tokensInFormatted);
+
+            // long scale ordinal
+            formatted = npf.pronounceNumber(i).places(0).shortScale(false).ordinal(true).get();
+            tokensInFormatted = tokensInFormattedString(formatted);
+            assertNumberInteger(formatted, F, T, i, T, tokensInFormatted);
         }
     }
 
-    @Test(timeout = 2000) // 20000 formats + parses take <1s, use 2s timeout just for slower PCs
-    public void testNumberShortScalePerformance() {
+    @Test(timeout = 4000) // 40000 formats + parses take <2s, use 4s timeout just for slower PCs
+    public void testNumberIntegerPerformance() {
         final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
         final long startingValue = 54378960497L;
         for (long i = startingValue; i < startingValue + 10000; ++i) {
-            // not ordinal
+            // short scale not ordinal
             String formatted = npf.pronounceNumber(i).places(0).get();
             int tokensInFormatted = tokensInFormattedString(formatted);
             assertNumberInteger(formatted, T, T, i, F, tokensInFormatted);
 
-            // ordinal
-            formatted = npf.pronounceNumber(i).places(0).ordinal(T).get();
+            // short scale ordinal
+            formatted = npf.pronounceNumber(i).places(0).ordinal(true).get();
             tokensInFormatted = tokensInFormattedString(formatted);
             assertNumberInteger(formatted, T, T, i, T, tokensInFormatted);
+
+            // long scale not ordinal
+            formatted = npf.pronounceNumber(i).places(0).shortScale(false).get();
+            tokensInFormatted = tokensInFormattedString(formatted);
+            assertNumberInteger(formatted, F, T, i, F, tokensInFormatted);
+
+            // long scale ordinal
+            formatted = npf.pronounceNumber(i).places(0).shortScale(false).ordinal(true).get();
+            tokensInFormatted = tokensInFormattedString(formatted);
+            assertNumberInteger(formatted, F, T, i, T, tokensInFormatted);
         }
     }
 
