@@ -69,6 +69,15 @@ public class EnglishNumberParserTest {
         assertNumberFunctionNull(s, true, enp -> enp.numberGroupShortScale(allowOrdinal, lastMultiplier));
     }
 
+    private static void assertNumberGroupLongScale(final String s, final boolean allowOrdinal, final long lastMultiplier, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
+        assertNumberFunction(s, true, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+                enp -> enp.numberGroupLongScale(allowOrdinal, lastMultiplier));
+    }
+
+    private static void assertNumberGroupLongScaleNull(final String s, final boolean allowOrdinal, final long lastMultiplier) {
+        assertNumberFunctionNull(s, true, enp -> enp.numberGroupLongScale(allowOrdinal, lastMultiplier));
+    }
+
     private static void assertNumberInteger(final String s, final boolean shortScale, final boolean allowOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, shortScale, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
                 (enp) -> enp.numberInteger(allowOrdinal));
@@ -215,6 +224,43 @@ public class EnglishNumberParserTest {
         assertNumberGroupShortScaleNull("nine thousand and one", T, 1000);
         assertNumberGroupShortScaleNull("eight million people",  F, 1000000);
         assertNumberGroupShortScaleNull(" ten ",                 T, 1000000);
+    }
+
+    @Test
+    public void testNumberGroupLongScale() {
+        assertNumberGroupLongScale("one hundred and twenty million", F, 1000000000, 120000000, F, 5);
+        assertNumberGroupLongScale("three thousand and six",         T, 1000000000, 3006,      F, 4);
+        assertNumberGroupLongScale("a hundred thousand",             F, 1000000,    100000,    F, 3);
+        assertNumberGroupLongScale("hundred 70 thousand",            T, 1000000,    170000,    F, 3);
+        assertNumberGroupLongScale("572 million",                    F, 1000000000, 572000000, F, 2);
+        assertNumberGroupLongScale("572012 billion",                 F, 1000000000000000000L, 572012000000000000L, F, 2);
+        assertNumberGroupLongScale("3 million",                      T, 1000000000, 3000000,   F, 2);
+        assertNumberGroupLongScale(", one hundred and ninety one",   F, 1000000,    191,       F, 6);
+    }
+
+    @Test
+    public void testNumberGroupLongScaleOrdinal() {
+        assertNumberGroupLongScale("seven hundred and sixty four millionth", T, 1000000000, 764000000, T, 6);
+        assertNumberGroupLongScale("seven hundred and sixty four millionth", F, 1000000000, 764,       F, 5);
+        assertNumberGroupLongScale("seven hundred and sixty four millionth", F, 1000000,    764,       F, 5);
+        assertNumberGroupLongScale("fifth billionth",                        T, 1000000000, 5,         T, 1);
+        assertNumberGroupLongScale("nineteen hundredth",                     T, 1000000000, 19,        F, 1);
+        assertNumberGroupLongScaleNull("seven hundred and sixty four millionth", T, 1000);
+        assertNumberGroupLongScaleNull("twelfth thousandth",                     F, 1000000000);
+    }
+
+    @Test
+    public void testNumberGroupLongScaleNull() {
+        assertNumberGroupLongScaleNull("",                      T, 1000000000);
+        assertNumberGroupLongScaleNull("hello",                 F, 1000000);
+        assertNumberGroupLongScaleNull("hello how are you",     T, 1000000);
+        assertNumberGroupLongScaleNull("5000000",               T, 1000000000);
+        assertNumberGroupLongScaleNull("one hundred and six",   F, 999);
+        assertNumberGroupLongScaleNull("twelve",                T, 0);
+        assertNumberGroupLongScaleNull("seven billion",         F, 1000000);
+        assertNumberGroupLongScaleNull("nine thousand and one", T, 1000);
+        assertNumberGroupLongScaleNull("eight million people",  F, 1000000);
+        assertNumberGroupLongScaleNull(" ten ",                 T, 1000000);
     }
 
     @Test

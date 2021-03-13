@@ -330,6 +330,25 @@ public class EnglishNumberParser {
                 return first;
             }
 
+            if (first == null) {
+                final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);
+                if (isRawNumber(ts.get(nextNotIgnore))
+                        && ts.get(nextNotIgnore).getNumber().lessThan(1000000)) {
+                    // maybe a raw number smaller than 1000000, e.g. 785743
+                    final boolean ordinal = ts.get(nextNotIgnore + 1).hasCategory("ordinal_suffix");
+                    if (ordinal) {
+                        if (!allowOrdinal) {
+                            // do not allow raw number + st/nd/rd/th if allowOrdinal is false
+                            return null;
+                        }
+                        ts.movePositionForwardBy(nextNotIgnore + 2);
+                        return ts.get(-2).getNumber().setOrdinal(true);
+                    }
+                    ts.movePositionForwardBy(nextNotIgnore + 1);
+                    first = ts.get(-1).getNumber(); // raw number group, e.g. 123042 million
+                }
+            }
+
         } else {
             if (first.isOrdinal() || first.lessThan(1000)) {
                 // nothing else follows an ordinal number; the number does not end with thousand
