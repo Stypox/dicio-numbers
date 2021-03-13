@@ -323,7 +323,14 @@ public class EnglishNumberParser {
 
         final int originalPosition = ts.getPosition();
         Number first = numberGroupShortScale(allowOrdinal, 1000000);
-        if (first != null) {
+        if (first == null) {
+            // there is no number or the number is followed by a multiplier which is not thousand
+            first = numberLessThan1000(allowOrdinal);
+            if (first != null && first.isOrdinal()) {
+                return first;
+            }
+
+        } else {
             if (first.isOrdinal() || first.lessThan(1000)) {
                 // nothing else follows an ordinal number; the number does not end with thousand
                 return first;
