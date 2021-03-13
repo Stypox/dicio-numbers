@@ -172,19 +172,32 @@ public class PronounceNumberTest {
     @Test
     public void ordinal() {
         // small numbers
-        assertEquals("first", pf.pronounceNumber(1).ordinal(true).get());
-        assertEquals("tenth", pf.pronounceNumber(10).ordinal(true).get());
-        assertEquals("fifteenth", pf.pronounceNumber(15).ordinal(true).get());
-        assertEquals("twentieth", pf.pronounceNumber(20).ordinal(true).get());
-        assertEquals("twenty seventh", pf.pronounceNumber(27).ordinal(true).get());
-        assertEquals("thirtieth", pf.pronounceNumber(30).ordinal(true).get());
-        assertEquals("thirty third", pf.pronounceNumber(33).ordinal(true).get());
-        assertEquals("hundredth", pf.pronounceNumber(100).ordinal(true).get());
-        assertEquals("thousandth", pf.pronounceNumber(1000).ordinal(true).get());
-        assertEquals("ten thousandth", pf.pronounceNumber(10000).ordinal(true).get());
-        assertEquals("two hundredth", pf.pronounceNumber(200).ordinal(true).get());
-        assertEquals("eighteen thousand, six hundred and ninety first", pf.pronounceNumber(18691).ordinal(true).get());
-        assertEquals("one thousand, five hundred and sixty seventh", pf.pronounceNumber(1567).ordinal(true).get());
+        assertEquals("first", pf.pronounceNumber(1).shortScale(true).ordinal(true).get());
+        assertEquals("first", pf.pronounceNumber(1).shortScale(false).ordinal(true).get());
+        assertEquals("tenth", pf.pronounceNumber(10).shortScale(true).ordinal(true).get());
+        assertEquals("tenth", pf.pronounceNumber(10).shortScale(false).ordinal(true).get());
+        assertEquals("fifteenth", pf.pronounceNumber(15).shortScale(true).ordinal(true).get());
+        assertEquals("fifteenth", pf.pronounceNumber(15).shortScale(false).ordinal(true).get());
+        assertEquals("twentieth", pf.pronounceNumber(20).shortScale(true).ordinal(true).get());
+        assertEquals("twentieth", pf.pronounceNumber(20).shortScale(false).ordinal(true).get());
+        assertEquals("twenty seventh", pf.pronounceNumber(27).shortScale(true).ordinal(true).get());
+        assertEquals("twenty seventh", pf.pronounceNumber(27).shortScale(false).ordinal(true).get());
+        assertEquals("thirtieth", pf.pronounceNumber(30).shortScale(true).ordinal(true).get());
+        assertEquals("thirtieth", pf.pronounceNumber(30).shortScale(false).ordinal(true).get());
+        assertEquals("thirty third", pf.pronounceNumber(33).shortScale(true).ordinal(true).get());
+        assertEquals("thirty third", pf.pronounceNumber(33).shortScale(false).ordinal(true).get());
+        assertEquals("hundredth", pf.pronounceNumber(100).shortScale(true).ordinal(true).get());
+        assertEquals("hundredth", pf.pronounceNumber(100).shortScale(false).ordinal(true).get());
+        assertEquals("thousandth", pf.pronounceNumber(1000).shortScale(true).ordinal(true).get());
+        assertEquals("thousandth", pf.pronounceNumber(1000).shortScale(false).ordinal(true).get());
+        assertEquals("ten thousandth", pf.pronounceNumber(10000).shortScale(true).ordinal(true).get());
+        assertEquals("ten thousandth", pf.pronounceNumber(10000).shortScale(false).ordinal(true).get());
+        assertEquals("two hundredth", pf.pronounceNumber(200).shortScale(true).ordinal(true).get());
+        assertEquals("two hundredth", pf.pronounceNumber(200).shortScale(false).ordinal(true).get());
+        assertEquals("eighteen thousand, six hundred and ninety first", pf.pronounceNumber(18691).ordinal(true).shortScale(true).get());
+        assertEquals("eighteen thousand, six hundred and ninety first", pf.pronounceNumber(18691).ordinal(true).shortScale(false).get());
+        assertEquals("one thousand, five hundred and sixty seventh", pf.pronounceNumber(1567).ordinal(true).shortScale(true).get());
+        assertEquals("one thousand, five hundred and sixty seventh", pf.pronounceNumber(1567).ordinal(true).shortScale(false).get());
 
         // big numbers
         assertEquals("eighteen millionth", pf.pronounceNumber(18000000).ordinal(true).get());

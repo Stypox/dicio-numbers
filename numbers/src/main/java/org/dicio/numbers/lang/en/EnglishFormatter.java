@@ -287,6 +287,12 @@ public class EnglishFormatter extends NumberFormatter {
                     groupName = subThousand(z / 1000, false) + " thousand";
                     if (z % 1000 != 0) {
                         groupName += (i == 0 ? ", " : " ") + subThousand(z % 1000, i == 0 && ordi);
+                    } else if (i == 0 && ordi) {
+                        if (z / 1000 == 1) {
+                            groupName = "thousandth"; // remove "one" from "one thousandth"
+                        } else {
+                            groupName += "th";
+                        }
                     }
                 }
 
