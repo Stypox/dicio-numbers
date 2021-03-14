@@ -273,7 +273,7 @@ public class EnglishNumberParser {
                 groups.setOrdinal(true);
                 break; // ordinal numbers terminate at the ordinal group
             }
-            lastMultiplier = group.integerValue();
+            lastMultiplier = group.isDecimal() ? group.decimalValue() : group.integerValue();
         }
         return groups;
     }
