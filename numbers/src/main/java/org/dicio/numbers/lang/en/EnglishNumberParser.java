@@ -252,7 +252,7 @@ public class EnglishNumberParser {
     Number numberShortLongScale(final boolean allowOrdinal) {
         // read as many groups as possible (e.g. 123 billion + 45 million + 6 thousand + 78)
         Number groups = null;
-        long lastMultiplier = Long.MAX_VALUE;
+        double lastMultiplier = Double.MAX_VALUE;
         while (true) {
             final Number group;
             if (shortScale) {
@@ -278,7 +278,7 @@ public class EnglishNumberParser {
         return groups;
     }
 
-    Number numberGroupShortScale(final boolean allowOrdinal, final long lastMultiplier) {
+    Number numberGroupShortScale(final boolean allowOrdinal, final double lastMultiplier) {
         if (lastMultiplier < 1000) {
             return null; // prevent two numbers smaller than 1000 to be one after another
         }
@@ -316,7 +316,7 @@ public class EnglishNumberParser {
         return null;
     }
 
-    Number numberGroupLongScale(final boolean allowOrdinal, final long lastMultiplier) {
+    Number numberGroupLongScale(final boolean allowOrdinal, final double lastMultiplier) {
         if (lastMultiplier < 1000000) {
             return null; // prevent two numbers smaller than 1000000 to be one after another
         }

@@ -103,6 +103,10 @@ public class Number {
         return isDecimal ? (decimalValue < integer) : (integerValue < integer);
     }
 
+    public boolean lessThan(final double decimal) {
+        return isDecimal ? (decimalValue < decimal) : (integerValue < decimal);
+    }
+
     public boolean moreThan(final long integer) {
         return isDecimal ? (decimalValue > integer) : (integerValue > integer);
     }
