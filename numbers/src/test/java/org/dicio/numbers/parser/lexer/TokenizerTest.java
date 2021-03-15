@@ -96,4 +96,13 @@ public class TokenizerTest {
         assertToken(tokens.get(3),  "twoS",    " ", cat("number", "digit"),              cat("ordinal"), new Number(2));
         assertToken(tokens.get(4),  "Fifths",  " ", cat("number", "digit", "ordinal"),   cat("sign"),    new Number(5));
     }
+
+    @Test
+    public void accents() {
+        final List<Token> tokens = tokenizer.tokenize("twò ThréèS çòÙplé mInùs");
+        assertToken(tokens.get(0),  "twò",    " ", cat("number", "digit"),               cat("ordinal"),    new Number(2));
+        assertToken(tokens.get(1),  "ThréèS", " ", cat("number", "digit"),               cat("sign"),       new Number(3));
+        assertToken(tokens.get(2),  "çòÙplé", " ", cat("number", "suffix_multiplier"),   cat("multiplier"), new Number(2));
+        assertToken(tokens.get(3),  "mInùs",  "",  cat("sign", "negative"),              cat("number"));
+    }
 }

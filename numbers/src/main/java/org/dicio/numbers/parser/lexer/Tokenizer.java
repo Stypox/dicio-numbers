@@ -8,14 +8,20 @@ import com.grack.nanojson.JsonParserException;
 import org.dicio.numbers.util.Number;
 import org.dicio.numbers.util.Utils;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class Tokenizer {
+
+    private static final Pattern diacriticalMarksRemover =
+            Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+
 
     private final String spaces;
     private final String charactersAsWord;
@@ -195,8 +201,9 @@ public class Tokenizer {
     }
 
     private String cleanValue(final String value) {
-        // TODO remove accents
-        return value.toLowerCase();
+        // nfkd normalize (i.e. remove accents) and make lowercase
+        final String normalized = Normalizer.normalize(value.toLowerCase(), Normalizer.Form.NFKD);
+        return diacriticalMarksRemover.matcher(normalized).replaceAll("");
     }
 
 
