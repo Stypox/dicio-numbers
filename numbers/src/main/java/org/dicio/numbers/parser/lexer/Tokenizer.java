@@ -9,7 +9,6 @@ import org.dicio.numbers.util.Number;
 import org.dicio.numbers.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -21,6 +20,7 @@ public class Tokenizer {
     private final String spaces;
     private final String charactersAsWord;
     private final Set<String> rawNumberCategories;
+    private final List<String> pluralEndings;
 
     private final Map<String, Set<String>> wordMatches;
     private final Map<String, Mapping> numberMappings;
@@ -35,6 +35,15 @@ public class Tokenizer {
             charactersAsWord = root.getString("characters_as_word");
             rawNumberCategories = readCategories(root.getArray("raw_number_categories"));
 
+            pluralEndings = new ArrayList<>();
+            for (final Object o : root.getArray("plural_endings")) {
+                if (!(o instanceof String)) {
+                    throw new RuntimeException(
+                            "Content of plural_endings array is not string: " + o);
+                }
+                pluralEndings.add((String) o);
+            }
+
             wordMatches = new HashMap<>();
             for (final Object o : root.getArray("word_matches")) {
                 if (!(o instanceof JsonObject)) {
@@ -43,12 +52,8 @@ public class Tokenizer {
 
                 final JsonObject match = (JsonObject) o;
                 final Set<String> categories = readCategories(match.getArray("categories"));
-                final JsonArray values = match.getArray("values");
-                if (values == null) {
-                    throw new RuntimeException("Missing values array in match: " + match);
-                }
 
-                for (final Object v : values) {
+                for (final Object v : match.getArray("values")) {
                     if (!(v instanceof String)) {
                         throw new RuntimeException("Content of values array is not string: " + v);
                     }
@@ -152,6 +157,20 @@ public class Tokenizer {
                     new Number(Long.parseLong(value)));
         }
 
+        Token token = tokenFromValueExact(value, spacesFollowing);
+        if (token == null) {
+            final String removedPluralEndings = removePluralEndings(value);
+            if (removedPluralEndings != null) {
+                token = tokenFromValueExact(removedPluralEndings, spacesFollowing);
+            }
+        }
+
+        return token == null ? new Token(value, spacesFollowing) : token;
+    }
+
+    private Token tokenFromValueExact(final String value,
+                                      final String spacesFollowing) {
+
         final String clean = cleanValue(value);
 
         final Mapping mapping = numberMappings.get(clean);
@@ -164,7 +183,16 @@ public class Tokenizer {
             return new MatchedToken(value, spacesFollowing, match);
         }
 
-        return new Token(value, spacesFollowing);
+        return null;
+    }
+
+    private String removePluralEndings(final String value) {
+        for (final String pluralEnding : pluralEndings) {
+            if (value.endsWith(pluralEnding)) {
+                return value.substring(0, value.length() - pluralEnding.length());
+            }
+        }
+        return null;
     }
 
     private String cleanValue(final String value) {

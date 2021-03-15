@@ -5,6 +5,9 @@
     "number",
     "raw"
   ],
+  "plural_endings": [
+    "s"
+  ],
   "word_matches": [
     {
       "categories": [
