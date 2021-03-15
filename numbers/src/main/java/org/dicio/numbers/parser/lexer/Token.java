@@ -25,7 +25,7 @@ public class Token {
     }
 
     public final boolean isValue(final String value) {
-        return this.value.equals(value);
+        return this.value.equalsIgnoreCase(value);
     }
 
     public Number getNumber() {
