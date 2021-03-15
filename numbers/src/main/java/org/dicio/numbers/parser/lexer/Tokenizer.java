@@ -157,22 +157,21 @@ public class Tokenizer {
                     new Number(Long.parseLong(value)));
         }
 
-        Token token = tokenFromValueExact(value, spacesFollowing);
+        final String clean = cleanValue(value);
+        Token token = tokenFromValueExact(clean, value, spacesFollowing);
         if (token == null) {
-            final String removedPluralEndings = removePluralEndings(value);
+            final String removedPluralEndings = removePluralEndings(clean);
             if (removedPluralEndings != null) {
-                token = tokenFromValueExact(removedPluralEndings, spacesFollowing);
+                token = tokenFromValueExact(removedPluralEndings, value, spacesFollowing);
             }
         }
 
         return token == null ? new Token(value, spacesFollowing) : token;
     }
 
-    private Token tokenFromValueExact(final String value,
+    private Token tokenFromValueExact(final String clean,
+                                      final String value,
                                       final String spacesFollowing) {
-
-        final String clean = cleanValue(value);
-
         final Mapping mapping = numberMappings.get(clean);
         if (mapping != null) {
             return new NumberToken(value, spacesFollowing, mapping.categories, mapping.number);
