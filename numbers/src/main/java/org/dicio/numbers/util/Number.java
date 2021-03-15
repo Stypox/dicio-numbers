@@ -90,13 +90,22 @@ public class Number {
         return number.isDecimal ? plus(number.decimalValue) : plus(number.integerValue);
     }
 
-    public Number divide(final Number number) {
-        if (isDecimal || number.isDecimal || (integerValue % number.integerValue != 0)) {
-            return new Number((isDecimal ? decimalValue : integerValue)
-                    / (number.isDecimal ? number.decimalValue : number.integerValue));
+    public Number divide(final long integer) {
+        if (isDecimal) {
+            return new Number(decimalValue / integer);
+        } else if (integerValue % integer == 0) {
+            return new Number(integerValue / integer);
         } else {
-            return new Number(integerValue / number.integerValue);
+            return new Number(((double) integerValue) / integer);
         }
+    }
+
+    public Number divide(final double decimal) {
+        return new Number((isDecimal ? decimalValue : integerValue) / decimal);
+    }
+
+    public Number divide(final Number number) {
+        return number.isDecimal ? divide(number.decimalValue) : divide(number.integerValue);
     }
 
     public boolean lessThan(final long integer) {

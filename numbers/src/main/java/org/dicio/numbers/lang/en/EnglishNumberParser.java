@@ -93,7 +93,17 @@ public class EnglishNumberParser {
                 // no denominator found: maybe a custom multiplier? e.g. half (=0.5), dozen (=12)
                 if (ts.get(0).hasCategory("suffix_multiplier")) {
                     ts.movePositionForwardBy(1);
-                    return numberToEdit.multiply(ts.get(-1).getNumber());
+
+                    final Number multiplier = ts.get(-1).getNumber();
+                    if (multiplier.isDecimal() && ((long) (1 / multiplier.decimalValue()))
+                            == (1 / multiplier.decimalValue())) {
+                        // the multiplier is an exact fraction, divide by the denominator converted
+                        // to long to possibly preserve the integerness of numberToEdit, e.g.
+                        // sixteen quarters should be 4, not 4.0
+                        return numberToEdit.divide((long) (1 / multiplier.decimalValue()));
+                    }
+
+                    return numberToEdit.multiply(multiplier);
                 }
             } else if (denominator.isOrdinal() && denominator.moreThan(2)) {
                 return numberToEdit.divide(denominator); // valid denominator, e.g. one fifth
