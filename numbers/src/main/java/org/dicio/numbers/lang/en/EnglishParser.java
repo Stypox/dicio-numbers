@@ -9,7 +9,7 @@ import java.util.List;
 
 public class EnglishParser extends NumberParser {
 
-    protected EnglishParser() {
+    public EnglishParser() {
         super("config/en-us");
     }
 
