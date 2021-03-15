@@ -5,14 +5,114 @@ import org.dicio.numbers.parser.lexer.Token;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.util.Number;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EnglishNumberParser {
 
     private final TokenStream ts;
     private final boolean shortScale;
+    private final boolean preferOrdinal;
 
-    EnglishNumberParser(final TokenStream tokenStream, final boolean shortScale) {
+    EnglishNumberParser(final TokenStream tokenStream,
+                        final boolean shortScale,
+                        final boolean preferOrdinal) {
         this.ts = tokenStream;
         this.shortScale = shortScale;
+        this.preferOrdinal = preferOrdinal;
+    }
+
+    public List<Object> extractNumbers() {
+        List<Object> textAndNumbers = new ArrayList<>();
+        final StringBuilder currentText = new StringBuilder();
+
+        // the called functions will add objects to textAndNumbers and reuse currentText for strings
+        if (preferOrdinal) {
+            extractNumbersPreferOrdinal(textAndNumbers, currentText);
+        } else {
+            extractNumbersPreferFraction(textAndNumbers, currentText);
+        }
+
+        if (currentText.length() != 0) {
+            // add leftover text (this can be done here since the functions above reuse currentText)
+            textAndNumbers.add(currentText.toString());
+        }
+
+        return textAndNumbers;
+    }
+
+    void extractNumbersPreferOrdinal(final List<Object> textAndNumbers,
+                                     final StringBuilder currentText) {
+        while (!ts.finished()) {
+            Number number = numberSignPoint(true);
+            if (number == null) {
+                // no number here
+                currentText.append(ts.get(0).getValue()).append(ts.get(0).getSpacesFollowing());
+                ts.movePositionForwardBy(1);
+
+            } else {
+                if (!number.isOrdinal() && !number.isDecimal()
+                        && !ts.get(0).hasCategory("ignore")) {
+                    // if this is directly followed by an ordinal number then it is a fraction (only
+                    // if number is not ordinal or already decimal). Note: a big long scale integer
+                    // (i.e. 10^24) would be decimal, here we are assuming that such a number has no
+                    // fraction after it.
+
+                    final int originalPosition = ts.getPosition();
+                    final Number denominator = numberInteger(true);
+                    if (denominator != null && denominator.isOrdinal()) {
+                        number = number.divide(denominator);
+                    } else {
+                        ts.setPosition(originalPosition);
+                    }
+                }
+
+                if (currentText.length() != 0) {
+                    textAndNumbers.add(currentText.toString());
+                    currentText.setLength(0); // clear the text efficiently
+                }
+                textAndNumbers.add(number);
+                currentText.append(ts.get(-1).getSpacesFollowing());
+            }
+        }
+    }
+
+    void extractNumbersPreferFraction(final List<Object> textAndNumbers,
+                                      final StringBuilder currentText) {
+        while (!ts.finished()) {
+            // first try without ordinal
+            Number number = numberSignPoint(false);
+            if (number == null) {
+                // maybe an ordinal number?
+                number = numberSignPoint(true);
+
+            } else if (!number.isDecimal() && !ts.get(0).hasCategory("ignore")) {
+                // if this is directly followed by an ordinal number then it is a fraction (only if
+                // number is not already decimal). Note: a big long scale integer (i.e. 10^24) would
+                // be decimal, here we are assuming that such a number has no fraction after it.
+
+                final int originalPosition = ts.getPosition();
+                final Number denominator = numberInteger(true);
+                if (denominator != null && denominator.isOrdinal()) {
+                    number = number.divide(denominator);
+                } else {
+                    ts.setPosition(originalPosition);
+                }
+            }
+
+            if (number == null) {
+                // no number here
+                currentText.append(ts.get(0).getValue()).append(ts.get(0).getSpacesFollowing());
+                ts.movePositionForwardBy(1);
+            } else {
+                if (currentText.length() != 0) {
+                    textAndNumbers.add(currentText.toString());
+                    currentText.setLength(0); // clear the text efficiently
+                }
+                textAndNumbers.add(number);
+                currentText.append(ts.get(-1).getSpacesFollowing());
+            }
+        }
     }
 
     Number numberSignPoint(final boolean allowOrdinal) {
