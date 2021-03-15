@@ -1,6 +1,6 @@
 {
   "spaces": " :;_!?<>|=()[]{}»«*~^`'\"",
-  "characters_as_word": "%#-+.,/",
+  "characters_as_word": "%‰#-+.,/",
   "raw_number_categories": [
     "number",
     "raw"
