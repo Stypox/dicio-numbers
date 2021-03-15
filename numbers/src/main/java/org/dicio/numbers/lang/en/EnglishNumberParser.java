@@ -45,21 +45,11 @@ public class EnglishNumberParser {
                                      final StringBuilder currentText) {
         while (!ts.finished()) {
             Number number = numberSignPoint(true);
-            if (number == null) {
-                // no number here
-                currentText.append(ts.get(0).getValue()).append(ts.get(0).getSpacesFollowing());
-                ts.movePositionForwardBy(1);
-            } else {
+            if (number != null) {
                 // a number was found, maybe it has a valid denominator?
                 number = divideByDenominatorIfPossible(number);
-
-                if (currentText.length() != 0) {
-                    textAndNumbers.add(currentText.toString());
-                    currentText.setLength(0); // clear the text efficiently
-                }
-                textAndNumbers.add(number);
-                currentText.append(ts.get(-1).getSpacesFollowing());
             }
+            addNumberOrText(number, textAndNumbers, currentText);
         }
     }
 
@@ -75,19 +65,7 @@ public class EnglishNumberParser {
                 // a number was found, maybe it has a valid denominator?
                 number = divideByDenominatorIfPossible(number);
             }
-
-            if (number == null) {
-                // no number here
-                currentText.append(ts.get(0).getValue()).append(ts.get(0).getSpacesFollowing());
-                ts.movePositionForwardBy(1);
-            } else {
-                if (currentText.length() != 0) {
-                    textAndNumbers.add(currentText.toString());
-                    currentText.setLength(0); // clear the text efficiently
-                }
-                textAndNumbers.add(number);
-                currentText.append(ts.get(-1).getSpacesFollowing());
-            }
+            addNumberOrText(number, textAndNumbers, currentText);
         }
     }
 
@@ -115,6 +93,23 @@ public class EnglishNumberParser {
             }
         }
         return numberToEdit;
+    }
+
+    void addNumberOrText(final Number number,
+                         final List<Object> textAndNumbers,
+                         final StringBuilder currentText) {
+        if (number == null) {
+            // no number here, add the text of the current token to currentText instead
+            currentText.append(ts.get(0).getValue()).append(ts.get(0).getSpacesFollowing());
+            ts.movePositionForwardBy(1);
+        } else {
+            if (currentText.length() != 0) {
+                textAndNumbers.add(currentText.toString()); // add the text before the number
+                currentText.setLength(0); // clear the string builder efficiently
+            }
+            textAndNumbers.add(number);
+            currentText.append(ts.get(-1).getSpacesFollowing()); // spaces after the number
+        }
     }
 
     Number numberSignPoint(final boolean allowOrdinal) {
