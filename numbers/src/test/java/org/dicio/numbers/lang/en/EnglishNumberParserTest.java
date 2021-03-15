@@ -121,6 +121,11 @@ public class EnglishNumberParserTest {
         assertNumberFunctionNull(s, false, (enp) -> enp.numberSignPoint(allowOrdinal));
     }
 
+    private static void assertDivideByDenominatorIfPossible(final String s, final Number startingNumber, final Number value, final int finalTokenStreamPosition) {
+        assertNumberFunction(s, true, value, finalTokenStreamPosition,
+                (enp) -> enp.divideByDenominatorIfPossible(startingNumber));
+    }
+
     private static void assertExtractNumbers(final String s, final boolean shortScale, final boolean preferOrdinal, final Object... results) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
         final List<Object> objects = new EnglishNumberParser(ts, shortScale, preferOrdinal)
@@ -527,6 +532,16 @@ public class EnglishNumberParserTest {
         assertNumberSignPointNull("minus minus 1 hundred and sixty", F);
         assertNumberSignPointNull(" plus million",                   T);
         assertNumberSignPointNull(" +- 5",                           F);
+    }
+
+    @Test
+    public void testDivideByDenominatorIfPossible() {
+        assertDivideByDenominatorIfPossible("fifths",    n(5, F),   n(1, F),   1);
+        assertDivideByDenominatorIfPossible("dozen two", n(3, F),   n(36, F),  1);
+        assertDivideByDenominatorIfPossible("halves a",  n(19, F),  n(9.5, F), 1);
+        assertDivideByDenominatorIfPossible("quarter",   n(16, F),  n(4, F),   1);
+        assertDivideByDenominatorIfPossible("quarter",   n(4.4, F), n(4.4, F), 0);
+        assertDivideByDenominatorIfPossible("people",    n(98, F),  n(98, F),  0);
     }
 
     @Test
