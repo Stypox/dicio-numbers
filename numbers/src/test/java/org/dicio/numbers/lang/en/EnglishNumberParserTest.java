@@ -536,12 +536,14 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testDivideByDenominatorIfPossible() {
-        assertDivideByDenominatorIfPossible("fifths",    n(5, F),   n(1, F),   1);
-        assertDivideByDenominatorIfPossible("dozen two", n(3, F),   n(36, F),  1);
-        assertDivideByDenominatorIfPossible("halves a",  n(19, F),  n(9.5, F), 1);
-        assertDivideByDenominatorIfPossible("quarter",   n(16, F),  n(4, F),   1);
-        assertDivideByDenominatorIfPossible("quarter",   n(4.4, F), n(4.4, F), 0);
-        assertDivideByDenominatorIfPossible("people",    n(98, F),  n(98, F),  0);
+        assertDivideByDenominatorIfPossible("fifths",    n(5, F),    n(1, F),   1);
+        assertDivideByDenominatorIfPossible("dozen two", n(3, F),    n(36, F),  1);
+        assertDivideByDenominatorIfPossible("halves a",  n(19, F),   n(9.5, F), 1);
+        assertDivideByDenominatorIfPossible("%",         n(50, F),   n(0.5, F), 1);
+        assertDivideByDenominatorIfPossible("‰",         n(1000, F), n(1, F),   1);
+        assertDivideByDenominatorIfPossible("quarter",   n(16, F),   n(4, F),   1);
+        assertDivideByDenominatorIfPossible("quarter",   n(4.4, F),  n(4.4, F), 0);
+        assertDivideByDenominatorIfPossible("people",    n(98, F),   n(98, F),  0);
     }
 
     @Test
