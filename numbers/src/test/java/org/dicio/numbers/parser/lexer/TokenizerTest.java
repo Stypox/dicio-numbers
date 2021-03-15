@@ -81,9 +81,19 @@ public class TokenizerTest {
         assertToken(tokens.get(5),  "plus",    " ",   cat("sign", "positive"),             cat("number"));
         assertToken(tokens.get(6),  "1928",    "",    cat("raw", "number"),                cat("digit"),      new Number(1928));
         assertToken(tokens.get(7),  "point",   " \"", cat("point"),                        cat("ignore"));
-        assertToken(tokens.get(8),  "half",    "\" ", cat("number"),                       cat("multiplier"), new Number(0.5));
+        assertToken(tokens.get(8),  "half",    "\" ", cat("number", "suffix_multiplier"),  cat("multiplier"), new Number(0.5));
         assertToken(tokens.get(9),  "a",       "",    cat("ignore"),                       cat("sign"));
         assertToken(tokens.get(10), "-",       "",    cat("ignore", "sign", "negative"),   cat("positive"));
         assertToken(tokens.get(11), "million", "",    cat("number", "multiplier"),         cat("tens"),       new Number(1000000));
+    }
+
+    @Test
+    public void plurals() {
+        final List<Token> tokens = tokenizer.tokenize(",heLLos plus twoS Fifths ");
+        assertToken(tokens.get(0),  ",",       "",  cat("ignore", "thousand_separator"), cat("point"));
+        assertToken(tokens.get(1),  "heLLos",  " ");
+        assertToken(tokens.get(2),  "plus",    " ", cat("sign", "positive"),             cat("number"));
+        assertToken(tokens.get(3),  "twoS",    " ", cat("number", "digit"),              cat("ordinal"), new Number(2));
+        assertToken(tokens.get(4),  "Fifths",  " ", cat("number", "digit", "ordinal"),   cat("sign"),    new Number(5));
     }
 }
