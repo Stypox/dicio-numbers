@@ -1,25 +1,25 @@
 package org.dicio.numbers.lang.en;
 
 import org.dicio.numbers.parser.NumberParser;
-import org.dicio.numbers.parser.param.Gender;
+import org.dicio.numbers.parser.lexer.TokenStream;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 public class EnglishParser extends NumberParser {
-    @Override
-    public double extractNumber(final String text,
-                                final boolean shortScale,
-                                final boolean ordinal) {
-        return 0;
+
+    protected EnglishParser() {
+        super("config/en-us");
     }
 
+
     @Override
-    public List<Double> extractNumbers(final String text,
+    public List<Object> extractNumbers(final String text,
                                        final boolean shortScale,
-                                       final boolean ordinal) {
-        return null;
+                                       final boolean preferOrdinal) {
+        return new EnglishNumberParser(new TokenStream(tokenizer.tokenize(text)),
+                shortScale, preferOrdinal).extractNumbers();
     }
 
     @Override
@@ -32,25 +32,5 @@ public class EnglishParser extends NumberParser {
                                          final boolean anchorDate,
                                          final LocalTime defaultTime) {
         return null;
-    }
-
-    @Override
-    public String normalize(final String text, final boolean removeArticles) {
-        return null;
-    }
-
-    @Override
-    public Gender getGender(final String text, final String context) {
-        return Gender.UNKNOWN;
-    }
-
-    @Override
-    public boolean isFractional(final String text, final boolean shortScale, final boolean spoken) {
-        return false;
-    }
-
-    @Override
-    public boolean isOrdinal(final String text, final boolean shortScale, final boolean spoken) {
-        return false;
     }
 }
