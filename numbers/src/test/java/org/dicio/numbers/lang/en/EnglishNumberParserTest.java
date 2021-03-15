@@ -538,6 +538,7 @@ public class EnglishNumberParserTest {
         assertExtractNumbers("one billionth minus fifty eight",       false, true,  n(1000000000000L, T),        " ",       n(-58, F));
         assertExtractNumbers("one billionth times eleven",            false, false, n(1.0 / 1000000000000.0, F), " times ", n(11, F));
         assertExtractNumbers("three halves, not eleven quarters",     false, true,  n(3.0 / 2.0, F), ", not ", n(11.0 / 4.0, F));
-        assertExtractNumbers("six pairs equals a dozen",              false, true,  n(6, F), " equals a ", n(12, F));
+        assertExtractNumbers("six pairs equals a dozen",              false, true,  n(12, F), " equals ", n(12, F));
+        assertExtractNumbers("a dozen scores is not a gross",         false, true,  n(240, F), " is not ", n(144, F));
     }
 }

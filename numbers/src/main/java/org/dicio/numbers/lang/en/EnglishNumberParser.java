@@ -44,7 +44,12 @@ public class EnglishNumberParser {
     void extractNumbersPreferOrdinal(final List<Object> textAndNumbers,
                                      final StringBuilder currentText) {
         while (!ts.finished()) {
-            Number number = numberSignPoint(true);
+            // first try with suffix multiplier, e.g. dozen
+            Number number = numberSuffixMultiplier();
+            if (number == null) {
+                number = numberSignPoint(true); // then try with normal number
+            }
+
             if (number != null) {
                 // a number was found, maybe it has a valid denominator?
                 number = divideByDenominatorIfPossible(number);
@@ -56,13 +61,18 @@ public class EnglishNumberParser {
     void extractNumbersPreferFraction(final List<Object> textAndNumbers,
                                       final StringBuilder currentText) {
         while (!ts.finished()) {
-            // first try without ordinal
-            Number number = numberSignPoint(false);
+            // first try with suffix multiplier, e.g. dozen
+            Number number = numberSuffixMultiplier();
+            if (number == null) {
+                number = numberSignPoint(false); // then try without ordinal
+            }
+
             if (number == null) {
                 // maybe an ordinal number?
                 number = numberSignPoint(true);
             } else {
                 // a number was found, maybe it has a valid denominator?
+                // note that e.g. "a couple halves" ends up here, but that's valid
                 number = divideByDenominatorIfPossible(number);
             }
             addNumberOrText(number, textAndNumbers, currentText);
@@ -93,6 +103,18 @@ public class EnglishNumberParser {
             }
         }
         return numberToEdit;
+    }
+
+    Number numberSuffixMultiplier() {
+        if (ts.get(0).hasCategory("suffix_multiplier")) {
+            ts.movePositionForwardBy(1);
+            return ts.get(-1).getNumber(); // a suffix multiplier, e.g. dozen, half, score, percent
+        } else if (ts.get(0).isValue("a") && ts.get(1).hasCategory("suffix_multiplier")) {
+            ts.movePositionForwardBy(2); // also skip "a" before the suffix, e.g. a dozen
+            return ts.get(-1).getNumber(); // a suffix multiplier preceded by "a", e.g. a quarter
+        } else {
+            return null;
+        }
     }
 
     void addNumberOrText(final Number number,
