@@ -49,23 +49,9 @@ public class EnglishNumberParser {
                 // no number here
                 currentText.append(ts.get(0).getValue()).append(ts.get(0).getSpacesFollowing());
                 ts.movePositionForwardBy(1);
-
             } else {
-                if (!number.isOrdinal() && !number.isDecimal()
-                        && !ts.get(0).hasCategory("ignore")) {
-                    // if this is directly followed by an ordinal number then it is a fraction (only
-                    // if number is not ordinal or already decimal). Note: a big long scale integer
-                    // (i.e. 10^24) would be decimal, here we are assuming that such a number has no
-                    // fraction after it.
-
-                    final int originalPosition = ts.getPosition();
-                    final Number denominator = numberInteger(true);
-                    if (denominator != null && denominator.isOrdinal()) {
-                        number = number.divide(denominator);
-                    } else {
-                        ts.setPosition(originalPosition);
-                    }
-                }
+                // a number was found, maybe it has a valid denominator?
+                number = divideByDenominatorIfPossible(number);
 
                 if (currentText.length() != 0) {
                     textAndNumbers.add(currentText.toString());
@@ -85,19 +71,9 @@ public class EnglishNumberParser {
             if (number == null) {
                 // maybe an ordinal number?
                 number = numberSignPoint(true);
-
-            } else if (!number.isDecimal() && !ts.get(0).hasCategory("ignore")) {
-                // if this is directly followed by an ordinal number then it is a fraction (only if
-                // number is not already decimal). Note: a big long scale integer (i.e. 10^24) would
-                // be decimal, here we are assuming that such a number has no fraction after it.
-
-                final int originalPosition = ts.getPosition();
-                final Number denominator = numberInteger(true);
-                if (denominator != null && denominator.isOrdinal()) {
-                    number = number.divide(denominator);
-                } else {
-                    ts.setPosition(originalPosition);
-                }
+            } else {
+                // a number was found, maybe it has a valid denominator?
+                number = divideByDenominatorIfPossible(number);
             }
 
             if (number == null) {
@@ -113,6 +89,26 @@ public class EnglishNumberParser {
                 currentText.append(ts.get(-1).getSpacesFollowing());
             }
         }
+    }
+
+    Number divideByDenominatorIfPossible(final Number numberToEdit) {
+        // if numberToEdit is directly followed by an ordinal number then it is a fraction (only if
+        // numberToEdit is not ordinal or already decimal). Note: a big long scale integer (i.e.
+        // 10^24) would be decimal, here we are assuming that such a number will never have a
+        // fraction after it for simplicity.
+
+        if (!numberToEdit.isOrdinal() && !numberToEdit.isDecimal()
+                && !ts.get(0).hasCategory("ignore")) {
+            final int originalPosition = ts.getPosition();
+            final Number denominator = numberInteger(true);
+            if (denominator != null && denominator.isOrdinal() && denominator.moreThan(2)) {
+                return numberToEdit.divide(denominator); // valid denominator, e.g. one fifth
+            } else {
+                // missing or invalid denominator, e.g. four second, three two, nine
+                ts.setPosition(originalPosition);
+            }
+        }
+        return numberToEdit;
     }
 
     Number numberSignPoint(final boolean allowOrdinal) {
