@@ -102,8 +102,8 @@ public class EnglishNumberParser {
             final int originalPosition = ts.getPosition();
             final Number denominator = numberInteger(true);
             if (denominator == null) {
-                // no denominator found: maybe a custom denominator? e.g. half (0.5), quarter (0.25)
-                if (ts.get(0).hasCategory("denominator")) {
+                // no denominator found: maybe a custom multiplier? e.g. half (=0.5), dozen (=12)
+                if (ts.get(0).hasCategory("suffix_multiplier")) {
                     ts.movePositionForwardBy(1);
                     return numberToEdit.multiply(ts.get(-1).getNumber());
                 }

@@ -267,20 +267,13 @@
     {
       "categories": [
         "number",
-        "denominator"
+        "suffix_multiplier"
       ],
       "values": {
         "half": 0.5,
         "halves": 0.5,
         "quarter": 0.25,
-        "quarters": 0.25
-      }
-    },
-    {
-      "categories": [
-        "number"
-      ],
-      "values": {
+        "quarters": 0.25,
         "pair": 2,
         "pairs": 2,
         "dozen": 12,
