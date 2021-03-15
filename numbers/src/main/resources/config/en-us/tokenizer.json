@@ -279,6 +279,8 @@
         "quarters": 0.25,
         "pair": 2,
         "pairs": 2,
+        "couple": 2,
+        "couples": 2,
         "dozen": 12,
         "dozens": 12,
         "gross": 144,
