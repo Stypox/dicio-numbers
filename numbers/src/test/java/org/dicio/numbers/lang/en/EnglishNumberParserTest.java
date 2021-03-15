@@ -531,14 +531,14 @@ public class EnglishNumberParserTest {
 
     @Test
     public void testExtractNumbers() {
-        assertExtractNumbers(" hello  ciao!, 3/5 or four sevenths?", true,  false, " hello  ciao!, ", n(3.0 / 5.0, F), " or ", n(4.0 / 7.0, F), "?");
-        assertExtractNumbers(" hello  ciao!, four sevenths or 3/5?", true,  true,  " hello  ciao!, ", n(4.0 / 7.0, F), " or ", n(3.0 / 5.0, F), "?");
-        assertExtractNumbers("three billionth plus two",             true,  true,  n(3000000000L, T),           " ",       n(2, F));
-        assertExtractNumbers("one billionth and sixteen sixty four", true,  false, n(1.0 / 1000000000.0, F),    " and ",   n(1664, F));
-        assertExtractNumbers("two billionths minus fifty eight",     false, true,  n(2000000000000L, T),        " ",       n(-58, F));
-        assertExtractNumbers("nine billionths times eleven",         false, false, n(9.0 / 1000000000000.0, F), " times ", n(11, F));
-        assertExtractNumbers("three halves, not eleven quarters",    false, true,  n(3.0 / 2.0, F), ", not ", n(11.0 / 4.0, F));
-        assertExtractNumbers("six pairs equals a dozen ",            false, true,  n(12, F), " equals ", n(12, F), " ");
-        assertExtractNumbers("a dozen scores is not a gross",        false, true,  n(240, F), " is not ", n(144, F));
+        assertExtractNumbers(" hello  ciao!, 3/5 or four sevenths?", T, F, " hello  ciao!, ", n(3.0 / 5.0, F), " or ", n(4.0 / 7.0, F), "?");
+        assertExtractNumbers(" hello  ciao!, four sevenths or 3/5?", T, T, " hello  ciao!, ", n(4.0 / 7.0, F), " or ", n(3.0 / 5.0, F), "?");
+        assertExtractNumbers("three billionth plus two",             T, T, n(3000000000L, T),           " ",       n(2, F));
+        assertExtractNumbers("one billionth and sixteen sixty four", T, F, n(1.0 / 1000000000.0, F),    " and ",   n(1664, F));
+        assertExtractNumbers("two billionths minus fifty eight",     F, T, n(2000000000000L, T),        " ",       n(-58, F));
+        assertExtractNumbers("nine billionths times eleven",         F, F, n(9.0 / 1000000000000.0, F), " times ", n(11, F));
+        assertExtractNumbers("three halves, not eleven quarters",    F, T, n(3.0 / 2.0, F), ", not ", n(11.0 / 4.0, F));
+        assertExtractNumbers("six pairs equals a dozen ",            F, T, n(12, F), " equals ", n(12, F), " ");
+        assertExtractNumbers("a dozen scores is not a gross",        F, T, n(240, F), " is not ", n(144, F));
     }
 }
