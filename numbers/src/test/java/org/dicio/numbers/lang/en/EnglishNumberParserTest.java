@@ -557,5 +557,7 @@ public class EnglishNumberParserTest {
         assertExtractNumbers("three halves, not eleven quarters",    F, T, n(3.0 / 2.0, F), ", not ", n(11.0 / 4.0, F));
         assertExtractNumbers("six pairs equals a dozen ",            F, T, n(12, F), " equals ", n(12, F), " ");
         assertExtractNumbers("a dozen scores is not a gross",        F, T, n(240, F), " is not ", n(144, F));
+        assertExtractNumbers("6 quadrillionths of a cake",           F, T, n(6e24, T), " of a cake");
+        assertExtractNumbers("is nineteen sixty four quadrillionth", F, F, "is ", n(1964e-24, F));
     }
 }
