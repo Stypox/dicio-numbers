@@ -267,7 +267,7 @@
     {
       "categories": [
         "number",
-        "fractional"
+        "denominator"
       ],
       "values": {
         "half": 0.5,

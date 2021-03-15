@@ -101,11 +101,17 @@ public class EnglishNumberParser {
                 && !ts.get(0).hasCategory("ignore")) {
             final int originalPosition = ts.getPosition();
             final Number denominator = numberInteger(true);
-            if (denominator != null && denominator.isOrdinal() && denominator.moreThan(2)) {
+            if (denominator == null) {
+                // no denominator found: maybe a custom denominator? e.g. half (0.5), quarter (0.25)
+                if (ts.get(0).hasCategory("denominator")) {
+                    ts.movePositionForwardBy(1);
+                    return numberToEdit.multiply(ts.get(-1).getNumber());
+                }
+            } else if (denominator.isOrdinal() && denominator.moreThan(2)) {
                 return numberToEdit.divide(denominator); // valid denominator, e.g. one fifth
             } else {
-                // missing or invalid denominator, e.g. four second, three two, nine
-                ts.setPosition(originalPosition);
+                // invalid denominator, e.g. three two, four second
+                ts.setPosition(originalPosition); // restore to original position
             }
         }
         return numberToEdit;
