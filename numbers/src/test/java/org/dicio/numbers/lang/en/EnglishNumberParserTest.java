@@ -7,7 +7,11 @@ import org.dicio.numbers.util.Number;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class EnglishNumberParserTest {
 
@@ -34,13 +38,22 @@ public class EnglishNumberParserTest {
         }
     }
 
+    private static Number n(final long value, final boolean ordinal) {
+        return new Number(value).setOrdinal(ordinal);
+    }
+
+    private static Number n(final double value, final boolean ordinal) {
+        return new Number(value).setOrdinal(ordinal);
+    }
+
+
     private static void assertNumberFunction(final String s,
                                              final boolean shortScale,
                                              final Number value,
                                              final int finalTokenStreamPosition,
                                              final NumberFunction numberFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Number number = numberFunction.call(new EnglishNumberParser(ts, shortScale));
+        final Number number = numberFunction.call(new EnglishNumberParser(ts, shortScale, false));
         assertEquals("wrong value for string " + s, value, number);
         assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
     }
@@ -106,6 +119,14 @@ public class EnglishNumberParserTest {
     private static void assertNumberSignPointNull(final String s, final boolean allowOrdinal) {
         assertNumberFunctionNull(s, true, (enp) -> enp.numberSignPoint(allowOrdinal));
         assertNumberFunctionNull(s, false, (enp) -> enp.numberSignPoint(allowOrdinal));
+    }
+
+    private static void assertExtractNumbers(final String s, final boolean shortScale, final boolean preferOrdinal, final Object... results) {
+        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
+        final List<Object> objects = new EnglishNumberParser(ts, shortScale, preferOrdinal)
+                .extractNumbers();
+        assertArrayEquals(results, objects.toArray());
+        assertTrue(ts.finished());
     }
 
 
@@ -506,5 +527,15 @@ public class EnglishNumberParserTest {
         assertNumberSignPointNull("minus minus 1 hundred and sixty", F);
         assertNumberSignPointNull(" plus million",                   T);
         assertNumberSignPointNull(" +- 5",                           F);
+    }
+
+    @Test
+    public void testExtractNumbers() {
+        assertExtractNumbers(" hello everyone, 3/5 or four seventh?", true,  false, " hello everyone, ", n(3.0 / 5.0, F), " or ", n(4.0 / 7.0, F), "?");
+        assertExtractNumbers(" hello everyone, four seventh or 3/5?", true,  true,  " hello everyone, ", n(4.0 / 7.0, F), " or ", n(3.0 / 5.0, F), "?");
+        assertExtractNumbers("one billionth plus two",                true,  true,  n(1000000000L, T),           " ",       n(2, F));
+        assertExtractNumbers("one billionth and sixteen sixty four",  true,  false, n(1.0 / 1000000000.0, F),    " and ",   n(1664, F));
+        assertExtractNumbers("one billionth minus fifty eight",       false, true,  n(1000000000000L, T),        " ",       n(-58, F));
+        assertExtractNumbers("one billionth times eleven",            false, false, n(1.0 / 1000000000000.0, F), " times ", n(11, F));
     }
 }
