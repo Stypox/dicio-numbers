@@ -8,15 +8,15 @@ import org.dicio.numbers.util.Number;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnglishNumberParser {
+public class EnglishNumberExtractor {
 
     private final TokenStream ts;
     private final boolean shortScale;
     private final boolean preferOrdinal;
 
-    EnglishNumberParser(final TokenStream tokenStream,
-                        final boolean shortScale,
-                        final boolean preferOrdinal) {
+    EnglishNumberExtractor(final TokenStream tokenStream,
+                           final boolean shortScale,
+                           final boolean preferOrdinal) {
         this.ts = tokenStream;
         this.shortScale = shortScale;
         this.preferOrdinal = preferOrdinal;

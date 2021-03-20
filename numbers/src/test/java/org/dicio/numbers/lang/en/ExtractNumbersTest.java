@@ -13,7 +13,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class EnglishNumberParserTest {
+public class ExtractNumbersTest {
 
     private static final boolean T = true, F = false;
     
@@ -26,7 +26,7 @@ public class EnglishNumberParserTest {
 
 
     private interface NumberFunction {
-        Number call(final EnglishNumberParser enp);
+        Number call(final EnglishNumberExtractor enp);
     }
 
 
@@ -53,7 +53,7 @@ public class EnglishNumberParserTest {
                                              final int finalTokenStreamPosition,
                                              final NumberFunction numberFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Number number = numberFunction.call(new EnglishNumberParser(ts, shortScale, false));
+        final Number number = numberFunction.call(new EnglishNumberExtractor(ts, shortScale, false));
         assertEquals("wrong value for string " + s, value, number);
         assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
     }
@@ -128,7 +128,7 @@ public class EnglishNumberParserTest {
 
     private static void assertExtractNumbers(final String s, final boolean shortScale, final boolean preferOrdinal, final Object... results) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final List<Object> objects = new EnglishNumberParser(ts, shortScale, preferOrdinal)
+        final List<Object> objects = new EnglishNumberExtractor(ts, shortScale, preferOrdinal)
                 .extractNumbers();
         assertArrayEquals("Invalid result array: " + objects.toString(), results, objects.toArray());
         assertTrue(ts.finished());
@@ -559,5 +559,16 @@ public class EnglishNumberParserTest {
         assertExtractNumbers("a dozen scores is not a gross",        F, T, n(240, F), " is not ", n(144, F));
         assertExtractNumbers("6 quadrillionths of a cake",           F, T, n(6e24, T), " of a cake");
         assertExtractNumbers("is nineteen sixty four quadrillionth", F, F, "is ", n(1964e-24, F));
+    }
+
+    @Test
+    public void testNumberParserExtractNumbers() {
+        final NumberParserFormatter npf
+                = new NumberParserFormatter(null, new EnglishParser());
+        assertArrayEquals(new Object[] {"I'm ", new Number(23), " years old."}, npf.extractNumbers("I'm twenty three years old.").get().toArray());
+        assertArrayEquals(new Object[] {"The ", new Number(1e30).setOrdinal(true)}, npf.extractNumbers("The quintillionth").shortScale(false).get().toArray());
+        assertArrayEquals(new Object[] {new Number(1e-18)}, npf.extractNumbers("One quintillionth").preferOrdinal(false).get().toArray());
+        assertArrayEquals(new Object[] {new Number(1000000000000000000L).setOrdinal(true)}, npf.extractNumbers("One quintillionth").preferOrdinal(true).get().toArray());
+        assertArrayEquals(new Object[] {new Number(1000000000000L)}, npf.extractNumbers("One billion").shortScale(false).preferOrdinal(true).get().toArray());
     }
 }

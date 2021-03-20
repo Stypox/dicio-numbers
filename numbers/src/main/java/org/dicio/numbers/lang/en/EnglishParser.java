@@ -15,10 +15,10 @@ public class EnglishParser extends NumberParser {
 
 
     @Override
-    public List<Object> extractNumbers(final String text,
+    public List<Object> extractNumbers(final String utterance,
                                        final boolean shortScale,
                                        final boolean preferOrdinal) {
-        return new EnglishNumberParser(new TokenStream(tokenizer.tokenize(text)),
+        return new EnglishNumberExtractor(new TokenStream(tokenizer.tokenize(utterance)),
                 shortScale, preferOrdinal).extractNumbers();
     }
 

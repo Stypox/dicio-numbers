@@ -9,6 +9,7 @@ import org.dicio.numbers.formatter.param.NiceTimeParameters;
 import org.dicio.numbers.formatter.param.NiceYearParameters;
 import org.dicio.numbers.formatter.param.PronounceNumberParameters;
 import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.param.ExtractNumbersParams;
 import org.dicio.numbers.util.MixedFraction;
 
 import java.time.Duration;
@@ -130,5 +131,18 @@ public final class NumberParserFormatter {
      */
     public final NiceDurationParameters niceDuration(final Duration duration) {
         return new NiceDurationParameters(formatter, duration);
+    }
+
+    /**
+     * Used to extract numbers from a string. For example, "I am twenty three years old" would be
+     * parsed as "I am ", 23, " years old".
+     *
+     * @param utterance the text to extract numbers from
+     * @return an instance of a utility class that enables customizing various parameters before
+     *         calling {@link NumberParser#extractNumbers(String, boolean, boolean)}. See {@link
+     *         ExtractNumbersParams}.
+     */
+    public final ExtractNumbersParams extractNumbers(final String utterance) {
+        return new ExtractNumbersParams(parser, utterance);
     }
 }

@@ -15,11 +15,13 @@ public abstract class NumberParser {
     }
 
 
-    public abstract List<Object> extractNumbers(String text, boolean shortScale, boolean ordinal);
+    public abstract List<Object> extractNumbers(String utterance,
+                                                boolean shortScale,
+                                                boolean preferOrdinal);
 
-    public abstract long extractDuration(String text);
+    public abstract long extractDuration(String utterance);
 
-    public abstract LocalDateTime extractDateTime(String text,
+    public abstract LocalDateTime extractDateTime(String utterance,
                                                   boolean anchorDate,
                                                   LocalTime defaultTime);
 }
