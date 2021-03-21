@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Locale;
 
 /**
  * A class that wraps a {@link NumberFormatter} and a {@link NumberParser} for a particular language
@@ -28,7 +29,8 @@ public final class NumberParserFormatter {
 
     /**
      * Constructs a {@link NumberParserFormatter} that wraps the provided {@link NumberFormatter}
-     * and {@link NumberParser}.
+     * and {@link NumberParser}. Note: do not use this manually, prefer
+     * {@link NumberParserFormatter}. This is mostly used for tests.
      *
      * @param formatter the formatter to wrap
      * @param parser the parser to wrap
@@ -36,6 +38,19 @@ public final class NumberParserFormatter {
     public NumberParserFormatter(final NumberFormatter formatter, final NumberParser parser) {
         this.formatter = formatter;
         this.parser = parser;
+    }
+
+    /**
+     * Constructs a {@link NumberParserFormatter} for the language of the provided locale.
+     *
+     * @param locale the locale containing the language to use
+     * @throws IllegalArgumentException if the provided locale is not supported
+     */
+    public NumberParserFormatter(final Locale locale) throws IllegalArgumentException {
+        final NumberParserFormatterBuilder.ParserFormatterPair parserFormatterPair
+                = NumberParserFormatterBuilder.parserFormatterPairForLocale(locale);
+        this.formatter = parserFormatterPair.formatter;
+        this.parser = parserFormatterPair.parser;
     }
 
 
