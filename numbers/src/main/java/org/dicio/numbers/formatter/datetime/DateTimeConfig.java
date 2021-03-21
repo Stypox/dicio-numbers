@@ -4,8 +4,9 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
+import org.dicio.numbers.util.ResourceOpener;
+
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -47,8 +48,8 @@ public class DateTimeConfig {
 
     public DateTimeConfig(final String configFolder) {
         try {
-            final JsonObject root = JsonParser.object().from(ClassLoader.getSystemClassLoader()
-                    .getResourceAsStream(configFolder + "/date_time.json"));
+            final JsonObject root = JsonParser.object().from(
+                    ResourceOpener.getResourceAsStream(configFolder + "/date_time.json"));
 
             final JsonObject year = root.getObject("year_format");
             final JsonObject date = root.getObject("date_format");
@@ -118,11 +119,8 @@ public class DateTimeConfig {
 
     private String readWordFromFile(final String configFolder,
                                     final String word) throws IOException {
-        final InputStream inputStream = ClassLoader.getSystemClassLoader()
-                .getResourceAsStream(configFolder + "/" + word + ".word");
-        if (inputStream == null) {
-            throw new FileNotFoundException();
-        }
+        final InputStream inputStream
+                = ResourceOpener.getResourceAsStream(configFolder + "/" + word + ".word");
 
         final ByteArrayOutputStream result = new ByteArrayOutputStream();
         final byte[] buffer = new byte[1024];

@@ -6,18 +6,17 @@ import com.grack.nanojson.JsonParserException;
 
 import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.util.ResourceOpener;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public abstract class DateTimeTestBase {
 
@@ -29,9 +28,9 @@ public abstract class DateTimeTestBase {
     public abstract NumberFormatter buildNumberFormatter();
 
     @Before
-    public void setup() throws JsonParserException {
-        root = JsonParser.object().from(ClassLoader.getSystemClassLoader()
-                .getResourceAsStream(configFolder() + "/date_time_test.json"));
+    public void setup() throws FileNotFoundException, JsonParserException {
+        root = JsonParser.object().from(
+                ResourceOpener.getResourceAsStream(configFolder() + "/date_time_test.json"));
         nf = buildNumberFormatter();
         pf = new NumberParserFormatter(nf, null);
     }
