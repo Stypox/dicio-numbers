@@ -6,8 +6,10 @@ import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
 import org.dicio.numbers.util.Number;
+import org.dicio.numbers.util.ResourceOpener;
 import org.dicio.numbers.util.Utils;
 
+import java.io.FileNotFoundException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,8 +36,8 @@ public class Tokenizer {
 
     public Tokenizer(final String configFolder) {
         try {
-            final JsonObject root = JsonParser.object().from(ClassLoader.getSystemClassLoader()
-                    .getResourceAsStream(configFolder + "/tokenizer.json"));
+            final JsonObject root = JsonParser.object().from(
+                    ResourceOpener.getResourceAsStream(configFolder + "/tokenizer.json"));
 
             spaces = root.getString("spaces");
             charactersAsWord = root.getString("characters_as_word");
@@ -97,7 +99,7 @@ public class Tokenizer {
                 }
             }
 
-        } catch (final JsonParserException e) {
+        } catch (final FileNotFoundException | JsonParserException e) {
             throw new RuntimeException(e);
         }
     }
