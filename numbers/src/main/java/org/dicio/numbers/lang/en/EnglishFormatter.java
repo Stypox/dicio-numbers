@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class EnglishFormatter extends NumberFormatter {
@@ -400,10 +401,10 @@ public class EnglishFormatter extends NumberFormatter {
 
         } else {
             if (use24Hour) {
-                return time.format(DateTimeFormatter.ofPattern("HH:mm"));
+                return time.format(DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH));
             } else {
                 final String result = time.format(DateTimeFormatter.ofPattern(
-                        (showAmPm ? "K:mm a" : "K:mm")));
+                        showAmPm ? "K:mm a" : "K:mm", Locale.ENGLISH));
                 if (result.startsWith("0:")) {
                     return "12:" + result.substring(2);
                 } else {
