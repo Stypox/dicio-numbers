@@ -20,13 +20,13 @@ public class NiceNumberTest {
 
     @Test
     public void speech() {
-        assertEquals("trenta quattro e mezzo", pf.niceNumber(34.5).get());
+        assertEquals("trenta quattro e un mezzo", pf.niceNumber(34.5).get());
         assertEquals("meno diciotto e tre quinti", pf.niceNumber(-18.6).get());
         assertEquals("novanta otto e diciotto diciannovesimi", pf.niceNumber(98.947368421).get());
-        assertEquals("meno cinque e sei undiciesimi", pf.niceNumber(-5.5454545).get());
+        assertEquals("meno cinque e sei undicesimi", pf.niceNumber(-5.5454545).get());
         assertEquals("sette noni", pf.niceNumber(7.0 / 9).get());
         assertEquals("meno due diciassettesimi", pf.niceNumber(-2.0 / 17).get());
-        assertEquals("quattrocento sessanta cinque", pf.niceNumber(465).get());
+        assertEquals("quattro cento sessanta cinque", pf.niceNumber(465).get());
         assertEquals("meno novanta uno", pf.niceNumber(-91).get());
         assertEquals("zero", pf.niceNumber(0).get());
     }
@@ -56,7 +56,7 @@ public class NiceNumberTest {
     @Test
     public void invalidFraction() {
         assertEquals("uno virgola otto quattro", pf.niceNumber(1.837).get());
-        assertEquals("meno trenta otto virgola uno nove due", pf.niceNumber(-38.192).get());
+        assertEquals("meno trenta otto virgola uno nove", pf.niceNumber(-38.192).get());
         assertEquals("3829.48", pf.niceNumber(3829.47832).speech(false).get());
         assertEquals("-7.19", pf.niceNumber(-7.1928).speech(false).get());
         assertEquals("-9322.38", pf.niceNumber(-9322 - 8.0 / 21).speech(false).get());

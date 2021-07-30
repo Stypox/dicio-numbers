@@ -78,7 +78,7 @@ public class PronounceNumberTest {
     @Test
     public void cento() {
         assertEquals("cento", pf.pronounceNumber(100).get());
-        assertEquals("sei cento e settanta otto", pf.pronounceNumber(678).get());
+        assertEquals("sei cento settanta otto", pf.pronounceNumber(678).get());
 
         assertEquals("cento tre milioni, due cento cinquanta quattro mila, sei cento cinquanta quattro",
                 pf.pronounceNumber(103254654).get());
@@ -90,17 +90,17 @@ public class PronounceNumberTest {
 
     @Test
     public void year() {
-        assertEquals("quattordici cinquanta sei", pf.pronounceNumber(1456).get());
-        assertEquals("mille nove cento ottanta quattro", pf.pronounceNumber(1984).get());
-        assertEquals("mille ottocento uno", pf.pronounceNumber(1801).get());
-        assertEquals("mille cento", pf.pronounceNumber(1100).get());
-        assertEquals("mille due cento uno", pf.pronounceNumber(1201).get());
-        assertEquals("mille cinque cento dieci", pf.pronounceNumber(1510).get());
-        assertEquals("mille sei", pf.pronounceNumber(1006).get());
+        assertEquals("mille, quattro cento cinquanta sei", pf.pronounceNumber(1456).get());
+        assertEquals("mille, nove cento ottanta quattro", pf.pronounceNumber(1984).get());
+        assertEquals("mille, otto cento uno", pf.pronounceNumber(1801).get());
+        assertEquals("mille, cento", pf.pronounceNumber(1100).get());
+        assertEquals("mille, due cento uno", pf.pronounceNumber(1201).get());
+        assertEquals("mille, cinque cento dieci", pf.pronounceNumber(1510).get());
+        assertEquals("mille, sei", pf.pronounceNumber(1006).get());
         assertEquals("mille", pf.pronounceNumber(1000).get());
         assertEquals("due mila", pf.pronounceNumber(2000).get());
-        assertEquals("due mila quindici", pf.pronounceNumber(2015).get());
-        assertEquals("quattro mila otto cento venti sette", pf.pronounceNumber(4827).get());
+        assertEquals("due mila, quindici", pf.pronounceNumber(2015).get());
+        assertEquals("quattro mila, otto cento venti sette", pf.pronounceNumber(4827).get());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class PronounceNumberTest {
         // floating point errors
         assertShortLongScale(9111202032999999488.0, "nove trilioni, cento undici biliardi, due cento due bilioni, trenta due miliardi, nove cento novanta nove milioni, nove cento novanta nove mila, quattro cento ottanta otto");
 
-        assertShortLongScale(29000.0, "venti nove mille");
+        assertShortLongScale(29000.0, "venti nove mila");
         assertShortLongScale(301000.0, "tre cento uno mila");
         assertShortLongScale(4000000.0, "quattro milioni");
         assertShortLongScale(50000000.0, "cinquanta milioni");
@@ -149,7 +149,7 @@ public class PronounceNumberTest {
         assertShortLongScale(308000000000000.0, "tre cento otto bilioni");
         assertShortLongScale(4000000000000000.0, "quattro biliardi");
         assertShortLongScale(52000000000000000.0, "cinquanta due biliardi");
-        assertShortLongScale(640000000000000000.0, "sei cento quaranta trilioni");
+        assertShortLongScale(640000000000000000.0, "sei cento quaranta biliardi");
         assertShortLongScale(7000000000000000000.0, "sette trilioni");
 
         // TODO maybe improve this
@@ -180,24 +180,25 @@ public class PronounceNumberTest {
         assertEquals("millesimo", pf.pronounceNumber(1000).shortScale(false).ordinal(true).get());
         assertEquals("dieci millesimo", pf.pronounceNumber(10000).shortScale(true).ordinal(true).get());
         assertEquals("dieci millesimo", pf.pronounceNumber(10000).shortScale(false).ordinal(true).get());
-        assertEquals("due cento", pf.pronounceNumber(200).shortScale(true).ordinal(true).get());
-        assertEquals("due cento", pf.pronounceNumber(200).shortScale(false).ordinal(true).get());
+        assertEquals("due centesimo", pf.pronounceNumber(200).shortScale(true).ordinal(true).get());
+        assertEquals("due centesimo", pf.pronounceNumber(200).shortScale(false).ordinal(true).get());
         assertEquals("diciotto mila, sei cento novanta unesimo", pf.pronounceNumber(18691).ordinal(true).shortScale(true).get());
         assertEquals("diciotto mila, sei cento novanta unesimo", pf.pronounceNumber(18691).ordinal(true).shortScale(false).get());
-        assertEquals("mille, cinque cento sessanta sette", pf.pronounceNumber(1567).ordinal(true).shortScale(true).get());
-        assertEquals("mille, cinque cento sessanta sette", pf.pronounceNumber(1567).ordinal(true).shortScale(false).get());
+        assertEquals("mille, cinque cento sessanta settesimo", pf.pronounceNumber(1567).ordinal(true).shortScale(true).get());
+        assertEquals("mille, cinque cento sessanta settesimo", pf.pronounceNumber(1567).ordinal(true).shortScale(false).get());
 
         // big numbers
+        assertEquals("milionesimo", pf.pronounceNumber(1000000).ordinal(true).get());
         assertEquals("diciotto milionesimo", pf.pronounceNumber(18000000).ordinal(true).get());
         assertEquals("diciotto milioni, centesimo", pf.pronounceNumber(18000100).ordinal(true).get());
         assertEquals("cento venti sette miliardesimo", pf.pronounceNumber(127000000000.0).ordinal(true).shortScale(true).get());
         assertEquals("due cento uno miliardesimo", pf.pronounceNumber(201000000000.0).ordinal(true).shortScale(false).get());
-        assertEquals("nove cento tredici miliardi, ottanta milioni, sei cento mila, sessanta quattro", pf.pronounceNumber(913080600064.0).ordinal(true).shortScale(true).get());
-        assertEquals("nove cento tredici miliardi, ottanta milioni, sei cento mila, sessanta quattro", pf.pronounceNumber(913080600064.0).ordinal(true).shortScale(false).get());
+        assertEquals("nove cento tredici miliardi, ottanta milioni, sei cento mila, sessanta quattresimo", pf.pronounceNumber(913080600064.0).ordinal(true).shortScale(true).get());
+        assertEquals("nove cento tredici miliardi, ottanta milioni, sei cento mila, sessanta quattresimo", pf.pronounceNumber(913080600064.0).ordinal(true).shortScale(false).get());
         assertEquals("un bilione, due milionesimo", pf.pronounceNumber(1000002000000.0).ordinal(true).shortScale(true).get());
         assertEquals("un bilione, due milionesimo", pf.pronounceNumber(1000002000000.0).ordinal(true).shortScale(false).get());
-        assertEquals("quattro bilioni, milionesimo", pf.pronounceNumber(4000001000000.0).ordinal(true).shortScale(true).get());
-        assertEquals("quattro bilioni, milionesimo", pf.pronounceNumber(4000001000000.0).ordinal(true).shortScale(false).get());
+        assertEquals("quattro bilioni, un milionesimo", pf.pronounceNumber(4000001000000.0).ordinal(true).shortScale(true).get());
+        assertEquals("quattro bilioni, un milionesimo", pf.pronounceNumber(4000001000000.0).ordinal(true).shortScale(false).get());
 
         // decimal numbers and scientific notation: the behaviour should be the same as with ordinal=false
         assertEquals("due virgola sette otto", pf.pronounceNumber(2.78).ordinal(true).get());
