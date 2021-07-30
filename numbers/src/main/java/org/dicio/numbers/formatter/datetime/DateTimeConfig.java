@@ -123,7 +123,7 @@ public class DateTimeConfig {
                 = ResourceOpener.getResourceAsStream(configFolder + "/" + word + ".word");
 
         final ByteArrayOutputStream result = new ByteArrayOutputStream();
-        final byte[] buffer = new byte[1024];
+        final byte[] buffer = new byte[16];
         int length;
         while ((length = inputStream.read(buffer)) != -1) {
             result.write(buffer, 0, length);
