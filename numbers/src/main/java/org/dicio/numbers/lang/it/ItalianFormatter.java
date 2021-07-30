@@ -96,7 +96,41 @@ public class ItalianFormatter extends NumberFormatter {
 
     @Override
     public String niceNumber(final MixedFraction mixedFraction, final boolean speech) {
-        return "";
+        if (speech) {
+            final String sign = mixedFraction.negative ? "meno " : "";
+            if (mixedFraction.numerator == 0) {
+                return sign + pronounceNumber(mixedFraction.whole, 0, true, false, false);
+            }
+
+            String denominatorString;
+            if (mixedFraction.denominator == 2) {
+                denominatorString = "mezzo";
+            } else if (mixedFraction.denominator == 4) {
+                denominatorString = "quarto";
+            } else {
+                // use ordinal: only mezzo and quarto are exceptions
+                denominatorString
+                        = pronounceNumber(mixedFraction.denominator, 0, true, false, true);
+            }
+
+            final String numeratorString;
+            if (mixedFraction.numerator == 1) {
+                numeratorString = "un"; // TODO check
+            } else {
+                numeratorString = pronounceNumber(mixedFraction.numerator, 0, true, false, false);
+                denominatorString = denominatorString.substring(0, denominatorString.length() - 1) + "i";
+            }
+
+            if (mixedFraction.whole == 0) {
+                return sign + numeratorString + " " + denominatorString;
+            } else {
+                return sign + pronounceNumber(mixedFraction.whole, 0, true, false, false)
+                        + " e " + numeratorString + " " + denominatorString;
+            }
+
+        } else {
+            return niceNumberNotSpeech(mixedFraction);
+        }
     }
 
     @Override
