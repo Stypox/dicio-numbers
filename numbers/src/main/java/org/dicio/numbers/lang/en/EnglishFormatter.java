@@ -146,15 +146,7 @@ public class EnglishFormatter extends NumberFormatter {
             }
 
         } else {
-            final String sign = mixedFraction.negative ? "-" : "";
-            if (mixedFraction.numerator == 0) {
-                return sign + mixedFraction.whole;
-            } else if (mixedFraction.whole == 0) {
-                return sign + mixedFraction.numerator + "/" + mixedFraction.denominator;
-            } else {
-                return sign + mixedFraction.whole + " "
-                        + mixedFraction.numerator + "/" + mixedFraction.denominator;
-            }
+            return niceNumberNotSpeech(mixedFraction);
         }
     }
 

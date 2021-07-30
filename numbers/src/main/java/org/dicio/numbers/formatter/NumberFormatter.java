@@ -32,6 +32,18 @@ public abstract class NumberFormatter {
      */
     public abstract String niceNumber(MixedFraction mixedFraction, boolean speech);
 
+    protected final String niceNumberNotSpeech(MixedFraction mixedFraction) {
+        final String sign = mixedFraction.negative ? "-" : "";
+        if (mixedFraction.numerator == 0) {
+            return sign + mixedFraction.whole;
+        } else if (mixedFraction.whole == 0) {
+            return sign + mixedFraction.numerator + "/" + mixedFraction.denominator;
+        } else {
+            return sign + mixedFraction.whole + " "
+                    + mixedFraction.numerator + "/" + mixedFraction.denominator;
+        }
+    }
+
     /**
      * Format a number to a pronounceable representation. For example, -4000619 would be formatted
      * into "minus four million, six hundred and nineteen" for English.
