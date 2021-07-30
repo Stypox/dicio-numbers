@@ -5,11 +5,9 @@ import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class ItalianFormatter extends NumberFormatter {
@@ -104,7 +102,7 @@ public class ItalianFormatter extends NumberFormatter {
 
             final String numeratorString;
             if (mixedFraction.numerator == 1) {
-                numeratorString = "un"; // TODO check
+                numeratorString = "un";
             } else {
                 numeratorString = pronounceNumber(mixedFraction.numerator, 0, true, false, false);
                 denominatorString = denominatorString.substring(0, denominatorString.length() - 1) + "i";
