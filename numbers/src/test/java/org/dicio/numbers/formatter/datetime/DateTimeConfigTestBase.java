@@ -20,6 +20,14 @@ public abstract class DateTimeConfigTestBase {
         config = new DateTimeConfig(configFolder());
     }
 
+    private void assertNotEmpty(final String string) {
+        assertFalse("String is empty", string.isEmpty());
+    }
+
+    private void assertTrimmed(final String string) {
+        assertEquals("String is not trimmed: \"" + string + "\"", string, string.trim());
+    }
+
     @Test
     public void notNull() {
         assertNotNull(config.decadeFormat);
@@ -50,18 +58,34 @@ public abstract class DateTimeConfigTestBase {
 
     @Test
     public void empty() {
-        assertFalse(config.bc.isEmpty());
-        assertFalse(config.today.isEmpty());
-        assertFalse(config.tomorrow.isEmpty());
-        assertFalse(config.yesterday.isEmpty());
-        assertFalse(config.dayWord.isEmpty());
-        assertFalse(config.daysWord.isEmpty());
-        assertFalse(config.hourWord.isEmpty());
-        assertFalse(config.hoursWord.isEmpty());
-        assertFalse(config.minuteWord.isEmpty());
-        assertFalse(config.minutesWord.isEmpty());
-        assertFalse(config.secondWord.isEmpty());
-        assertFalse(config.secondsWord.isEmpty());
+        assertNotEmpty(config.bc);
+        assertNotEmpty(config.today);
+        assertNotEmpty(config.tomorrow);
+        assertNotEmpty(config.yesterday);
+        assertNotEmpty(config.dayWord);
+        assertNotEmpty(config.daysWord);
+        assertNotEmpty(config.hourWord);
+        assertNotEmpty(config.hoursWord);
+        assertNotEmpty(config.minuteWord);
+        assertNotEmpty(config.minutesWord);
+        assertNotEmpty(config.secondWord);
+        assertNotEmpty(config.secondsWord);
+    }
+
+    @Test
+    public void trimmed() {
+        assertTrimmed(config.bc);
+        assertTrimmed(config.today);
+        assertTrimmed(config.tomorrow);
+        assertTrimmed(config.yesterday);
+        assertTrimmed(config.dayWord);
+        assertTrimmed(config.daysWord);
+        assertTrimmed(config.hourWord);
+        assertTrimmed(config.hoursWord);
+        assertTrimmed(config.minuteWord);
+        assertTrimmed(config.minutesWord);
+        assertTrimmed(config.secondWord);
+        assertTrimmed(config.secondsWord);
     }
 
     @Test
