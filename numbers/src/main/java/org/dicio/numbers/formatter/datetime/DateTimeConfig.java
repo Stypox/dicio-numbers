@@ -128,6 +128,6 @@ public class DateTimeConfig {
         while ((length = inputStream.read(buffer)) != -1) {
             result.write(buffer, 0, length);
         }
-        return result.toString(StandardCharsets.UTF_8.name());
+        return result.toString(StandardCharsets.UTF_8.name()).trim();
     }
 }
