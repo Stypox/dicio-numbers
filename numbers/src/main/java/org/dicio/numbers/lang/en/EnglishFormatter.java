@@ -338,7 +338,7 @@ public class EnglishFormatter extends NumberFormatter {
                 if (time.getHour() < 10) {
                     result.append("zero ");
                 }
-                result.append(pronounceNumber(time.getHour(), 0, true, false, false));
+                result.append(pronounceNumberDuration(time.getHour()));
 
                 result.append(" ");
                 if (time.getMinute() == 0) {
@@ -347,7 +347,7 @@ public class EnglishFormatter extends NumberFormatter {
                     if (time.getMinute() < 10) {
                         result.append("zero ");
                     }
-                    result.append(pronounceNumber(time.getMinute(), 0, true, false, false));
+                    result.append(pronounceNumberDuration(time.getMinute()));
                 }
 
                 return result.toString();
@@ -362,15 +362,15 @@ public class EnglishFormatter extends NumberFormatter {
                 final StringBuilder result = new StringBuilder();
                 if (time.getMinute() == 15) {
                     result.append("quarter past ");
-                    result.append(pronounceNumber(normalizedHour, 0, true, false, false));
+                    result.append(pronounceNumberDuration(normalizedHour));
                 } else if (time.getMinute() == 30) {
                     result.append("half past ");
-                    result.append(pronounceNumber(normalizedHour, 0, true, false, false));
+                    result.append(pronounceNumberDuration(normalizedHour));
                 } else if (time.getMinute() == 45) {
                     result.append("quarter to ");
-                    result.append(pronounceNumber(normalizedHour % 12 + 1, 0, true, false, false));
+                    result.append(pronounceNumberDuration(normalizedHour % 12 + 1));
                 } else {
-                    result.append(pronounceNumber(normalizedHour, 0, true, false, false));
+                    result.append(pronounceNumberDuration(normalizedHour));
 
                     if (time.getMinute() == 0) {
                         if (!showAmPm) {
@@ -381,7 +381,7 @@ public class EnglishFormatter extends NumberFormatter {
                             result.append(" oh");
                         }
                         result.append(" ");
-                        result.append(pronounceNumber(time.getMinute(), 0, true, false, false));
+                        result.append(pronounceNumberDuration(time.getMinute()));
                     }
                 }
 
