@@ -5,10 +5,8 @@ import org.dicio.numbers.util.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 public class ItalianFormatter extends NumberFormatter {
 
@@ -246,7 +244,83 @@ public class ItalianFormatter extends NumberFormatter {
                            final boolean speech,
                            final boolean use24Hour,
                            final boolean showAmPm) {
-        return "";
+        if (speech) {
+            final StringBuilder result = new StringBuilder();
+            if (time.getMinute() == 45) {
+                final int newHour = (time.getHour() + 1) % 24;
+                if (newHour == 0) {
+                    result.append("un quarto a mezzanotte");
+                } else if (newHour == 12) {
+                    result.append("un quarto a mezzogiorno");
+                } else {
+                    result.append("un quarto alle ");
+                    result.append(getHourName(newHour, use24Hour));
+                }
+            } else {
+                result.append(getHourName(time.getHour(), use24Hour));
+
+                if (time.getMinute() == 0) {
+                    result.append(" in punto");
+                } else if (time.getMinute() == 15) {
+                    result.append(" e un quarto");
+                } else if (time.getMinute() == 30) {
+                    result.append(" e mezza");
+                } else {
+                    result.append(" e ");
+                    if (time.getMinute() < 10) {
+                        result.append("zero ");
+                    }
+                    result.append(pronounceNumberDuration(time.getMinute()));
+                }
+            }
+
+            if (!use24Hour && showAmPm && result.indexOf("mezzanotte") == -1 && result.indexOf("mezzogiorno") == -1) {
+                if (time.getHour() >= 19) {
+                    result.append(" di sera");
+                } else if (time.getHour() >= 12) {
+                    result.append(" di pomeriggio");
+                } else if (time.getHour() >= 4) {
+                    result.append(" di mattina");
+                } else {
+                    result.append(" di notte");
+                }
+            }
+            return result.toString();
+
+        } else {
+            if (use24Hour) {
+                return time.format(DateTimeFormatter.ofPattern("HH:mm", Locale.ITALIAN));
+            } else {
+                final String result = time.format(DateTimeFormatter.ofPattern(
+                        showAmPm ? "K:mm a" : "K:mm", Locale.ENGLISH));
+                if (result.startsWith("0:")) {
+                    return "12:" + result.substring(2);
+                } else {
+                    return result;
+                }
+            }
+        }
+    }
+
+    private String getHourName(final int hour, final boolean use24Hour) {
+        if (hour == 0) {
+            return "mezzanotte";
+        } else if (hour == 12) {
+            return "mezzogiorno";
+        }
+
+        final int normalizedHour;
+        if (use24Hour) {
+            normalizedHour = hour;
+        } else {
+            normalizedHour = hour % 12;
+        }
+
+        if (normalizedHour == 1) {
+            return "una";
+        } else {
+            return pronounceNumberDuration(normalizedHour);
+        }
     }
 
     @Override
@@ -256,6 +330,7 @@ public class ItalianFormatter extends NumberFormatter {
         }
         return super.pronounceNumberDuration(number);
     }
+
 
     /**
      * @param n must be 0 <= n <= 999

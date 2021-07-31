@@ -60,7 +60,7 @@ public class NiceTimeTest {
     public void quarterPast() {
         final LocalTime dt = LocalTime.of(1, 15, 33);
         assertEquals("una e un quarto", pf.niceTime(dt).get());
-        assertEquals("una e un quarto di mattina", pf.niceTime(dt).showAmPm(true).get());
+        assertEquals("una e un quarto di notte", pf.niceTime(dt).showAmPm(true).get());
         assertEquals("una e un quarto", pf.niceTime(dt).use24Hour(true).get());
         assertEquals("una e un quarto", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
         assertEquals("1:15", pf.niceTime(dt).speech(false).get());
@@ -72,10 +72,10 @@ public class NiceTimeTest {
     @Test
     public void half() {
         final LocalTime dt = LocalTime.of(12, 30, 59);
-        assertEquals("mezzogiorno e mezzo", pf.niceTime(dt).get());
-        assertEquals("mezzogiorno e mezzo", pf.niceTime(dt).showAmPm(true).get());
-        assertEquals("mezzogiorno e mezzo", pf.niceTime(dt).use24Hour(true).get());
-        assertEquals("mezzogiorno e mezzo", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
+        assertEquals("mezzogiorno e mezza", pf.niceTime(dt).get());
+        assertEquals("mezzogiorno e mezza", pf.niceTime(dt).showAmPm(true).get());
+        assertEquals("mezzogiorno e mezza", pf.niceTime(dt).use24Hour(true).get());
+        assertEquals("mezzogiorno e mezza", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
         assertEquals("12:30", pf.niceTime(dt).speech(false).get());
         assertEquals("12:30 PM", pf.niceTime(dt).speech(false).showAmPm(true).get());
         assertEquals("12:30", pf.niceTime(dt).speech(false).use24Hour(true).get());
@@ -116,8 +116,8 @@ public class NiceTimeTest {
         assertEquals("venti due e zero tre", pf.niceTime(dt).use24Hour(true).get());
         assertEquals("venti due e zero tre", pf.niceTime(dt).use24Hour(true).showAmPm(true).get());
         assertEquals("10:03", pf.niceTime(dt).speech(false).get());
-        assertEquals("10:03 AM", pf.niceTime(dt).speech(false).showAmPm(true).get());
-        assertEquals("10:03", pf.niceTime(dt).speech(false).use24Hour(true).get());
-        assertEquals("10:03", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
+        assertEquals("10:03 PM", pf.niceTime(dt).speech(false).showAmPm(true).get());
+        assertEquals("22:03", pf.niceTime(dt).speech(false).use24Hour(true).get());
+        assertEquals("22:03", pf.niceTime(dt).speech(false).use24Hour(true).showAmPm(true).get());
     }
 }
