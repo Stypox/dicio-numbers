@@ -249,6 +249,14 @@ public class ItalianFormatter extends NumberFormatter {
         return "";
     }
 
+    @Override
+    protected String pronounceNumberDuration(final long number) {
+        if (number == 1) {
+            return "un";
+        }
+        return super.pronounceNumberDuration(number);
+    }
+
     /**
      * @param n must be 0 <= n <= 999
      * @return the string representation of a number smaller than 1000
