@@ -193,7 +193,7 @@ public abstract class NumberFormatter {
         final StringBuilder result = new StringBuilder();
         if (speech) {
             if (days > 0) {
-                result.append(pronounceNumber(days, 0, true, false, false));
+                result.append(pronounceNumberDuration(days));
                 result.append(" ");
                 result.append(days == 1 ? config.dayWord : config.daysWord);
             }
@@ -202,7 +202,7 @@ public abstract class NumberFormatter {
                 if (result.length() != 0) {
                     result.append(" ");
                 }
-                result.append(pronounceNumber(hours, 0, true, false, false));
+                result.append(pronounceNumberDuration(hours));
                 result.append(" ");
                 result.append(hours == 1 ? config.hourWord : config.hoursWord);
             }
@@ -211,7 +211,7 @@ public abstract class NumberFormatter {
                 if (result.length() != 0) {
                     result.append(" ");
                 }
-                result.append(pronounceNumber(minutes, 0, true, false, false));
+                result.append(pronounceNumberDuration(minutes));
                 result.append(" ");
                 result.append(minutes == 1 ? config.minuteWord : config.minutesWord);
             }
@@ -221,7 +221,7 @@ public abstract class NumberFormatter {
                 if (result.length() != 0) {
                     result.append(" ");
                 }
-                result.append(pronounceNumber(seconds, 0, true, false, false));
+                result.append(pronounceNumberDuration(seconds));
                 result.append(" ");
                 result.append(seconds == 1 ? config.secondWord : config.secondsWord);
             }
@@ -253,4 +253,7 @@ public abstract class NumberFormatter {
         return result.toString();
     }
 
+    protected String pronounceNumberDuration(final long number) {
+        return pronounceNumber(number, 0, true, false, false);
+    }
 }
