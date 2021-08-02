@@ -1,12 +1,15 @@
 package org.dicio.numbers.lang.en;
 
+import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.lang.it.ItalianFormatter;
 import org.dicio.numbers.test.BaseNiceDurationTest;
 import org.junit.Test;
 
 public class NiceDurationTest extends BaseNiceDurationTest {
 
-    public NiceDurationTest() {
-        super(new EnglishFormatter());
+    @Override
+    public NumberFormatter buildNumberFormatter() {
+        return new EnglishFormatter();
     }
 
     @Test
