@@ -1,5 +1,6 @@
-package org.dicio.numbers.formatter.datetime;
+package org.dicio.numbers.test;
 
+import org.dicio.numbers.formatter.datetime.DateTimeConfig;
 import org.junit.Before;
 import org.junit.Test;
 

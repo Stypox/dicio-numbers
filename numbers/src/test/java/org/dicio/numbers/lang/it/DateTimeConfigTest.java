@@ -1,6 +1,6 @@
 package org.dicio.numbers.lang.it;
 
-import org.dicio.numbers.formatter.datetime.DateTimeConfigTestBase;
+import org.dicio.numbers.test.DateTimeConfigTestBase;
 
 public class DateTimeConfigTest extends DateTimeConfigTestBase {
     @Override

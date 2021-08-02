@@ -1,7 +1,7 @@
 package org.dicio.numbers.lang.it;
 
 import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.formatter.datetime.DateTimeTestBase;
+import org.dicio.numbers.test.DateTimeTestBase;
 import org.junit.Test;
 
 import java.time.LocalDate;

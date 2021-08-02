@@ -1,4 +1,4 @@
-package org.dicio.numbers.formatter.datetime;
+package org.dicio.numbers.test;
 
 import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
