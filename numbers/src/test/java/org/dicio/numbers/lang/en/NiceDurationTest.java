@@ -1,7 +1,6 @@
 package org.dicio.numbers.lang.en;
 
 import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.lang.it.ItalianFormatter;
 import org.dicio.numbers.test.BaseNiceDurationTest;
 import org.junit.Test;
 

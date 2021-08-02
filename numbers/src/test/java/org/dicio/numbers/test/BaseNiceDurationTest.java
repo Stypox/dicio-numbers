@@ -1,10 +1,8 @@
 package org.dicio.numbers.test;
 
-import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.util.ResourceOpener;
 import org.junit.Before;
 
 import java.io.FileNotFoundException;
