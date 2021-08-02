@@ -1,38 +1,12 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.NumberParserFormatter;
-import org.junit.BeforeClass;
+import org.dicio.numbers.test.BaseNiceDurationTest;
 import org.junit.Test;
 
-import java.time.Duration;
+public class NiceDurationTest extends BaseNiceDurationTest {
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-public class NiceDurationTest {
-
-    private static NumberParserFormatter pf;
-
-    @BeforeClass
-    public static void setup() {
-        pf = new NumberParserFormatter(new EnglishFormatter(), null);
-    }
-
-    private static void assertDuration(final String expected,
-                                       final boolean speech,
-                                       final long days,
-                                       final long hours,
-                                       final long minutes,
-                                       final long seconds) {
-        // just make sure given parameters are valid
-        assertTrue(days >= 0);
-        assertTrue(hours >= 0 && hours < 24);
-        assertTrue(minutes >= 0 && minutes < 60);
-        assertTrue(seconds >= 0 && seconds < 60);
-
-        assertEquals(expected, pf.niceDuration(
-                Duration.ofSeconds(seconds + 60 * (minutes + 60 * (hours + 24 * days))))
-                .speech(speech).get());
+    public NiceDurationTest() {
+        super(new EnglishFormatter());
     }
 
     @Test
