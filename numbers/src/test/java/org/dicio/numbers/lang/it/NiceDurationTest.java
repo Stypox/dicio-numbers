@@ -1,10 +1,10 @@
 package org.dicio.numbers.lang.it;
 
 import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.test.BaseNiceDurationTest;
+import org.dicio.numbers.test.NiceDurationTestBase;
 import org.junit.Test;
 
-public class NiceDurationTest extends BaseNiceDurationTest {
+public class NiceDurationTest extends NiceDurationTestBase {
 
     @Override
     public NumberFormatter buildNumberFormatter() {
