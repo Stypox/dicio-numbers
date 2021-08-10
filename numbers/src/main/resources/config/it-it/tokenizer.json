@@ -156,6 +156,7 @@
       "values": {
         "mille": 1000,
         "migliaio": 1000,
+        "migliaia": 1000,
         "mila": 1000,
         "milione": 1000000,
         "milioni": 1000000,
