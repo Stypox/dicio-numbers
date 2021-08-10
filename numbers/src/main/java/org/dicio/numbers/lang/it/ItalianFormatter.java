@@ -213,13 +213,19 @@ public class ItalianFormatter extends NumberFormatter {
             appendSplitGroups(result, groupNames);
 
             if (ordinal && numberIsWhole) { // not ordinal if not whole
-                if (result.lastIndexOf("tre") != result.length() - 3) {
-                    result.deleteCharAt(result.length() - 1);
-                    if (result.lastIndexOf("mil") == result.length() - 3) {
-                        result.append("l");
+                if (result.lastIndexOf("dieci") == result.length() - 5) {
+                    result.deleteCharAt(result.length() - 4);
+                    result.append("mo");
+                } else {
+                    if (result.lastIndexOf("tre") != result.length() - 3
+                            && result.lastIndexOf("sei") != result.length() - 3) {
+                        result.deleteCharAt(result.length() - 1);
+                        if (result.lastIndexOf("mil") == result.length() - 3) {
+                            result.append("l");
+                        }
                     }
+                    result.append("esimo");
                 }
-                result.append("esimo");
             }
         }
 

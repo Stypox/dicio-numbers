@@ -176,6 +176,8 @@ public class PronounceNumberTest {
         assertEquals("trenta treesimo", pf.pronounceNumber(33).shortScale(false).ordinal(true).get());
         assertEquals("centesimo", pf.pronounceNumber(100).shortScale(true).ordinal(true).get());
         assertEquals("centesimo", pf.pronounceNumber(100).shortScale(false).ordinal(true).get());
+        assertEquals("cento decimo", pf.pronounceNumber(110).shortScale(false).ordinal(true).get());
+        assertEquals("sei cento seiesimo", pf.pronounceNumber(606).shortScale(true).ordinal(true).get());
         assertEquals("millesimo", pf.pronounceNumber(1000).shortScale(true).ordinal(true).get());
         assertEquals("millesimo", pf.pronounceNumber(1000).shortScale(false).ordinal(true).get());
         assertEquals("dieci millesimo", pf.pronounceNumber(10000).shortScale(true).ordinal(true).get());
