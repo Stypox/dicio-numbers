@@ -1,6 +1,6 @@
 {
   "spaces": " :;_!?<>|=()[]{}»«*~^`'\"",
-  "characters_as_word": "%‰#-+.,/",
+  "characters_as_word": "%‰#-+.,/°ª",
   "raw_number_categories": [
     "number",
     "raw"
@@ -32,9 +32,7 @@
       ],
       "values": [
         "°",
-        "o",
         "ª",
-        "a",
         "esimo",
         "esima",
         "esimi",
