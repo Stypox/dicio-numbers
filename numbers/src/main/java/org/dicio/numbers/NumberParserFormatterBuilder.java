@@ -3,6 +3,8 @@ package org.dicio.numbers;
 import org.dicio.numbers.formatter.NumberFormatter;
 import org.dicio.numbers.lang.en.EnglishFormatter;
 import org.dicio.numbers.lang.en.EnglishParser;
+import org.dicio.numbers.lang.it.ItalianFormatter;
+import org.dicio.numbers.lang.it.ItalianParser;
 import org.dicio.numbers.parser.NumberParser;
 
 import java.util.Collection;
@@ -36,6 +38,7 @@ class NumberParserFormatterBuilder {
     private static final Map<String, ParserFormatterClasses> PARSER_FORMATTER_CLASSES_MAP
             = new HashMap<String, ParserFormatterClasses>() {{
         put("en", new ParserFormatterClasses(EnglishFormatter.class, EnglishParser.class));
+        put("it", new ParserFormatterClasses(ItalianFormatter.class, ItalianParser.class));
     }};
 
 
