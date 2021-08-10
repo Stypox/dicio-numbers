@@ -53,6 +53,15 @@
     },
     {
       "categories": [
+        "point",
+        "ignore"
+      ],
+      "values": [
+        ","
+      ]
+    },
+    {
+      "categories": [
         "fraction_separator"
       ],
       "values": [
