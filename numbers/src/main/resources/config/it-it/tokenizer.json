@@ -98,9 +98,7 @@
       ],
       "values": {
         "zero": 0,
-        "un": 1,
         "uno": 1,
-        "una": 1,
         "due": 2,
         "tre": 3,
         "quattro": 4,
@@ -109,6 +107,16 @@
         "sette": 7,
         "otto": 8,
         "nove": 9
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "digit"
+      ],
+      "values": {
+        "un": 1,
+        "una": 1
       }
     },
     {
