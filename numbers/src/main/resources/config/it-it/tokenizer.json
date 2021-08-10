@@ -1,0 +1,362 @@
+{
+  "spaces": " :;_!?<>|=()[]{}»«*~^`'\"",
+  "characters_as_word": "%‰#-+.,/",
+  "raw_number_categories": [
+    "number",
+    "raw"
+  ],
+  "plural_endings": [
+    "s"
+  ],
+  "word_matches": [
+    {
+      "categories": [
+        "ignore"
+      ],
+      "values": [
+        "e"
+      ]
+    },
+    {
+      "categories": [
+        "ignore",
+        "thousand_separator"
+      ],
+      "values": [
+        "."
+      ]
+    },
+    {
+      "categories": [
+        "ordinal_suffix"
+      ],
+      "values": [
+        "°",
+        "ª"
+      ]
+    },
+    {
+      "categories": [
+        "point"
+      ],
+      "values": [
+        "punto",
+        "virgola",
+        ","
+      ]
+    },
+    {
+      "categories": [
+        "fraction_separator"
+      ],
+      "values": [
+        "fratto",
+        "diviso",
+        "/"
+      ]
+    },
+    {
+      "categories": [
+        "sign",
+        "positive"
+      ],
+      "values": [
+        "piu",
+        "più",
+        "+"
+      ]
+    },
+    {
+      "categories": [
+        "sign",
+        "negative"
+      ],
+      "values": [
+        "meno",
+        "-"
+      ]
+    }
+  ],
+  "number_mappings": [
+    {
+      "categories": [
+        "number",
+        "digit",
+        "digit_after_point"
+      ],
+      "values": {
+        "zero": 0,
+        "un": 1,
+        "uno": 1,
+        "una": 1,
+        "due": 2,
+        "tre": 3,
+        "quattro": 4,
+        "cinque": 5,
+        "sei": 6,
+        "sette": 7,
+        "otto": 8,
+        "nove": 9
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "teen"
+      ],
+      "values": {
+        "dieci": 10,
+        "undici": 11,
+        "dodici": 12,
+        "tredici": 13,
+        "quattordici": 14,
+        "quindici": 15,
+        "sedici": 16,
+        "diciassette": 17,
+        "diciotto": 18,
+        "diciannove": 19
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "tens"
+      ],
+      "values": {
+        "venti": 20,
+        "trenta": 30,
+        "quaranta": 40,
+        "cinquanta": 50,
+        "sessanta": 60,
+        "settanta": 70,
+        "ottanta": 80,
+        "novanta": 90
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "hundred"
+      ],
+      "values": {
+        "cento": 100
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "multiplier"
+      ],
+      "values": {
+        "mille": 1000,
+        "milione": 1000000,
+        "miliardo": 1000000000,
+        "bilione": 1000000000000,
+        "biliardo": 1000000000000000,
+        "trilione": 1000000000000000000
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "digit"
+      ],
+      "values": {
+        "primo": 1,
+        "prima": 1,
+        "primi": 1,
+        "prime": 1,
+        "secondo": 2,
+        "seconda": 2,
+        "secondi": 2,
+        "seconde": 2,
+        "terzo": 3,
+        "terza": 3,
+        "terzi": 3,
+        "terze": 3,
+        "quarto": 4,
+        "quarta": 4,
+        "quarti": 4,
+        "quarte": 4,
+        "quinto": 5,
+        "quinta": 5,
+        "quinti": 5,
+        "quinte": 5,
+        "sesto": 6,
+        "sesta": 6,
+        "sesti": 6,
+        "seste": 6,
+        "settimo": 7,
+        "settima": 7,
+        "settimi": 7,
+        "settime": 7,
+        "ottavo": 8,
+        "ottava": 8,
+        "ottavi": 8,
+        "ottave": 8,
+        "nono": 9,
+        "nona": 9,
+        "noni": 9,
+        "none": 9
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "teen"
+      ],
+      "values": {
+        "decimo": 10,
+        "decima": 10,
+        "decimi": 10,
+        "decime": 10,
+        "undicesimo": 11,
+        "undicesima": 11,
+        "undicesimi": 11,
+        "undicesime": 11,
+        "dodicesimo": 12,
+        "dodicesima": 12,
+        "dodicesimi": 12,
+        "dodicesime": 12,
+        "tredicesimo": 13,
+        "tredicesima": 13,
+        "tredicesimi": 13,
+        "tredicesime": 13,
+        "quattordicesimo": 14,
+        "quattordicesima": 14,
+        "quattordicesimi": 14,
+        "quattordicesime": 14,
+        "quindicesimo": 15,
+        "quindicesima": 15,
+        "quindicesimi": 15,
+        "quindicesime": 15,
+        "sedicesimo": 16,
+        "sedicesima": 16,
+        "sedicesimi": 16,
+        "sedicesime": 16,
+        "diciassettesimo": 17,
+        "diciassettesima": 17,
+        "diciassettesimi": 17,
+        "diciassettesime": 17,
+        "diciottesimo": 18,
+        "diciottesima": 18,
+        "diciottesimi": 18,
+        "diciottesime": 18,
+        "diciannovesimo": 19,
+        "diciannovesima": 19,
+        "diciannovesimi": 19,
+        "diciannovesime": 19
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "tens"
+      ],
+      "values": {
+        "ventesimo": 20,
+        "ventesima": 20,
+        "ventesimi": 20,
+        "ventesime": 20,
+        "trentesimo": 30,
+        "trentesima": 30,
+        "trentesimi": 30,
+        "trentesime": 30,
+        "quarantesimo": 40,
+        "quarantesima": 40,
+        "quarantesimi": 40,
+        "quarantesime": 40,
+        "cinquantesimo": 50,
+        "cinquantesima": 50,
+        "cinquantesimi": 50,
+        "cinquantesime": 50,
+        "sessantesimo": 60,
+        "sessantesima": 60,
+        "sessantesimi": 60,
+        "sessantesime": 60,
+        "settantesimo": 70,
+        "settantesima": 70,
+        "settantesimi": 70,
+        "settantesime": 70,
+        "ottantesimo": 80,
+        "ottantesima": 80,
+        "ottantesimi": 80,
+        "ottantesime": 80,
+        "novantesimo": 90,
+        "novantesima": 90,
+        "novantesimi": 90,
+        "novantesime": 90
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "hundred"
+      ],
+      "values": {
+        "centesimo": 100,
+        "centesima": 100,
+        "centesimi": 100,
+        "centesime": 100
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "multiplier"
+      ],
+      "values": {
+        "millesimo": 1000,
+        "millesima": 1000,
+        "millesimi": 1000,
+        "millesime": 1000,
+        "millionesimo": 1000000,
+        "millionesima": 1000000,
+        "millionesimi": 1000000,
+        "millionesime": 1000000,
+        "miliardesimo": 1000000000,
+        "miliardesima": 1000000000,
+        "miliardesimi": 1000000000,
+        "miliardesime": 1000000000,
+        "bilionesimo": 1000000000000,
+        "bilionesima": 1000000000000,
+        "bilionesimi": 1000000000000,
+        "bilionesime": 1000000000000,
+        "biliardesimo": 1000000000000000,
+        "biliardesima": 1000000000000000,
+        "biliardesimi": 1000000000000000,
+        "biliardesime": 1000000000000000,
+        "trilionesimo": 1000000000000000000,
+        "trilionesima": 1000000000000000000,
+        "trilionesimi": 1000000000000000000,
+        "trilionesime": 1000000000000000000
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "suffix_multiplier"
+      ],
+      "values": {
+        "mezzo": 0.5,
+        "mezzi": 0.5,
+        "paio": 2,
+        "paia": 2,
+        "coppia": 2,
+        "coppie": 2,
+        "dozzina": 12,
+        "dozzine": 12,
+        "percento": 0.01,
+        "%": 0.01,
+        "permille": 0.001,
+        "‰": 0.001,
+        "TODO dovrei anche aggiungere per cento e per mille???": 0
+      }
+    }
+  ]
+}
