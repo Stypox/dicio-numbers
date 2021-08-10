@@ -149,6 +149,8 @@
       ],
       "values": {
         "mille": 1000,
+        "migliaio": 1000,
+        "mila": 1000,
         "milione": 1000000,
         "miliardo": 1000000000,
         "bilione": 1000000000000,
