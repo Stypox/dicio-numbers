@@ -121,12 +121,13 @@ public class Tokenizer {
         while (i < s.length()) {
             // token values are either a 1-char-long string from the charactersAsWord array,
             // or another arbitrary string not containing any spaces
-            boolean tokenIsDigits = false;
+            boolean tokenIsDigits = false, valueNeedsCleaning = true;
             while (i < s.length()) {
                 if (Utils.containsCodePoint(spaces, s.codePointAt(i))) {
                     break; // current character is a space
                 } else if (Utils.containsCodePoint(charactersAsWord, s.codePointAt(i))) {
                     if (i == begin) {
+                        valueNeedsCleaning = false; // do not normalize single characters
                         ++i; // found character to be considered as a separate word at the beginning
                     }
                     break; // current character is to be considered as a separate word, stop
@@ -151,7 +152,7 @@ public class Tokenizer {
             final String spacesFollowing = s.substring(begin, i);
             begin = i;
 
-            tokens.add(tokenFromValue(value, spacesFollowing, tokenIsDigits));
+            tokens.add(tokenFromValue(value, spacesFollowing, tokenIsDigits, valueNeedsCleaning));
         }
         return tokens;
     }
@@ -159,13 +160,14 @@ public class Tokenizer {
 
     private Token tokenFromValue(final String value,
                                  final String spacesFollowing,
-                                 final boolean tokenIsDigits) {
+                                 final boolean tokenIsDigits,
+                                 final boolean valueNeedsCleaning) {
         if (tokenIsDigits) {
             return new NumberToken(value, spacesFollowing, rawNumberCategories,
                     new Number(Long.parseLong(value)));
         }
 
-        final String clean = cleanValue(value);
+        final String clean = valueNeedsCleaning ? cleanValue(value) : value;
         Token token = tokenFromValueExact(clean, value, spacesFollowing);
         if (token == null) {
             final String removedPluralEndings = removePluralEndings(clean);
