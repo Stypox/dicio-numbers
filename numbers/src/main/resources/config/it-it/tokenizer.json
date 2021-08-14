@@ -1,6 +1,7 @@
 {
   "spaces": " :;_!?<>|=()[]{}»«*~^`'\"",
   "characters_as_word": "%‰#-+.,/°ª",
+  "compound_word_piece_category": "compound_word_piece",
   "raw_number_categories": [
     "number",
     "raw"
@@ -93,7 +94,8 @@
       "categories": [
         "number",
         "digit",
-        "digit_after_point"
+        "digit_after_point",
+        "compound_word_piece"
       ],
       "values": {
         "zero": 0,
@@ -111,7 +113,8 @@
     {
       "categories": [
         "number",
-        "digit"
+        "digit",
+        "compound_word_piece"
       ],
       "values": {
         "un": 1,
@@ -121,7 +124,8 @@
     {
       "categories": [
         "number",
-        "teen"
+        "teen",
+        "compound_word_piece"
       ],
       "values": {
         "dieci": 10,
@@ -139,23 +143,33 @@
     {
       "categories": [
         "number",
-        "tens"
+        "tens",
+        "compound_word_piece"
       ],
       "values": {
         "venti": 20,
+        "vent": 20,
         "trenta": 30,
+        "trent": 30,
         "quaranta": 40,
+        "quarant": 40,
         "cinquanta": 50,
+        "cinquant": 50,
         "sessanta": 60,
+        "sessant": 60,
         "settanta": 70,
+        "settant": 70,
         "ottanta": 80,
-        "novanta": 90
+        "ottant": 80,
+        "novanta": 90,
+        "novant": 90
       }
     },
     {
       "categories": [
         "number",
-        "hundred"
+        "hundred",
+        "compound_word_piece"
       ],
       "values": {
         "cento": 100
@@ -164,7 +178,8 @@
     {
       "categories": [
         "number",
-        "multiplier"
+        "multiplier",
+        "compound_word_piece"
       ],
       "values": {
         "mille": 1000,
@@ -187,7 +202,8 @@
       "categories": [
         "number",
         "ordinal",
-        "digit"
+        "digit",
+        "compound_word_piece"
       ],
       "values": {
         "primo": 1,
@@ -268,7 +284,8 @@
       "categories": [
         "number",
         "ordinal",
-        "teen"
+        "teen",
+        "compound_word_piece"
       ],
       "values": {
         "decimo": 10,
@@ -317,7 +334,8 @@
       "categories": [
         "number",
         "ordinal",
-        "tens"
+        "tens",
+        "compound_word_piece"
       ],
       "values": {
         "ventesimo": 20,
@@ -358,7 +376,8 @@
       "categories": [
         "number",
         "ordinal",
-        "hundred"
+        "hundred",
+        "compound_word_piece"
       ],
       "values": {
         "centesimo": 100,
@@ -371,7 +390,8 @@
       "categories": [
         "number",
         "ordinal",
-        "multiplier"
+        "multiplier",
+        "compound_word_piece"
       ],
       "values": {
         "millesimo": 1000,
