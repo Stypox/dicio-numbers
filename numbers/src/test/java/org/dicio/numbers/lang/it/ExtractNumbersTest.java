@@ -312,10 +312,20 @@ public class ExtractNumbersTest extends ExtractNumbersTestBase {
     }
 
     @Test
+    public void testExtractNumbersCompound() {
+        assertExtractNumbers("millemiliardesimi e milleseicento novantaquattro",              F, n(1000.0 / 1000000000.0, F), " e ", n(1694, F));
+        assertExtractNumbers("è millenovecento sessantaquattro novanta quattro trilionesimi", F, "è ", n(1964.0 / 94e18, F));
+        assertExtractNumbers("ventitreesimo meno cinquantotto ventinovesimi",                 T, n(23, T), " ", n(-2, F));
+        assertExtractNumbers("novantasei trentaseiesimi più centosedici",                     F, n(96.0 / 36.0, F), " ", n(116, F));
+        assertExtractNumbers("novantanove virgola unounozeroquattrotre virgola zerouno",      T, n(99.11043, F), " virgola ", n(0, F), n(1, F));
+        assertExtractNumbers("venticinque dozzine trequarti virgola ventidueciao",            T, n(300, F), " ", n(3.0 / 4.0, F), " virgola ventidueciao");
+    }
+
+    @Test
     public void testNumberParserExtractNumbers() {
         final NumberParserFormatter npf
-                = new NumberParserFormatter(null, new ItalianParser()); // mille non più mille // l'italia ha vinto sei a zero
-        assertArrayEquals(new Object[] {"Ho ", new Number(23), " anni."}, npf.extractNumbers("Ho venti tre anni.").get().toArray());
+                = new NumberParserFormatter(null, new ItalianParser());
+        assertArrayEquals(new Object[] {"Ho ", new Number(23), " anni."}, npf.extractNumbers("Ho ventitre anni.").get().toArray());
         assertArrayEquals(new Object[] {"Il ", new Number(1000000000000000000L).setOrdinal(true)}, npf.extractNumbers("Il trilionesimo").get().toArray());
         assertArrayEquals(new Object[] {new Number(1e-18)}, npf.extractNumbers("Un trilionesimo").get().toArray());
         assertArrayEquals(new Object[] {new Number(1000000000L)}, npf.extractNumbers("Un miliardo").preferOrdinal(true).get().toArray());
