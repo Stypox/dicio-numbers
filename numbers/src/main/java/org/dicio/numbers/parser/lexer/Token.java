@@ -8,10 +8,14 @@ public class Token {
 
 
     private final String value;
-    private final String spacesFollowing;
+    private String spacesFollowing;
 
     public Token(final String value, final String spacesFollowing) {
         this.value = value;
+        this.spacesFollowing = spacesFollowing;
+    }
+
+    void setSpacesFollowing(final String spacesFollowing) {
         this.spacesFollowing = spacesFollowing;
     }
 

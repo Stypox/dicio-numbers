@@ -11,12 +11,7 @@ import org.dicio.numbers.util.Utils;
 
 import java.io.FileNotFoundException;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Tokenizer {
@@ -32,6 +27,7 @@ public class Tokenizer {
 
     private final Map<String, Set<String>> wordMatches;
     private final Map<String, Mapping> numberMappings;
+    private final List<String> compoundWordPieces;
 
 
     public Tokenizer(final String configFolder) {
@@ -41,6 +37,10 @@ public class Tokenizer {
 
             spaces = root.getString("spaces");
             charactersAsWord = root.getString("characters_as_word");
+
+            final String compoundWordPieceCategory = root.getString("compound_word_piece_category", null);
+            compoundWordPieces = new ArrayList<>();
+
             rawNumberCategories = readCategories(root.getArray("raw_number_categories"));
 
             pluralEndings = new ArrayList<>();
@@ -66,6 +66,10 @@ public class Tokenizer {
                         throw new RuntimeException("Content of values array is not string: " + v);
                     }
                     wordMatches.put((String) v, categories);
+
+                    if (categories.contains(compoundWordPieceCategory)) {
+                        compoundWordPieces.add((String) v);
+                    }
                 }
             }
 
@@ -95,6 +99,10 @@ public class Tokenizer {
                     } else {
                         throw new RuntimeException("Content of values array is neither an integer "
                                 + "nor a decimal number: " + v);
+                    }
+
+                    if (categories.contains(compoundWordPieceCategory)) {
+                        compoundWordPieces.add(v.getKey());
                     }
                 }
             }
@@ -152,19 +160,21 @@ public class Tokenizer {
             final String spacesFollowing = s.substring(begin, i);
             begin = i;
 
-            tokens.add(tokenFromValue(value, spacesFollowing, tokenIsDigits, valueNeedsCleaning));
+            addTokenFromValue(tokens, value, spacesFollowing, tokenIsDigits, valueNeedsCleaning);
         }
         return tokens;
     }
 
 
-    private Token tokenFromValue(final String value,
-                                 final String spacesFollowing,
-                                 final boolean tokenIsDigits,
-                                 final boolean valueNeedsCleaning) {
+    private void addTokenFromValue(final List<Token> tokens,
+                                   final String value,
+                                   final String spacesFollowing,
+                                   final boolean tokenIsDigits,
+                                   final boolean valueNeedsCleaning) {
         if (tokenIsDigits) {
-            return new NumberToken(value, spacesFollowing, rawNumberCategories,
-                    new Number(Long.parseLong(value)));
+            tokens.add(new NumberToken(value, spacesFollowing, rawNumberCategories,
+                    new Number(Long.parseLong(value))));
+            return;
         }
 
         final String clean = valueNeedsCleaning ? cleanValue(value) : value;
@@ -176,7 +186,18 @@ public class Tokenizer {
             }
         }
 
-        return token == null ? new Token(value, spacesFollowing) : token;
+        if (token == null) {
+            // try to parse compound word
+            final List<Token> compoundWord = tokenizeCompoundWord(clean);
+            if (compoundWord != null) {
+                compoundWord.get(0).setSpacesFollowing(spacesFollowing);
+                Collections.reverse(compoundWord); // results from tokenizeCompoundWord are reversed
+                tokens.addAll(compoundWord);
+                return;
+            }
+        }
+
+        tokens.add(token == null ? new Token(value, spacesFollowing) : token);
     }
 
     private Token tokenFromValueExact(final String clean,
@@ -208,6 +229,29 @@ public class Tokenizer {
         // nfkd normalize (i.e. remove accents) and make lowercase
         final String normalized = Normalizer.normalize(value.toLowerCase(), Normalizer.Form.NFKD);
         return diacriticalMarksRemover.matcher(normalized).replaceAll("");
+    }
+
+    /**
+     * Tokenizes a compound word (e.g. twentytwo is parsed into two tokens: twewnty and two)
+     * @param clean the clean word
+     * @return a list of tokens in reverse order (e.g. [two, twenty] for input twentytwo)
+     */
+    private List<Token> tokenizeCompoundWord(final String clean) {
+        if (clean.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        for (final String compoundPiece : compoundWordPieces) {
+            if (clean.startsWith(compoundPiece)) {
+                final List<Token> nextTokens = tokenizeCompoundWord(clean.substring(compoundPiece.length()));
+                if (nextTokens != null) {
+                    nextTokens.add(tokenFromValueExact(compoundPiece, compoundPiece, ""));
+                    return nextTokens; // will be in reverse order, since first matches are added last
+                }
+            }
+        }
+
+        return null;
     }
 
 
