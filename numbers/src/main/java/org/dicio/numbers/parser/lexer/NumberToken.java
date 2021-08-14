@@ -8,10 +8,10 @@ public class NumberToken extends MatchedToken {
 
     private final Number number;
 
-    protected NumberToken(final String value,
-                          final String spacesFollowing,
-                          final Set<String> categories,
-                          final Number number) {
+    NumberToken(final String value,
+                final String spacesFollowing,
+                final Set<String> categories,
+                final Number number) {
         super(value, spacesFollowing, categories);
         this.number = number;
     }

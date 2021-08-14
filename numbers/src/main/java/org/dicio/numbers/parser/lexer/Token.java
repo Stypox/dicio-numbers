@@ -10,7 +10,7 @@ public class Token {
     private final String value;
     private String spacesFollowing;
 
-    public Token(final String value, final String spacesFollowing) {
+    Token(final String value, final String spacesFollowing) {
         this.value = value;
         this.spacesFollowing = spacesFollowing;
     }
