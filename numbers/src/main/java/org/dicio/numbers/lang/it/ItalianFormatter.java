@@ -138,7 +138,7 @@ public class ItalianFormatter extends NumberFormatter {
         // the biggest double smaller than 10^21 = 1000 * 10^18, which is the biggest pronounceable
         // number, since e.g. 999.99 * 10^18 can be pronounced correctly.
         if (scientific || Math.abs(number) > 999999999999999934463d) {
-            final String scientificFormatted = String.format("%E", number);
+            final String scientificFormatted = String.format(Locale.ENGLISH, "%E", number);
             final String[] parts = scientificFormatted.split("E", 2);
             final double power = Integer.parseInt(parts[1]);
 
