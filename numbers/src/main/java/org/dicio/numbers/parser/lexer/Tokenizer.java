@@ -189,7 +189,7 @@ public class Tokenizer {
         if (token == null) {
             // try to parse compound word
             final List<Token> compoundWord = tokenizeCompoundWord(clean);
-            if (compoundWord != null) {
+            if (compoundWord != null && !compoundWord.isEmpty()) {
                 compoundWord.get(0).setSpacesFollowing(spacesFollowing);
                 Collections.reverse(compoundWord); // results from tokenizeCompoundWord are reversed
                 tokens.addAll(compoundWord);
