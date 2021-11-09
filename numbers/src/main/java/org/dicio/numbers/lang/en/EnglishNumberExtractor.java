@@ -5,7 +5,6 @@ import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.util.Number;
 import org.dicio.numbers.util.NumberExtractorUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.dicio.numbers.util.NumberExtractorUtils.*;
@@ -25,22 +24,15 @@ public class EnglishNumberExtractor {
     }
 
     public List<Object> extractNumbers() {
-        List<Object> textAndNumbers = new ArrayList<>();
-        final StringBuilder currentText = new StringBuilder();
-
-        // the called functions will add objects to textAndNumbers and reuse currentText for strings
         if (preferOrdinal) {
-            extractNumbersPreferOrdinal(textAndNumbers, currentText);
+            return extractNumbersWith(this::extractNumbersPreferOrdinal);
         } else {
-            extractNumbersPreferFraction(textAndNumbers, currentText);
+            return extractNumbersWith(this::extractNumbersPreferFraction);
         }
+    }
 
-        if (currentText.length() != 0) {
-            // add leftover text (this can be done here since the functions above reuse currentText)
-            textAndNumbers.add(currentText.toString());
-        }
-
-        return textAndNumbers;
+    public List<Object> extractNumbersForDurationParsing() {
+        return extractNumbersWith(this::extractNumbersNoOrdinal);
     }
 
     void extractNumbersPreferOrdinal(final List<Object> textAndNumbers,
@@ -80,6 +72,27 @@ public class EnglishNumberExtractor {
             addNumberOrText(ts, number, textAndNumbers, currentText);
         }
     }
+
+    void extractNumbersNoOrdinal(final List<Object> textAndNumbers,
+                                 final StringBuilder currentText) {
+        // for now this function is used internally just for duration parsing, but maybe it could
+        // be exposed to library users, giving more control over how ordinals are handled.
+        while (!ts.finished()) {
+            // first try with suffix multiplier, e.g. dozen
+            Number number = numberSuffixMultiplier();
+            if (number == null) {
+                number = numberSignPoint(false); // then try without ordinal
+            }
+
+            if (number != null) {
+                // a number was found, maybe it has a valid denominator?
+                // note that e.g. "a couple halves" ends up here, but that's valid
+                number = divideByDenominatorIfPossible(number);
+            }
+            addNumberOrText(ts, number, textAndNumbers, currentText);
+        }
+    }
+
 
     Number divideByDenominatorIfPossible(final Number numberToEdit) {
         // if numberToEdit is directly followed by an ordinal number then it is a fraction (only if

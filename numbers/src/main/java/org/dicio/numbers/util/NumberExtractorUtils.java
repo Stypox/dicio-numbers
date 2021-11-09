@@ -3,6 +3,7 @@ package org.dicio.numbers.util;
 import org.dicio.numbers.parser.lexer.Token;
 import org.dicio.numbers.parser.lexer.TokenStream;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NumberExtractorUtils {
@@ -10,10 +11,29 @@ public class NumberExtractorUtils {
     private NumberExtractorUtils() {
     }
 
+    public interface ExtractNumbersMethod {
+        void extractNumbers(final List<Object> textAndNumbers, final StringBuilder currentText);
+    }
+
     public interface NumberGroupGetter {
         Number get(TokenStream ts, boolean allowOrdinal, double lastMultiplier);
     }
 
+
+    public static List<Object> extractNumbersWith(final ExtractNumbersMethod extractNumbersMethod) {
+        List<Object> textAndNumbers = new ArrayList<>();
+        final StringBuilder currentText = new StringBuilder();
+
+        // the called functions will add objects to textAndNumbers and reuse currentText for strings
+        extractNumbersMethod.extractNumbers(textAndNumbers, currentText);
+
+        if (currentText.length() != 0) {
+            // add leftover text (this can be done here since the functions above reuse currentText)
+            textAndNumbers.add(currentText.toString());
+        }
+
+        return textAndNumbers;
+    }
 
     public static void addNumberOrText(final TokenStream ts,
                                        final Number number,
@@ -32,6 +52,7 @@ public class NumberExtractorUtils {
             currentText.append(ts.get(-1).getSpacesFollowing()); // spaces after the number
         }
     }
+
 
     public static Number numberBigRaw(final TokenStream ts, final boolean allowOrdinal) {
         // try to parse big raw numbers (bigger than 999), e.g. 1207, 57378th
