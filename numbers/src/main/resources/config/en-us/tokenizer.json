@@ -296,5 +296,92 @@
         "‰": 0.001
       }
     }
+  ],
+  "duration_words": {
+    "1e-9": [
+      "nanosecond",
+      "nanoseconds",
+      "ns"
+    ],
+    "1e-6": [
+      "microsecond",
+      "microseconds",
+      "μs"
+    ],
+    "1e-3": [
+      "millisecond",
+      "milliseconds",
+      "ms"
+    ],
+    "1": [
+      "second",
+      "seconds",
+      "s",
+      "sec",
+      "secs"
+    ],
+    "60": [
+      "minute",
+      "minutes",
+      "m",
+      "min",
+      "mins"
+    ],
+    "3600": [
+      "hour",
+      "hours",
+      "h",
+      "hr",
+      "hrs"
+    ],
+    "86400": [
+      "day",
+      "days",
+      "d"
+    ],
+    "604800": [
+      "week",
+      "weeks",
+      "w"
+    ],
+    "2629800": [
+      "month",
+      "months",
+      "mo",
+      "mon",
+      "mons"
+    ],
+    "31557600": [
+      "year",
+      "years",
+      "yr",
+      "yrs"
+    ],
+    "315576000": [
+      "decade",
+      "decades"
+    ],
+    "3155760000": [
+      "century",
+      "centuries"
+    ],
+    "31557600000": [
+      "millenium",
+      "millennium",
+      "milleniums",
+      "millenniums"
+    ]
+  },
+  "duration_restrict_after_number": [
+    "ns",
+    "μs",
+    "ms",
+    "s",
+    "m",
+    "h",
+    "d",
+    "w",
+    "mo",
+    "yr"
   ]
 }
