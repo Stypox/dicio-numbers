@@ -7,7 +7,7 @@ import static org.dicio.numbers.util.NumberExtractorUtils.numberGroupShortScale;
 import static org.dicio.numbers.util.NumberExtractorUtils.numberLessThan1000;
 import static org.junit.Assert.assertEquals;
 
-public abstract class NumberExtractorUtilsTestBase extends ExtractNumbersTestBase {
+public abstract class NumberExtractorUtilsTestBase extends WithTokenizerTestBase {
 
     protected interface NumberFunction {
         Number call(final TokenStream ts);

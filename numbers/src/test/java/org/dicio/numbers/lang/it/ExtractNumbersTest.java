@@ -2,15 +2,19 @@ package org.dicio.numbers.lang.it;
 
 import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.test.ExtractNumbersTestBase;
+import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.util.Number;
 import org.junit.Test;
 
 import java.util.List;
 
+import static org.dicio.numbers.test.TestUtils.F;
+import static org.dicio.numbers.test.TestUtils.T;
+import static org.dicio.numbers.test.TestUtils.n;
+import static org.dicio.numbers.test.TestUtils.numberDeduceType;
 import static org.junit.Assert.*;
 
-public class ExtractNumbersTest extends ExtractNumbersTestBase {
+public class ExtractNumbersTest extends WithTokenizerTestBase {
 
     @Override
     public String configFolder() {
