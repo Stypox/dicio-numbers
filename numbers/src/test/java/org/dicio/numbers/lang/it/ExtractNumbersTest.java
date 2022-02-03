@@ -319,6 +319,7 @@ public class ExtractNumbersTest extends ExtractNumbersTestBase {
         assertExtractNumbers("novantasei trentaseiesimi più centosedici",                     F, n(96.0 / 36.0, F), " ", n(116, F));
         assertExtractNumbers("novantanove virgola unounozeroquattrotre virgola zerouno",      T, n(99.11043, F), " virgola ", n(0, F), n(1, F));
         assertExtractNumbers("venticinque dozzine trequarti virgola ventidueciao",            T, n(300, F), " ", n(3.0 / 4.0, F), " virgola ventidueciao");
+        assertExtractNumbers("centotto",                                                      F, n(108, F));
     }
 
     @Test

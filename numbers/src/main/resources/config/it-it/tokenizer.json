@@ -172,7 +172,8 @@
         "compound_word_piece"
       ],
       "values": {
-        "cento": 100
+        "cento": 100,
+        "cent": 100
       }
     },
     {
