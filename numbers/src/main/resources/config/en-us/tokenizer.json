@@ -298,9 +298,92 @@
     }
   ],
   "duration_words": {
-
+    "1 NANOS": [
+      "nanosecond",
+      "nanoseconds",
+      "ns"
+    ],
+    "1 MICROS": [
+      "microsecond",
+      "microseconds",
+      "μs"
+    ],
+    "1 MILLIS": [
+      "millisecond",
+      "milliseconds",
+      "ms"
+    ],
+    "1 SECONDS": [
+      "second",
+      "seconds",
+      "s",
+      "sec",
+      "secs"
+    ],
+    "1 MINUTES": [
+      "minute",
+      "minutes",
+      "m",
+      "min",
+      "mins"
+    ],
+    "1 HOURS": [
+      "hour",
+      "hours",
+      "h",
+      "hr",
+      "hrs"
+    ],
+    "1 DAYS": [
+      "day",
+      "days",
+      "d"
+    ],
+    "1 WEEKS": [
+      "week",
+      "weeks",
+      "w"
+    ],
+    "1 MONTHS": [
+      "month",
+      "months",
+      "mo",
+      "mon",
+      "mons"
+    ],
+    "1 YEARS": [
+      "year",
+      "years",
+      "yr",
+      "yrs"
+    ],
+    "1 DECADES": [
+      "decade",
+      "decades"
+    ],
+    "1 CENTURIES": [
+      "century",
+      "centuries"
+    ],
+    "1 MILLENNIA": [
+      "millenium",
+      "millennium",
+      "milleniums",
+      "millenniums",
+      "millenia",
+      "millennia"
+    ]
   },
   "duration_restrict_after_number": [
-
+    "ns",
+    "μs",
+    "ms",
+    "s",
+    "m",
+    "h",
+    "d",
+    "w",
+    "mo",
+    "yr"
   ]
 }
