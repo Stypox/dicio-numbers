@@ -442,5 +442,11 @@
         "TODO dovrei anche aggiungere per cento e per mille???": 0
       }
     }
+  ],
+  "duration_words": {
+
+  },
+  "duration_restrict_after_number": [
+
   ]
 }

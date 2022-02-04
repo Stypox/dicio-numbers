@@ -11,13 +11,16 @@ import org.dicio.numbers.util.Utils;
 
 import java.io.FileNotFoundException;
 import java.text.Normalizer;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class Tokenizer {
 
-    private static final Pattern diacriticalMarksRemover =
+    private static final Pattern DIACRITICAL_MARKS_REMOVER =
             Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+    private static final Pattern AT_SPACES_SPLITTER = Pattern.compile(" ");
 
 
     private final String spaces;
@@ -28,6 +31,7 @@ public class Tokenizer {
     private final Map<String, Set<String>> wordMatches;
     private final Map<String, Mapping> numberMappings;
     private final List<String> compoundWordPieces;
+    private final Map<String, DurationMapping> durationMappings;
 
 
     public Tokenizer(final String configFolder) {
@@ -77,7 +81,7 @@ public class Tokenizer {
             for (final Object o : root.getArray("number_mappings")) {
                 if (!(o instanceof JsonObject)) {
                     throw new RuntimeException(
-                            "Content of number_mappings array is not object: " + o);
+                            "Content of number_mappings array is not an object: " + o);
                 }
 
                 final JsonObject mapping = (JsonObject) o;
@@ -89,22 +93,61 @@ public class Tokenizer {
                 }
 
                 for (final Map.Entry<String, Object> v : values.entrySet()) {
-                    if (v.getValue() instanceof Short || v.getValue() instanceof Integer
-                            || v.getValue() instanceof Long) {
-                        numberMappings.put(v.getKey(), new Mapping(categories,
-                                new Number(((java.lang.Number) v.getValue()).longValue())));
-                    } else if (v.getValue() instanceof Float || v.getValue() instanceof Double) {
-                        numberMappings.put(v.getKey(), new Mapping(categories,
-                                new Number(((java.lang.Number) v.getValue()).doubleValue())));
-                    } else {
-                        throw new RuntimeException("Content of values array is neither an integer "
-                                + "nor a decimal number: " + v);
-                    }
+                    numberMappings.put(v.getKey(),
+                            new Mapping(categories, Number.fromObject(v.getValue())));
 
                     if (categories.contains(compoundWordPieceCategory)) {
                         compoundWordPieces.add(v.getKey());
                     }
                 }
+            }
+
+            durationMappings = new HashMap<>();
+            for (final Map.Entry<String, Object> o : root.getObject("duration_words").entrySet()) {
+                final String[] parts = AT_SPACES_SPLITTER.split(o.getKey());
+                if (parts.length != 2) {
+                    throw new RuntimeException("Duration \"" + o.getKey() + "\" is not valid, it"
+                            + " should be made of an integer number followed by a unit");
+                }
+
+                final int multiplier;
+                try {
+                    multiplier = Integer.parseInt(parts[0]);
+                } catch (final NumberFormatException e) {
+                    throw new RuntimeException("Multiplier \"" + parts[0] + "\" of duration \""
+                            + o.getKey() + "\" is not an integer", e);
+                }
+
+                final Duration duration;
+                try {
+                    duration = ChronoUnit.valueOf(parts[1]).getDuration();
+                } catch (final IllegalArgumentException e) {
+                    throw new RuntimeException("Unit \"" + parts[1] + "\" of duration \""
+                            + o.getKey() + "\" is not a valid unit; valid units are: "
+                            + Arrays.toString(ChronoUnit.class.getEnumConstants()));
+                }
+
+                if (!(o.getValue() instanceof JsonArray)) {
+                    throw new RuntimeException("Value corresponding to duration \"" + o.getKey()
+                            + "\" is not an array: " + o.getValue());
+                }
+                for (final Object w : (JsonArray) o.getValue()) {
+                    if (!(w instanceof String)) {
+                        throw new RuntimeException("Entry in array for duration \"" + o.getKey() +
+                                "\" is not a string: " + w);
+                    }
+                    // make sure to create a new DurationMapping object each time, since their
+                    // restrictedAfterNumber value is changed in the for below
+                    durationMappings.put((String) w,
+                            new DurationMapping(duration.multipliedBy(multiplier)));
+                }
+            }
+            for (final Object o : root.getArray("duration_restrict_after_number")) {
+                if (!(o instanceof String) || !durationMappings.containsKey(o)) {
+                    throw new RuntimeException("Found entry in duration_restrict_after_number array"
+                            + " that was not in duration_words: " + o);
+                }
+                durationMappings.get(o).restrictedAfterNumber = true;
             }
 
         } catch (final FileNotFoundException | JsonParserException e) {
@@ -213,6 +256,12 @@ public class Tokenizer {
             return new MatchedToken(value, spacesFollowing, match);
         }
 
+        final DurationMapping durationMapping = durationMappings.get(clean);
+        if (durationMapping != null) {
+            return new DurationToken(value, spacesFollowing,
+                    durationMapping.durationMultiplier, durationMapping.restrictedAfterNumber);
+        }
+
         return null;
     }
 
@@ -228,7 +277,7 @@ public class Tokenizer {
     private String cleanValue(final String value) {
         // nfkd normalize (i.e. remove accents) and make lowercase
         final String normalized = Normalizer.normalize(value.toLowerCase(), Normalizer.Form.NFKD);
-        return diacriticalMarksRemover.matcher(normalized).replaceAll("");
+        return DIACRITICAL_MARKS_REMOVER.matcher(normalized).replaceAll("");
     }
 
     /**
@@ -280,6 +329,16 @@ public class Tokenizer {
         private Mapping(final Set<String> categories, final Number number) {
             this.categories = categories;
             this.number = number;
+        }
+    }
+
+    private static final class DurationMapping {
+        final Duration durationMultiplier;
+        boolean restrictedAfterNumber;
+
+        private DurationMapping(final Duration durationMultiplier) {
+            this.durationMultiplier = durationMultiplier;
+            this.restrictedAfterNumber = false;
         }
     }
 }
