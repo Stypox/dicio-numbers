@@ -23,6 +23,17 @@ public class Number {
         this.decimalValue = decimalValue;
     }
 
+    public static Number fromObject(final Object object) {
+        if (object instanceof Short || object instanceof Integer || object instanceof Long) {
+            return new Number(((java.lang.Number) object).longValue());
+        } else if (object instanceof Float || object instanceof Double) {
+            return new Number(((java.lang.Number) object).doubleValue());
+        } else {
+            throw new IllegalArgumentException(
+                    "object is neither an integer nor a decimal number: " + object);
+        }
+    }
+
 
     public boolean isDecimal() {
         return isDecimal;
