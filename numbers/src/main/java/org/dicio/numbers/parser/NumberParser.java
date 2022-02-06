@@ -2,6 +2,7 @@ package org.dicio.numbers.parser;
 
 import org.dicio.numbers.parser.lexer.Tokenizer;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -19,7 +20,7 @@ public abstract class NumberParser {
                                                 boolean shortScale,
                                                 boolean preferOrdinal);
 
-    public abstract long extractDuration(String utterance);
+    public abstract Duration extractDuration(String utterance, boolean shortScale);
 
     public abstract LocalDateTime extractDateTime(String utterance,
                                                   boolean anchorDate,

@@ -74,6 +74,8 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
         assertDuration("one billionth century",     T, t(1e-9 * 100 * YEAR));
         assertDuration("1 millennium",              F, t(1000 * YEAR));
         assertDuration("four three millenia four",  T, t(3000 * YEAR));
+        assertNoDuration("one hundred tests",      F);
+        assertNoDuration("point three four grams", T);
     }
 
     @Test
@@ -127,5 +129,16 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
             assertDuration(formatted, ts, T, durationToTest);
             assertTrue(ts.finished());
         }
+    }
+
+    @Test
+    public void testNumberParserExtractDuration() {
+        final NumberParserFormatter npf
+                = new NumberParserFormatter(null, new EnglishParser());
+        assertNull(npf.extractDuration("hello how are you").get());
+        assertNull(npf.extractDuration("one billion euros").shortScale(true).get());
+        assertNull(npf.extractDuration("a million").shortScale(false).get());
+        assertEquals(t(DAY), npf.extractDuration("twenty four hours is not two days").get());
+        assertEquals(t(2 * DAY), npf.extractDuration("two days are not twenty four hours").get());
     }
 }

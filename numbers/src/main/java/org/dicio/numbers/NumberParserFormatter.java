@@ -9,6 +9,7 @@ import org.dicio.numbers.formatter.param.NiceTimeParameters;
 import org.dicio.numbers.formatter.param.NiceYearParameters;
 import org.dicio.numbers.formatter.param.PronounceNumberParameters;
 import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.param.ExtractDurationParams;
 import org.dicio.numbers.parser.param.ExtractNumbersParams;
 import org.dicio.numbers.util.MixedFraction;
 
@@ -159,5 +160,20 @@ public final class NumberParserFormatter {
      */
     public final ExtractNumbersParams extractNumbers(final String utterance) {
         return new ExtractNumbersParams(parser, utterance);
+    }
+
+    /**
+     * Used to extract a duration from a string. For example, "Set a timer for three minutes and
+     * five seconds" would be parsed as 185 seconds. If the user said multiple durations not next to
+     * one another inside the string, only the first one will be returned. For example, "400 days
+     * are more than one year" would be parsed only as 365 days.
+     *
+     * @param utterance the text to extract a duration from
+     * @return an instance of a utility class that enables customizing various parameters before
+     *         calling {@link NumberParser#extractDuration(String, boolean)}. See {@link
+     *         ExtractDurationParams}.
+     */
+    public final ExtractDurationParams extractDuration(final String utterance) {
+        return new ExtractDurationParams(parser, utterance);
     }
 }

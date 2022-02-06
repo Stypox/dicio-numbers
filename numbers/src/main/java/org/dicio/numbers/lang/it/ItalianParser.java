@@ -3,6 +3,7 @@ package org.dicio.numbers.lang.it;
 import org.dicio.numbers.parser.NumberParser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -23,12 +24,12 @@ public class ItalianParser extends NumberParser {
     }
 
     @Override
-    public long extractDuration(final String text) {
-        return 0;
+    public Duration extractDuration(final String utterance, final boolean shortScale) {
+        return null;
     }
 
     @Override
-    public LocalDateTime extractDateTime(final String text,
+    public LocalDateTime extractDateTime(final String utterance,
                                          final boolean anchorDate,
                                          final LocalTime defaultTime) {
         return null;
