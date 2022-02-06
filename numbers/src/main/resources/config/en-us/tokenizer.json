@@ -97,6 +97,14 @@
       "values": [
         "-"
       ]
+    },
+    {
+      "categories": [
+        "duration_separator"
+      ],
+      "values": [
+        "of"
+      ]
     }
   ],
   "number_mappings": [
