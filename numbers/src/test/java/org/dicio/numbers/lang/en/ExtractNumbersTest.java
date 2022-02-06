@@ -389,6 +389,12 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertDivideByDenominatorIfPossible("quarter",   n(16, F),   n(4, F),   1);
         assertDivideByDenominatorIfPossible("quarter",   n(4.4, F),  n(4.4, F), 0);
         assertDivideByDenominatorIfPossible("people",    n(98, F),   n(98, F),  0);
+
+        // "a" could be the numerator of fractions but not really a number, so handled here
+        assertDivideByDenominatorIfPossible("a tenth",   null,       n(0.1, F), 2);
+        assertDivideByDenominatorIfPossible("a ten",     null,       null,      0);
+        assertDivideByDenominatorIfPossible("a people",  null,       null,      0);
+        assertDivideByDenominatorIfPossible("a tenth",   n(2.8, F),  n(2.8, F), 0);
     }
 
     @Test

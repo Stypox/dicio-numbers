@@ -44,10 +44,8 @@ public class EnglishNumberExtractor {
                 number = numberSignPoint(true); // then try with normal number
             }
 
-            if (number != null) {
-                // a number was found, maybe it has a valid denominator?
-                number = divideByDenominatorIfPossible(number);
-            }
+            // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
+            number = divideByDenominatorIfPossible(number);
             addNumberOrText(ts, number, textAndNumbers, currentText);
         }
     }
@@ -61,13 +59,13 @@ public class EnglishNumberExtractor {
                 number = numberSignPoint(false); // then try without ordinal
             }
 
+            // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
+            // note that e.g. "a couple halves" ends up here, but that's valid
+            number = divideByDenominatorIfPossible(number);
+
             if (number == null) {
                 // maybe an ordinal number?
                 number = numberSignPoint(true);
-            } else {
-                // a number was found, maybe it has a valid denominator?
-                // note that e.g. "a couple halves" ends up here, but that's valid
-                number = divideByDenominatorIfPossible(number);
             }
             addNumberOrText(ts, number, textAndNumbers, currentText);
         }
@@ -95,6 +93,23 @@ public class EnglishNumberExtractor {
 
 
     Number divideByDenominatorIfPossible(final Number numberToEdit) {
+        if (numberToEdit == null) {
+            if (ts.get(0).isValue("a")) {
+                // handle cases where
+                final int originalPosition = ts.getPosition();
+                ts.movePositionForwardBy(1);
+
+                final Number denominator = numberInteger(true);
+                if (denominator != null && denominator.isOrdinal() && denominator.moreThan(2)) {
+                    return new Number(1).divide(denominator); // valid denominator, e.g. a tenth
+                } else {
+                    // missing or invalid denominator, e.g. a hello, a four
+                    ts.setPosition(originalPosition); // restore to original position
+                }
+            }
+            return null;
+        }
+
         // if numberToEdit is directly followed by an ordinal number then it is a fraction (only if
         // numberToEdit is not ordinal or already decimal). Note: a big long scale integer (i.e.
         // 10^24) would be decimal, here we are assuming that such a number will never have a
