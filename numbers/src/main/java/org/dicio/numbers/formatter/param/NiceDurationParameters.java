@@ -5,6 +5,7 @@ import org.dicio.numbers.formatter.NumberFormatter;
 import java.time.Duration;
 
 public class NiceDurationParameters {
+    // TODO documentation
 
     private final NumberFormatter numberFormatter;
     private final Duration duration;

@@ -5,7 +5,7 @@ import org.dicio.numbers.parser.NumberParser;
 import java.util.List;
 
 public class ExtractNumbersParams {
-
+    // TODO documentation
     private final NumberParser numberParser;
     private final String utterance;
 

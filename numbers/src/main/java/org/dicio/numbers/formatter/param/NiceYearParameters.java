@@ -9,6 +9,7 @@ import java.time.LocalDate;
  * is used anyway in NumberParserFormatter to keep consistency with other functions.
  */
 public class NiceYearParameters {
+    // TODO documentation
 
     private final NumberFormatter numberFormatter;
     private final LocalDate date;

@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class NiceDateTimeParameters {
+    // TODO documentation
 
     private final NumberFormatter numberFormatter;
     private final LocalDate date;

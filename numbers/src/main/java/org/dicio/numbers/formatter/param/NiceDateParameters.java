@@ -5,6 +5,7 @@ import org.dicio.numbers.formatter.NumberFormatter;
 import java.time.LocalDate;
 
 public class NiceDateParameters {
+    // TODO documentation
 
     private final NumberFormatter numberFormatter;
     private final LocalDate date;
