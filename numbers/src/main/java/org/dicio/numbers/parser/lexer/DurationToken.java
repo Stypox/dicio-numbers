@@ -20,6 +20,16 @@ public class DurationToken extends Token {
         this.restrictedAfterNumber = restrictedAfterNumber;
     }
 
+    @Override
+    public boolean isDurationToken() {
+        return true;
+    }
+
+    @Override
+    public DurationToken asDurationToken() {
+        return this;
+    }
+
     public Duration getDurationMultiplier() {
         return durationMultiplier;
     }

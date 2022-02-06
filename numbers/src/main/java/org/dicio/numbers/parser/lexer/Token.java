@@ -44,6 +44,14 @@ public class Token {
         return false; // false by default, overridden
     }
 
+    public boolean isDurationToken() {
+        return false; // false by default, overridden
+    }
+
+    public DurationToken asDurationToken() {
+        throw new UnsupportedOperationException(); // throw by default, overridden
+    }
+
 
     public static Token emptyToken() {
         return EMPTY_TOKEN;

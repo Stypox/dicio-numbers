@@ -246,23 +246,31 @@ public class Tokenizer {
     private Token tokenFromValueExact(final String clean,
                                       final String value,
                                       final String spacesFollowing) {
+        MatchedToken matchedToken = null;
         final Mapping mapping = numberMappings.get(clean);
-        if (mapping != null) {
-            return new NumberToken(value, spacesFollowing, mapping.categories, mapping.number);
-        }
+        if (mapping == null) {
+            final Set<String> wordMatch = wordMatches.get(clean);
+            if (wordMatch != null) {
+                matchedToken = new MatchedToken(value, spacesFollowing, wordMatch);
+            }
 
-        final Set<String> match = wordMatches.get(clean);
-        if (match != null) {
-            return new MatchedToken(value, spacesFollowing, match);
+        } else {
+            matchedToken
+                    = new NumberToken(value, spacesFollowing, mapping.categories, mapping.number);
         }
 
         final DurationMapping durationMapping = durationMappings.get(clean);
         if (durationMapping != null) {
-            return new DurationToken(value, spacesFollowing,
+            final DurationToken durationToken = new DurationToken(value, spacesFollowing,
                     durationMapping.durationMultiplier, durationMapping.restrictedAfterNumber);
+            if (matchedToken == null) {
+                return durationToken;
+            } else {
+                matchedToken.setDurationTokenMatch(durationToken);
+            }
         }
 
-        return null;
+        return matchedToken;
     }
 
     private String removePluralEndings(final String value) {
