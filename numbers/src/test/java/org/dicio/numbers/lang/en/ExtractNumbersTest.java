@@ -252,7 +252,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     @Test(timeout = 4000) // 40000 formats + parses take <2s, use 4s timeout just for slower PCs
-    public void testNumberIntegerPerformance() {
+    public void testNumberIntegerPerformanceWithFormatter() {
         final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
         final long startingValue = 54378960497L;
         for (long i = startingValue; i < startingValue + 10000; ++i) {
