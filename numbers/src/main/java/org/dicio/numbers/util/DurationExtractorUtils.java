@@ -22,7 +22,8 @@ public class DurationExtractorUtils {
      * well at least for european languages (I don't know the structure of other languages though).
      * @param tokenStream the token stream from which to obtain information
      * @param extractOneNumberNoOrdinal tries to extract a non-ordinal number at the current token
-     *                                  stream position. Will be called multiple times.
+     *                                  stream position. Will be called multiple times. Should not
+     *                                  prefer ordinal numbers (i.e. preferOrdinal should be false).
      * @return the found duration, or null if no duration was found
      */
     public static Duration extractDuration(final TokenStream tokenStream,
