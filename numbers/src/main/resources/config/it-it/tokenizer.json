@@ -427,10 +427,12 @@
         "suffix_multiplier"
       ],
       "values": {
+        "mezz": 0.5,
         "mezzo": 0.5,
         "mezza": 0.5,
         "mezzi": 0.5,
         "mezze": 0.5,
+        "meta": 0.5,
         "paio": 2,
         "paia": 2,
         "coppia": 2,
