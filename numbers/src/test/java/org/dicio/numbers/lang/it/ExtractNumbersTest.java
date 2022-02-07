@@ -324,6 +324,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertExtractNumbers("novantanove virgola unounozeroquattrotre virgola zerouno",      T, n(99.11043, F), " virgola ", n(0, F), n(1, F));
         assertExtractNumbers("venticinque dozzine trequarti virgola ventidueciao",            T, n(300, F), " ", n(3.0 / 4.0, F), " virgola ventidueciao");
         assertExtractNumbers("centotto",                                                      F, n(108, F));
+        assertExtractNumbers("mezze coppie",                                                  T, n(0.5, F), " ", n(2, F));
     }
 
     @Test
