@@ -7,25 +7,22 @@ import static org.dicio.numbers.util.NumberExtractorUtils.numberGroupShortScale;
 import static org.dicio.numbers.util.NumberExtractorUtils.numberLessThan1000;
 import static org.junit.Assert.assertEquals;
 
+import java.util.function.Function;
+
 public abstract class NumberExtractorUtilsTestBase extends WithTokenizerTestBase {
-
-    protected interface NumberFunction {
-        Number call(final TokenStream ts);
-    }
-
 
     protected void assertNumberFunction(final String s,
                                         final Number value,
                                         final int finalTokenStreamPosition,
-                                        final NumberFunction numberFunction) {
+                                        final Function<TokenStream, Number> numberFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Number number = numberFunction.call(ts);
+        final Number number = numberFunction.apply(ts);
         assertEquals("wrong value for string " + s, value, number);
         assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
     }
 
     protected void assertNumberFunctionNull(final String s,
-                                            final NumberFunction numberFunction) {
+                                            final Function<TokenStream, Number> numberFunction) {
         assertNumberFunction(s, null, 0, numberFunction);
     }
 
