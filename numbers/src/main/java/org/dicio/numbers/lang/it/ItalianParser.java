@@ -2,6 +2,7 @@ package org.dicio.numbers.lang.it;
 
 import org.dicio.numbers.parser.NumberParser;
 import org.dicio.numbers.parser.lexer.TokenStream;
+import org.dicio.numbers.util.DurationExtractorUtils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -25,7 +26,11 @@ public class ItalianParser extends NumberParser {
 
     @Override
     public Duration extractDuration(final String utterance, final boolean shortScale) {
-        return null;
+        final TokenStream tokenStream = new TokenStream(tokenizer.tokenize(utterance));
+        final ItalianNumberExtractor numberExtractor
+                = new ItalianNumberExtractor(tokenStream, false);
+        return DurationExtractorUtils.extractDuration(tokenStream,
+                numberExtractor::extractOneNumberNoOrdinal);
     }
 
     @Override

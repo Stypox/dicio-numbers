@@ -87,6 +87,15 @@
         "meno",
         "-"
       ]
+    },
+    {
+      "categories": [
+        "duration_separator"
+      ],
+      "values": [
+        "di",
+        "d"
+      ]
     }
   ],
   "number_mappings": [
@@ -448,9 +457,75 @@
     }
   ],
   "duration_words": {
-
+    "1 NANOS": [
+      "nanosecondo",
+      "nanosecondi",
+      "ns"
+    ],
+    "1 MICROS": [
+      "microsecondo",
+      "microsecondi",
+      "μs"
+    ],
+    "1 MILLIS": [
+      "millisecondo",
+      "millisecondi",
+      "ms"
+    ],
+    "1 SECONDS": [
+      "secondo",
+      "secondi",
+      "s",
+      "sec"
+    ],
+    "1 MINUTES": [
+      "minuto",
+      "minuti",
+      "m",
+      "min"
+    ],
+    "1 HOURS": [
+      "ora",
+      "ore",
+      "h"
+    ],
+    "1 DAYS": [
+      "giorno",
+      "giorni",
+      "giornata",
+      "giornate"
+    ],
+    "1 WEEKS": [
+      "settimana",
+      "settimane"
+    ],
+    "1 MONTHS": [
+      "mese",
+      "mesi"
+    ],
+    "1 YEARS": [
+      "anno",
+      "anni"
+    ],
+    "1 DECADES": [
+      "decennio",
+      "decenni"
+    ],
+    "1 CENTURIES": [
+      "secolo",
+      "secoli"
+    ],
+    "1 MILLENNIA": [
+      "millennio",
+      "millenni"
+    ]
   },
   "duration_restrict_after_number": [
-
+    "ns",
+    "μs",
+    "ms",
+    "s",
+    "m",
+    "h"
   ]
 }
