@@ -19,6 +19,7 @@ import static org.junit.Assert.assertTrue;
 import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
+import org.dicio.numbers.util.DurationExtractorUtils;
 import org.junit.Test;
 
 import java.time.Duration;
@@ -33,7 +34,11 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
                                 final TokenStream ts,
                                 final boolean shortScale,
                                 final Duration expectedDuration) {
-        final Duration duration = new EnglishDurationExtractor(ts, shortScale).extractDuration();
+        final EnglishNumberExtractor numberExtractor
+                = new EnglishNumberExtractor(ts, shortScale, false);
+        final Duration duration = DurationExtractorUtils.extractDuration(ts,
+                numberExtractor::extractOneNumberNoOrdinal);
+
         assertNotNull(duration);
         assertEquals("wrong duration in seconds for string \"" + s + "\": expected \""
                         + new EnglishFormatter().niceDuration(expectedDuration, true) + "\" but got \""
@@ -49,7 +54,10 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
 
     private void assertNoDuration(final String s, final boolean shortScale) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Duration duration = new EnglishDurationExtractor(ts, shortScale).extractDuration();
+        final EnglishNumberExtractor numberExtractor
+                = new EnglishNumberExtractor(ts, shortScale, false);
+        final Duration duration = DurationExtractorUtils.extractDuration(ts,
+                numberExtractor::extractOneNumberNoOrdinal);
         assertNull(duration);
     }
 

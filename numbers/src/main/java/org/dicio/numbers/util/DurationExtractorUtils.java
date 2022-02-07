@@ -1,25 +1,40 @@
-package org.dicio.numbers.lang.en;
+package org.dicio.numbers.util;
 
 import org.dicio.numbers.parser.lexer.DurationToken;
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.util.Number;
 
 import java.time.Duration;
+import java.util.function.Supplier;
 
-public class EnglishDurationExtractor {
+public class DurationExtractorUtils {
     private final TokenStream ts;
-    private final EnglishNumberExtractor numberExtractor;
+    private final Supplier<Number> extractOneNumberNoOrdinal;
 
-    EnglishDurationExtractor(final TokenStream tokenStream, final boolean shortScale) {
+    private DurationExtractorUtils(final TokenStream tokenStream,
+                                   final Supplier<Number> extractOneNumberNoOrdinal) {
         this.ts = tokenStream;
-        this.numberExtractor = new EnglishNumberExtractor(ts, shortScale, false);
+        this.extractOneNumberNoOrdinal = extractOneNumberNoOrdinal;
     }
 
-    public Duration extractDuration() {
+    /**
+     * Extract a duration from the provided token stream (assuming the token stream has been
+     * tokenized with the same rules as those in the English language). This class should work
+     * well at least for european languages (I don't know the structure of other languages though).
+     * @param tokenStream the token stream from which to obtain information
+     * @param extractOneNumberNoOrdinal tries to extract a non-ordinal number at the current token
+     *                                  stream position. Will be called multiple times.
+     * @return the found duration, or null if no duration was found
+     */
+    public static Duration extractDuration(final TokenStream tokenStream,
+                                           final Supplier<Number> extractOneNumberNoOrdinal) {
+        return new DurationExtractorUtils(tokenStream, extractOneNumberNoOrdinal).extractDuration();
+    }
+
+    private Duration extractDuration() {
         Duration result;
         while (true) {
             final int originalPosition = ts.getPosition();
-            final Number number = numberExtractor.extractOneNumberNoOrdinal();
+            final Number number = extractOneNumberNoOrdinal.get();
             result = durationAfterNullableNumber(number);
 
             if (result != null) {
@@ -34,7 +49,7 @@ public class EnglishDurationExtractor {
         }
 
         while (!ts.finished()) {
-            final Number number = numberExtractor.extractOneNumberNoOrdinal();
+            final Number number = extractOneNumberNoOrdinal.get();
             final Duration duration = durationAfterNullableNumber(number);
 
             if (number == null && duration == null && ts.get(0).hasCategory("ignore")) {
@@ -49,7 +64,7 @@ public class EnglishDurationExtractor {
         return result;
     }
 
-    Duration durationAfterNullableNumber(final Number number) {
+    private Duration durationAfterNullableNumber(final Number number) {
         if (number == null) {
             if (ts.get(0).isDurationToken()) {
                 final DurationToken durationToken = ts.get(0).asDurationToken();
