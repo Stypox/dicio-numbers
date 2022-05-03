@@ -29,7 +29,7 @@ These JSON objects should contain:
 - `"weekday"`: a numbered list of how the 7 days in the week are pronounced, where monday is at position **0**
 - `"date"`: a numbered list of how the at-most-31 days in the month are pronounced, where the first day is at position **1**
 - `"month"`: a numbered list of how the 12 months are pronounced, where january is at position **1**
-- `"number"`: a list of `"NUMBER": "PRONOUNCIATION"` pairs. It should contain the pronounciation of all numbers that you want to use in [`"decade_format"`, `"hundreds_format"` and `"thousand_format"`](#"decadeformat"-"hundredsformat"-"thousandformat").
+- `"number"`: a list of `"NUMBER": "PRONOUNCIATION"` pairs. It should contain the pronounciation of all numbers that you want to use in [`"decade_format"`, `"hundreds_format"` and `"thousand_format"`](#decade_format-hundreds_format-thousand_format).
 
 #### `"decade_format"`, `"hundreds_format"`, `"thousand_format"`
 
@@ -129,7 +129,7 @@ This is the table of possible `FORMATTED_STRING_NAME`s you can use when having t
 
 #### `"year_format"`
 
-This JSON object follows the same structure as [`"decade_format"`, `"hundreds_format"`, `"thousand_format"`](#"decadeformat"-"hundredsformat"-"thousandformat"), but there is also a `"bc"` field that should contain the translation of the shortened "Before Christ" ("b.c."). In this JSON object you should put how to fully format a number as a year, using the formatted strings already calculated using `"decade_format"`, `"hundreds_format"` and `"thousand_format"`.
+This JSON object follows the same structure as [`"decade_format"`, `"hundreds_format"`, `"thousand_format"`](#decade_format-hundreds_format-thousand_format), but there is also a `"bc"` field that should contain the translation of the shortened "Before Christ" ("b.c."). In this JSON object you should put how to fully format a number as a year, using the formatted strings already calculated using `"decade_format"`, `"hundreds_format"` and `"thousand_format"`.
 
 The formats have at their disposal the full table from above plus the following items (which are the ones that should actually be used).
 <table>
@@ -257,21 +257,21 @@ Each of the JSON objects described below contains a numbered list of tests to ru
 
 #### `"test_nice_year"`
 
-These tests are for [`"year_format"`](#"yearformat"). Each test has:
+These tests are for [`"year_format"`](#year_format). Each test has:
 - `"datetime_param"` the datetime in this form: year, month, day, hour, minute, second
 - `"bc"` whether the datetime is before Christ (`True`) or not (`False`)
 - `"assertEqual"` what the provided datetime should be formatted as
 
 #### `"test_nice_date"`
 
-These tests are for [`"date_format"`](#"dateformat"). Each test has:
+These tests are for [`"date_format"`](#date_format). Each test has:
 - `"datetime_param"` the datetime in this form: year, month, day, hour, minute, second
 - `"now"` the datetime corresponding to the "now" time for which to test relative dates (e.g. if `datetime_param=now`, then `today` will be outputted, not the full date), in the same form, or `None` if "now" is unknown or unwanted
 - `"assertEqual"` what the provided datetime should be formatted as
 
 #### `"test_nice_date_time"`
 
-These tests are for [`"date_time_format"`](#"datetimeformat"). Each test has:
+These tests are for [`"date_time_format"`](#date_time_format). Each test has:
 - `"datetime_param"` the datetime in this form: year, month, day, hour, minute, second
 - `"now"` the datetime corresponding to the "now" time for which to test relative dates (e.g. if `datetime_param=now`, then `today` will be outputted, not the full date), in the same form, or `None` if "now" is unknown or unwanted
 - `"use_24hour"` whether to use the 24-hour format (`True`) or use the 12-hour one (`False`) (parameter passed to the java method `niceTime`)
