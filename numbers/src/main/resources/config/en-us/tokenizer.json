@@ -1,5 +1,5 @@
 {
-  "spaces": " :;_!?<>|=()[]{}»«*~^`'\"",
+  "spaces": " \t\n\f\r:;_!?<>|=()[]{}»«*~^`'\"",
   "characters_as_word": "%‰#-+.,/",
   "raw_number_categories": [
     "number",

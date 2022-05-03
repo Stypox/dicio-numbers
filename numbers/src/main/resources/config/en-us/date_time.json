@@ -26,7 +26,7 @@
     "5": {"match": "^\\d00\\d$", "format": "{formatted_thousand} {formatted_decade} {bc}"},
     "6": {"match": "^\\d{2}0\\d$", "format": "{formatted_thousand} oh {formatted_decade} {bc}"},
     "7": {"match": "^\\d{4}$", "format": "{formatted_thousand} {formatted_decade} {bc}"},
-    "default": "{year} {bc}",
+    "default": "{number} {bc}",
     "bc": "b.c."
   },
   "date_format": {

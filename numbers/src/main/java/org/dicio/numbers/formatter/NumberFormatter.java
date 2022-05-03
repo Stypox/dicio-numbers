@@ -97,9 +97,9 @@ public abstract class NumberFormatter {
         }
 
         return formatString.format(new HashMap<String, String>() {{
+            put("day", config.days[date.getDayOfMonth() - 1]);
             put("weekday", config.weekdays[date.getDayOfWeek().getValue() - 1]);
             put("month", config.months[date.getMonth().getValue() - 1]);
-            put("day", config.days[date.getDayOfMonth() - 1]);
             put("formatted_year", niceYear(date));
         }});
     }
