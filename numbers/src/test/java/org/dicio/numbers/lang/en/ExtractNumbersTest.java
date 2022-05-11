@@ -7,6 +7,7 @@ import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 import static org.dicio.numbers.test.TestUtils.F;
 import static org.dicio.numbers.test.TestUtils.T;
@@ -21,25 +22,21 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         return "config/en-us";
     }
 
-    private interface NumberFunction {
-        Number call(final EnglishNumberExtractor enp, final TokenStream ts);
-    }
-
 
     private void assertNumberFunction(final String s,
                                       final boolean shortScale,
                                       final Number value,
                                       final int finalTokenStreamPosition,
-                                      final NumberFunction numberFunction) {
+                                      final BiFunction<EnglishNumberExtractor, TokenStream, Number> numberFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Number number = numberFunction.call(new EnglishNumberExtractor(ts, shortScale, false), ts);
+        final Number number = numberFunction.apply(new EnglishNumberExtractor(ts, shortScale, false), ts);
         assertEquals("wrong value for string " + s, value, number);
         assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
     }
 
     private void assertNumberFunctionNull(final String s,
                                           final boolean shortScale,
-                                          final NumberFunction numberFunction) {
+                                          final BiFunction<EnglishNumberExtractor, TokenStream, Number> numberFunction) {
         assertNumberFunction(s, shortScale, null, 0, numberFunction);
     }
 
