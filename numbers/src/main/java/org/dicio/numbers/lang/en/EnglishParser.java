@@ -29,8 +29,8 @@ public class EnglishParser extends NumberParser {
         final TokenStream tokenStream = new TokenStream(tokenizer.tokenize(utterance));
         final EnglishNumberExtractor numberExtractor
                 = new EnglishNumberExtractor(tokenStream, shortScale, false);
-        return DurationExtractorUtils.extractDuration(tokenStream,
-                numberExtractor::extractOneNumberNoOrdinal);
+        return new DurationExtractorUtils(tokenStream, numberExtractor::extractOneNumberNoOrdinal)
+                .extractDuration();
     }
 
     @Override

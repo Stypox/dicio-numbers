@@ -11,45 +11,58 @@ public class DurationExtractorUtils {
     private final TokenStream ts;
     private final Supplier<Number> extractOneNumberNoOrdinal;
 
-    private DurationExtractorUtils(final TokenStream tokenStream,
-                                   final Supplier<Number> extractOneNumberNoOrdinal) {
+    /**
+     * This class should work well at least for european languages (I don't know the structure of
+     * other languages though). Requires the token stream to have been tokenized with the same rules
+     * as in the English language.
+     *
+     * @param tokenStream the token stream from which to obtain information
+     * @param extractOneNumberNoOrdinal tries to extract a non-ordinal number at the current token
+     *                                  stream position. Will be called multiple times. Should not
+     *                                  prefer ordinal numbers (i.e. preferOrdinal should be false).
+     */
+    public DurationExtractorUtils(final TokenStream tokenStream,
+                                  final Supplier<Number> extractOneNumberNoOrdinal) {
         this.ts = tokenStream;
         this.extractOneNumberNoOrdinal = extractOneNumberNoOrdinal;
     }
 
     /**
-     * Extract a duration from the provided token stream (assuming the token stream has been
-     * tokenized with the same rules as those in the English language). This class should work
-     * well at least for european languages (I don't know the structure of other languages though).
-     * @param tokenStream the token stream from which to obtain information
-     * @param extractOneNumberNoOrdinal tries to extract a non-ordinal number at the current token
-     *                                  stream position. Will be called multiple times. Should not
-     *                                  prefer ordinal numbers (i.e. preferOrdinal should be false).
+     * Extract a duration at any position (after the current one) in the token stream provided in
+     * the constructor
      * @return the found duration, or null if no duration was found
      */
-    public static Duration extractDuration(final TokenStream tokenStream,
-                                           final Supplier<Number> extractOneNumberNoOrdinal) {
-        return new DurationExtractorUtils(tokenStream, extractOneNumberNoOrdinal).extractDuration();
-    }
-
-    private Duration extractDuration() {
-        Duration result;
-        while (true) {
-            final int originalPosition = ts.getPosition();
-            final Number number = extractOneNumberNoOrdinal.get();
-            result = durationAfterNullableNumber(number);
-
+    public Duration extractDuration() {
+        while (!ts.finished()) {
+            final Duration result = extractDurationAtCurrentPosition();
             if (result != null) {
-                break; // found a duration, exit the loop and try to expand it
+                return result; // duration found at the current position
             }
 
-            ts.setPosition(originalPosition + 1); // advance by one token w/ respect to beginning
-            if (ts.finished()) {
-                // no duration found in all of the token stream
-                return null;
-            }
+            ts.movePositionForwardBy(1); // try to find a duration at the next token
         }
 
+        return null; // no duration found in all of the token stream
+    }
+
+    /**
+     * Extract a duration at the current position (i.e. no words will be skipped, not even ignorable
+     * words) in the token stream provided in the constructor
+     * @return the found duration, or null if no duration was found
+     */
+    public Duration extractDurationAtCurrentPosition() {
+        final int originalPosition = ts.getPosition();
+        final Number firstNumber = extractOneNumberNoOrdinal.get();
+        Duration result = durationAfterNullableNumber(firstNumber);
+
+        if (result == null) {
+            // duration not found at current position
+            ts.setPosition(originalPosition);
+            return null;
+        }
+
+        // found a duration, try to expand it
+        int positionLastDurationFound = ts.getPosition();
         while (!ts.finished()) {
             final Number number = extractOneNumberNoOrdinal.get();
             final Duration duration = durationAfterNullableNumber(number);
@@ -59,10 +72,12 @@ public class DurationExtractorUtils {
             } else if (duration == null) {
                 break;
             } else {
+                positionLastDurationFound = ts.getPosition();
                 result = result.plus(duration); // found another duration group, add and continue
             }
         }
 
+        ts.setPosition(positionLastDurationFound);
         return result;
     }
 

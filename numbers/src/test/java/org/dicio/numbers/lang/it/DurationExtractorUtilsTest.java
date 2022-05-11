@@ -18,6 +18,9 @@ import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.util.DurationExtractorUtils;
 import org.junit.Test;
 
+/**
+ * TODO also test extractDurationAtCurrentPosition
+ */
 public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
     @Override
     public String configFolder() {
@@ -28,8 +31,8 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
     public Duration extractDuration(final TokenStream ts, final boolean shortScale) {
         final ItalianNumberExtractor numberExtractor
                 = new ItalianNumberExtractor(ts, false);
-        return DurationExtractorUtils.extractDuration(ts,
-                numberExtractor::extractOneNumberNoOrdinal);
+        return new DurationExtractorUtils(ts, numberExtractor::extractOneNumberNoOrdinal)
+                .extractDuration();
     }
 
     private void assertDuration(final String s, final java.time.Duration duration) {

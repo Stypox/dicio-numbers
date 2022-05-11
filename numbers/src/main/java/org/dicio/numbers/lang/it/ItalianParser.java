@@ -29,8 +29,8 @@ public class ItalianParser extends NumberParser {
         final TokenStream tokenStream = new TokenStream(tokenizer.tokenize(utterance));
         final ItalianNumberExtractor numberExtractor
                 = new ItalianNumberExtractor(tokenStream, false);
-        return DurationExtractorUtils.extractDuration(tokenStream,
-                numberExtractor::extractOneNumberNoOrdinal);
+        return new DurationExtractorUtils(tokenStream, numberExtractor::extractOneNumberNoOrdinal)
+                .extractDuration();
     }
 
     @Override
