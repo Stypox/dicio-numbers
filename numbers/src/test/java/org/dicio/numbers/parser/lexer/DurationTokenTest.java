@@ -10,18 +10,16 @@ import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 
+import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
-import java.time.Duration;
-
 public class DurationTokenTest {
 
-    private static void assertDurationMultipliedBy(final Duration tokenDuration,
+    private static void assertDurationMultipliedBy(final java.time.Duration tokenDuration,
                                                    final Number number,
-                                                   final Duration expectedDuration) {
-        assertEquals(expectedDuration,
-                new DurationToken("", "", tokenDuration, false).getDurationMultipliedBy(number));
+                                                   final java.time.Duration expectedDuration) {
+        assertEquals(expectedDuration, new Duration(tokenDuration).multiply(number).toJavaDuration());
     }
 
     @Test

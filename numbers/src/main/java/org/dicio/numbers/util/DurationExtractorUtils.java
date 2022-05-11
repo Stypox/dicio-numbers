@@ -2,9 +2,9 @@ package org.dicio.numbers.util;
 
 import org.dicio.numbers.parser.lexer.DurationToken;
 import org.dicio.numbers.parser.lexer.TokenStream;
+import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
 
-import java.time.Duration;
 import java.util.function.Supplier;
 
 public class DurationExtractorUtils {
@@ -97,7 +97,7 @@ public class DurationExtractorUtils {
                 // e.g. two seconds, a couple of hours
                 final DurationToken durationToken = ts.get(nextNotIgnore).asDurationToken();
                 ts.movePositionForwardBy(nextNotIgnore + 1);
-                return durationToken.getDurationMultipliedBy(number);
+                return durationToken.getDurationMultiplier().multiply(number);
             } else {
                 // the number that was found was actually followed by a duration multiplier,
                 // e.g. fifteen people, a couple of houses

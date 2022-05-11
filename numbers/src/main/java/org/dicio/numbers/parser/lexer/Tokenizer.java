@@ -5,13 +5,13 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
+import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.ResourceOpener;
 import org.dicio.numbers.util.Utils;
 
 import java.io.FileNotFoundException;
 import java.text.Normalizer;
-import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -110,17 +110,17 @@ public class Tokenizer {
                             + " should be made of an integer number followed by a unit");
                 }
 
-                final int multiplier;
+                final Number multiplier;
                 try {
-                    multiplier = Integer.parseInt(parts[0]);
+                    multiplier = new Number(Integer.parseInt(parts[0]));
                 } catch (final NumberFormatException e) {
                     throw new RuntimeException("Multiplier \"" + parts[0] + "\" of duration \""
                             + o.getKey() + "\" is not an integer", e);
                 }
 
-                final Duration duration;
+                final ChronoUnit chronoUnit;
                 try {
-                    duration = ChronoUnit.valueOf(parts[1]).getDuration();
+                    chronoUnit = ChronoUnit.valueOf(parts[1]);
                 } catch (final IllegalArgumentException e) {
                     throw new RuntimeException("Unit \"" + parts[1] + "\" of duration \""
                             + o.getKey() + "\" is not a valid unit; valid units are: "
@@ -139,7 +139,7 @@ public class Tokenizer {
                     // make sure to create a new DurationMapping object each time, since their
                     // restrictedAfterNumber value is changed in the for below
                     durationMappings.put((String) w,
-                            new DurationMapping(duration.multipliedBy(multiplier)));
+                            new DurationMapping(new Duration().plus(multiplier, chronoUnit)));
                 }
             }
             for (final Object o : root.getArray("duration_restrict_after_number")) {

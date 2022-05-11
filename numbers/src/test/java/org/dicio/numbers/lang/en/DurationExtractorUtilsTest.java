@@ -16,10 +16,9 @@ import static org.junit.Assert.assertTrue;
 import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.DurationExtractorUtilsTestBase;
+import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.util.DurationExtractorUtils;
 import org.junit.Test;
-
-import java.time.Duration;
 
 public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
     @Override
@@ -91,14 +90,14 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
     @Test(timeout = 4000) // 1024 formats + parses take <2s, use 4s timeout just for slower PCs
     public void testPerformanceWithFormatter() {
         // TODO there are no fractions of second here since the formatter does not support them
-        final Duration[] alternatives = {
+        final java.time.Duration[] alternatives = {
                 t(1), t(5 * MINUTE), t(2 * HOUR), t(16 * DAY), t(WEEK), t(3 * MONTH), t(5 * YEAR),
                 t(1e9 * YEAR), t(17 * WEEK), t(45)
         };
 
         final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
         for (int i = 0; i < (1 << alternatives.length); ++i) {
-            Duration durationToTest = Duration.ZERO;
+            java.time.Duration durationToTest = java.time.Duration.ZERO;
             for (int j = 0; j < alternatives.length; ++j) {
                 if ((i & (1 << j)) != 0) {
                     durationToTest = durationToTest.plus(alternatives[j]);

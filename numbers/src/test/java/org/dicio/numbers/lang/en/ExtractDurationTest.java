@@ -22,7 +22,7 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
         assertNull(npf.extractDuration("hello how are you").get());
         assertNull(npf.extractDuration("one billion euros").shortScale(true).get());
         assertNull(npf.extractDuration("a million").shortScale(false).get());
-        assertEquals(t(DAY), npf.extractDuration("twenty four hours is not two days").get());
-        assertEquals(t(2 * DAY), npf.extractDuration("two days are not twenty four hours").get());
+        assertEquals(t(DAY), npf.extractDuration("twenty four hours is not two days").get().toJavaDuration());
+        assertEquals(t(2 * DAY), npf.extractDuration("two days are not twenty four hours").get().toJavaDuration());
     }
 }

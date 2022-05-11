@@ -1,8 +1,7 @@
 package org.dicio.numbers.parser.param;
 
 import org.dicio.numbers.parser.NumberParser;
-
-import java.time.Duration;
+import org.dicio.numbers.unit.Duration;
 
 public class ExtractDurationParams {
     private final NumberParser numberParser;

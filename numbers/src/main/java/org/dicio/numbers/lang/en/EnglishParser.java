@@ -2,9 +2,9 @@ package org.dicio.numbers.lang.en;
 
 import org.dicio.numbers.parser.NumberParser;
 import org.dicio.numbers.parser.lexer.TokenStream;
+import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.util.DurationExtractorUtils;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;

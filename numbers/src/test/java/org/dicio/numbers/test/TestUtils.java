@@ -1,5 +1,6 @@
 package org.dicio.numbers.test;
 
+import org.dicio.numbers.lang.en.EnglishFormatter;
 import org.dicio.numbers.unit.Number;
 
 import java.time.Duration;
@@ -55,5 +56,17 @@ public class TestUtils {
 
     public static Duration t(final double seconds) {
         return Duration.ofSeconds((long) seconds, (int)((seconds % 1.0) * 1e9));
+    }
+
+    public static String niceDuration(final org.dicio.numbers.unit.Duration duration) {
+        return niceDuration(duration.toJavaDuration());
+    }
+
+    public static String niceDuration(final Duration duration) {
+        if (duration.isNegative()) {
+            return "minus " + niceDuration(duration.negated());
+        } else {
+            return new EnglishFormatter().niceDuration(duration, true);
+        }
     }
 }

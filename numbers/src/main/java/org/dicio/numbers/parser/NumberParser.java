@@ -1,8 +1,8 @@
 package org.dicio.numbers.parser;
 
 import org.dicio.numbers.parser.lexer.Tokenizer;
+import org.dicio.numbers.unit.Duration;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
