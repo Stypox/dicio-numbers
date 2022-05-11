@@ -3,7 +3,7 @@ package org.dicio.numbers.lang.it;
 import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.util.List;

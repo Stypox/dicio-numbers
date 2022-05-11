@@ -1,7 +1,7 @@
 package org.dicio.numbers.test;
 
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 
 import static org.dicio.numbers.util.NumberExtractorUtils.numberGroupShortScale;
 import static org.dicio.numbers.util.NumberExtractorUtils.numberLessThan1000;

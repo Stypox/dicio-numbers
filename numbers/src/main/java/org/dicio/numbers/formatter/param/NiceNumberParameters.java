@@ -1,12 +1,12 @@
 package org.dicio.numbers.formatter.param;
 
 import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.util.MixedFraction;
+import org.dicio.numbers.unit.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.util.List;
 
-import static org.dicio.numbers.util.MixedFraction.DEFAULT_DENOMINATORS;
+import static org.dicio.numbers.unit.MixedFraction.DEFAULT_DENOMINATORS;
 
 public class NiceNumberParameters {
 

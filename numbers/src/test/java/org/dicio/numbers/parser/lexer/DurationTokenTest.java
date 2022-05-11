@@ -10,7 +10,7 @@ import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.time.Duration;

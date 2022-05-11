@@ -1,6 +1,6 @@
 package org.dicio.numbers.test;
 
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

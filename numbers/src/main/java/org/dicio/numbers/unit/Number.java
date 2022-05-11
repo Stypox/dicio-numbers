@@ -1,7 +1,10 @@
-package org.dicio.numbers.util;
+package org.dicio.numbers.unit;
 
 import java.util.Objects;
 
+/**
+ * TODO add documentation
+ */
 public class Number {
 
     private final boolean isDecimal;
@@ -10,6 +13,13 @@ public class Number {
 
     private boolean isOrdinal = false;
 
+
+    public Number(final Number number) {
+        this.isDecimal = number.isDecimal;
+        this.integerValue = number.integerValue;
+        this.decimalValue = number.decimalValue;
+        this.isOrdinal = number.isOrdinal;
+    }
 
     public Number(final long integerValue) {
         this.isDecimal = false;

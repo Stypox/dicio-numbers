@@ -1,6 +1,6 @@
 package org.dicio.numbers.parser.lexer;
 
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 
 import java.util.Set;
 

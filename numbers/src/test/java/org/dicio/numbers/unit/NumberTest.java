@@ -1,5 +1,6 @@
-package org.dicio.numbers.util;
+package org.dicio.numbers.unit;
 
+import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

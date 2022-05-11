@@ -3,7 +3,7 @@ package org.dicio.numbers.formatter;
 import org.dicio.numbers.formatter.datetime.DateTimeConfig;
 import org.dicio.numbers.formatter.datetime.FormatString;
 import org.dicio.numbers.formatter.datetime.NiceYearSubstitutionTableBuilder;
-import org.dicio.numbers.util.MixedFraction;
+import org.dicio.numbers.unit.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.time.Duration;

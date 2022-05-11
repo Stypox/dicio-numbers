@@ -1,4 +1,6 @@
-package org.dicio.numbers.util;
+package org.dicio.numbers.unit;
+
+import org.dicio.numbers.util.Utils;
 
 import java.util.Arrays;
 import java.util.List;

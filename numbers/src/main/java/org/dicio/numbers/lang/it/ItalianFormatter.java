@@ -1,7 +1,7 @@
 package org.dicio.numbers.lang.it;
 
 import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.util.MixedFraction;
+import org.dicio.numbers.unit.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.time.LocalTime;

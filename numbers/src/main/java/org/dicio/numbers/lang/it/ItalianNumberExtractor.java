@@ -1,7 +1,7 @@
 package org.dicio.numbers.lang.it;
 
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.NumberExtractorUtils;
 
 import java.util.List;
@@ -13,8 +13,7 @@ public class ItalianNumberExtractor {
     private final TokenStream ts;
     private final boolean preferOrdinal;
 
-    ItalianNumberExtractor(final TokenStream tokenStream,
-                           final boolean preferOrdinal) {
+    ItalianNumberExtractor(final TokenStream tokenStream, final boolean preferOrdinal) {
         this.ts = tokenStream;
         this.preferOrdinal = preferOrdinal;
     }

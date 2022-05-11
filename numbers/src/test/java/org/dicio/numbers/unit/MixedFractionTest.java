@@ -1,5 +1,8 @@
-package org.dicio.numbers.util;
+package org.dicio.numbers.unit;
 
+import org.dicio.numbers.unit.MixedFraction;
+import org.dicio.numbers.util.Utils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -32,7 +35,7 @@ public class MixedFractionTest {
         assertEquals(numerator, mixedFraction.numerator);
         assertEquals(denominator, mixedFraction.denominator);
 
-        assertEquals(number, (number < 0 ? -1 : 1) * (mixedFraction.whole
+        Assert.assertEquals(number, (number < 0 ? -1 : 1) * (mixedFraction.whole
                         + (double) mixedFraction.numerator / mixedFraction.denominator),
                 Utils.WHOLE_FRACTION_ACCURACY);
     }

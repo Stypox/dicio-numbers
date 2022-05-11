@@ -5,7 +5,7 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.ResourceOpener;
 import org.dicio.numbers.util.Utils;
 

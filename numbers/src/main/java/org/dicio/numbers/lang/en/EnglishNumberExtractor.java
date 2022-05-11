@@ -2,7 +2,7 @@ package org.dicio.numbers.lang.en;
 
 import org.dicio.numbers.parser.lexer.NumberToken;
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.NumberExtractorUtils;
 
 import java.util.List;

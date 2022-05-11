@@ -2,6 +2,7 @@ package org.dicio.numbers.util;
 
 import org.dicio.numbers.parser.lexer.DurationToken;
 import org.dicio.numbers.parser.lexer.TokenStream;
+import org.dicio.numbers.unit.Number;
 
 import java.time.Duration;
 import java.util.function.Supplier;
