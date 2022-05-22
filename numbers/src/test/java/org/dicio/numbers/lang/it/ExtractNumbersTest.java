@@ -7,6 +7,7 @@ import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static org.dicio.numbers.test.TestUtils.F;
 import static org.dicio.numbers.test.TestUtils.T;
@@ -21,23 +22,19 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         return "config/it-it";
     }
 
-    private interface NumberFunction {
-        Number call(final ItalianNumberExtractor enp);
-    }
-
 
     private void assertNumberFunction(final String s,
                                       final Number value,
                                       final int finalTokenStreamPosition,
-                                      final NumberFunction numberFunction) {
+                                      final Function<ItalianNumberExtractor, Number> numberFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Number number = numberFunction.call(new ItalianNumberExtractor(ts, false));
+        final Number number = numberFunction.apply(new ItalianNumberExtractor(ts, false));
         assertEquals("wrong value for string " + s, value, number);
         assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
     }
 
     private void assertNumberFunctionNull(final String s,
-                                          final NumberFunction numberFunction) {
+                                          final Function<ItalianNumberExtractor, Number> numberFunction) {
         assertNumberFunction(s, null, 0, numberFunction);
     }
 
@@ -116,7 +113,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertNumberInteger("tredici sedicesimi",      F, 13,       F, 1);
         assertNumberInteger("sedici tredicesimi",      T, 16,       F, 1);
         assertNumberInteger("543789ª",                 T, 543789,   T, 2);
-        assertNumberInteger("12°tempo",                T, 12,   T, 2);
+        assertNumberInteger("12°tempo",                T, 12,       T, 2);
         assertNumberInteger("75.483.543ª",             T, 75483543, T, 6);
         assertNumberIntegerNull("2938°",    F);
         assertNumberIntegerNull("102.321ª", F);
