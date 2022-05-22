@@ -88,6 +88,30 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeDayOfWeekDuration);
     }
 
+    private void assertRelativeTomorrow(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
+        assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeTomorrow);
+    }
+
+    private void assertRelativeTomorrowNull(final String s) {
+        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeTomorrow);
+    }
+
+    private void assertRelativeToday(final String s) {
+        assertRelativeDurationFunction(s, new Duration(), 1, ItalianDateTimeExtractor::relativeToday);
+    }
+
+    private void assertRelativeTodayNull(final String s) {
+        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeToday);
+    }
+
+    private void assertRelativeYesterday(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
+        assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeYesterday);
+    }
+
+    private void assertRelativeYesterdayNull(final String s) {
+        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeYesterday);
+    }
+
 
     @Test
     public void testRelativeDuration() {
@@ -148,5 +172,62 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeDayOfWeekDurationNull("tra due giorni");
         assertRelativeDayOfWeekDurationNull("e tra due domeniche");
         assertRelativeDayOfWeekDurationNull("ieri e domani");
+    }
+
+    @Test
+    public void testRelativeTomorrow() {
+        assertRelativeTomorrow("domani andiamo",            t(1, DAYS), 1);
+        assertRelativeTomorrow("dopodomani e",              t(2, DAYS), 2);
+        assertRelativeTomorrow("dopo l'domani test",        t(2, DAYS), 3);
+        assertRelativeTomorrow("dopo e dopodomani e",       t(3, DAYS), 4);
+        assertRelativeTomorrow("dopo dopo dopo dopodomani", t(5, DAYS), 5);
+    }
+
+    @Test
+    public void testRelativeTomorrowNull() {
+        assertRelativeTomorrowNull("ciao come va");
+        assertRelativeTomorrowNull("e domani");
+        assertRelativeTomorrowNull("il dopo domani");
+        assertRelativeTomorrowNull("ieri");
+        assertRelativeTomorrowNull("oggi");
+    }
+
+    @Test
+    public void testRelativeToday() {
+        assertRelativeToday("oggi");
+        assertRelativeToday("oggi proprio oggi");
+        assertRelativeToday("oggi test");
+        assertRelativeToday("oggi e");
+    }
+
+    @Test
+    public void testRelativeTodayNull() {
+        assertRelativeTodayNull("ciao come va");
+        assertRelativeTodayNull("proprio oggi");
+        assertRelativeTodayNull("l'oggi");
+        assertRelativeTodayNull("e oggi");
+        assertRelativeTodayNull("ieri");
+        assertRelativeTodayNull("domani");
+    }
+
+    @Test
+    public void testRelativeYesterday() {
+        assertRelativeYesterday("ieri sono stato",            t(-1, DAYS), 1);
+        assertRelativeYesterday("altro l'ieri test",          t(-2, DAYS), 3);
+        assertRelativeYesterday("ieri l'altro e",             t(-2, DAYS), 3);
+        assertRelativeYesterday("ieri l'altro l'altro",       t(-2, DAYS), 3);
+        assertRelativeYesterday("altro ieri altro",           t(-2, DAYS), 2);
+        assertRelativeYesterday("altroieri",                  t(-2, DAYS), 2);
+        assertRelativeYesterday("altro l'altro l'altro ieri", t(-4, DAYS), 6);
+    }
+
+    @Test
+    public void testRelativeYesterdayNull() {
+        assertRelativeYesterdayNull("ciao come va");
+        assertRelativeYesterdayNull("e ieri");
+        assertRelativeYesterdayNull("l'altro ieri");
+        assertRelativeYesterdayNull("altri ieri");
+        assertRelativeYesterdayNull("oggi");
+        assertRelativeYesterdayNull("domani");
     }
 }

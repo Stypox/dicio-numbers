@@ -1,5 +1,7 @@
 package org.dicio.numbers.lang.it;
 
+import static org.dicio.numbers.util.Utils.firstNotNull;
+
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
@@ -28,6 +30,70 @@ public class ItalianDateTimeExtractor {
         this.numberExtractor = new ItalianNumberExtractor(ts, false);
         this.durationExtractor = new DurationExtractorUtils(ts,
                 numberExtractor::extractOneNumberNoOrdinal);
+    }
+
+    Duration relativeSpecialDay() {
+        return firstNotNull(this::relativeYesterday, this::relativeToday, this::relativeTomorrow);
+    }
+
+    Duration relativeYesterday() {
+        int originalPosition = ts.getPosition();
+
+        // collect as many adders ("altro") preceding yesterday ("ieri") as possible
+        int dayCount = 0;
+        while (ts.get(0).hasCategory("yesterday_adder")) {
+            ++dayCount;
+            ts.movePositionForwardBy(ts.indexOfWithoutCategory("date_time_ignore", 1));
+        }
+
+        // collect the actual yesterday ("ieri") and exit if it is not found
+        if (!ts.get(0).hasCategory("yesterday")) {
+            ts.setPosition(originalPosition);
+            return null;
+        }
+        ts.movePositionForwardBy(1);
+        ++dayCount;
+
+        // if no adders were collected before yesterday, try to collect only one at the end
+        int nextNotIgnore = ts.indexOfWithoutCategory("date_time_ignore", 0);
+        if (dayCount == 1 && ts.get(nextNotIgnore).hasCategory("yesterday_adder")) {
+            ++dayCount;
+            ts.movePositionForwardBy(nextNotIgnore + 1);
+        }
+
+        // found relative yesterday, e.g. altro altro ieri, ieri l'altro
+        return new Duration().plus(new Number(-dayCount), ChronoUnit.DAYS);
+    }
+
+    Duration relativeToday() {
+        if (ts.get(0).hasCategory("today")) {
+            ts.movePositionForwardBy(1);
+            return new Duration(); // no offset
+        } else {
+            return null;
+        }
+    }
+
+    Duration relativeTomorrow() {
+        int originalPosition = ts.getPosition();
+
+        // collect as many "dopo" preceding "domani" as possible
+        int dayCount = 0;
+        while (ts.get(0).hasCategory("tomorrow_adder")) {
+            ++dayCount;
+            ts.movePositionForwardBy(ts.indexOfWithoutCategory("date_time_ignore", 1));
+        }
+
+        // collect the actual "domani" and exit if it is not found
+        if (!ts.get(0).hasCategory("tomorrow")) {
+            ts.setPosition(originalPosition);
+            return null;
+        }
+        ts.movePositionForwardBy(1);
+        ++dayCount;
+
+        // found relative tomorrow, e.g. domani, dopo dopo domani
+        return new Duration().plus(new Number(dayCount), ChronoUnit.DAYS);
     }
 
     Duration relativeDayOfWeekDuration() {

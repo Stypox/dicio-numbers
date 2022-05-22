@@ -134,9 +134,20 @@
         "successiva",
         "successivi",
         "successive",
-        "dopo",
         "viene",
         "verra"
+      ]
+    },
+    {
+      "categories": [
+        "pre_relative_indicator",
+        "post_relative_indicator",
+        "positive",
+        "tomorrow_adder",
+        "compound_word_piece"
+      ],
+      "values": [
+        "dopo"
       ]
     },
     {
@@ -175,6 +186,41 @@
         "passati",
         "passate",
         "parte"
+      ]
+    },
+    {
+      "categories": [
+        "yesterday",
+        "compound_word_piece"
+      ],
+      "values": [
+        "ieri"
+      ]
+    },
+    {
+      "categories": [
+        "today"
+      ],
+      "values": [
+        "oggi"
+      ]
+    },
+    {
+      "categories": [
+        "tomorrow",
+        "compound_word_piece"
+      ],
+      "values": [
+        "domani"
+      ]
+    },
+    {
+      "categories": [
+        "yesterday_adder",
+        "compound_word_piece"
+      ],
+      "values": [
+        "altro"
       ]
     }
   ],
