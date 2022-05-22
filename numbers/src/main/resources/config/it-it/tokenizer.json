@@ -109,26 +109,33 @@
         "la",
         "i",
         "gli",
-        "le",
-        "l",
-        "a",
-        "questo",
-        "questa",
-        "questi",
-        "queste",
         "che"
       ]
     },
     {
       "categories": [
         "date_time_ignore",
-        "pre_hour"
+        "pre_hour",
+        "pre_special_hour"
       ],
       "values": [
         "le",
         "l",
         "alle",
         "all"
+      ]
+    },
+    {
+      "categories": [
+        "date_time_ignore",
+        "pre_special_hour"
+      ],
+      "values": [
+        "a",
+        "questo",
+        "questa",
+        "questi",
+        "queste"
       ]
     },
     {
@@ -638,6 +645,32 @@
         "sabati": 5,
         "domenica": 6,
         "domeniche": 6
+      }
+    },
+    {
+      "categories": [
+        "special_hour"
+      ],
+      "values": {
+        "notte": 3,
+        "notti": 3,
+        "stanotte": 3,
+        "mattina": 9,
+        "mattino": 9,
+        "mattine": 9,
+        "mattini": 9,
+        "stamattina": 9,
+        "stamani": 9,
+        "stamane": 9,
+        "mezzogiorno": 12,
+        "pranzo": 12,
+        "cena": 20,
+        "pomeriggio": 15,
+        "pomeriggi": 15,
+        "sera": 21,
+        "sere": 21,
+        "stasera": 21,
+        "mezzanotte": 24
       }
     }
   ],

@@ -44,8 +44,9 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
                                                 final Function<ItalianDateTimeExtractor, Duration> durationFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
         final Duration actualDuration = durationFunction.apply(new ItalianDateTimeExtractor(ts, NOW));
-        assertNotNull(actualDuration);
-        assertEquals(finalTokenStreamPosition, ts.getPosition());
+        assertNotNull("null relative duration for string \"" + s + "\"", actualDuration);
+        assertEquals("wrong final token position for string \"" + s + "\"",
+                finalTokenStreamPosition, ts.getPosition());
         assertTrue("wrong relative duration for string \"" + s + "\": expected \""
                         + niceDuration(expectedDuration) + "\" but got \""
                         + niceDuration(actualDuration) + "\"",
@@ -64,6 +65,22 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
             fail("expected no relative duration (null), but got \"" + niceDuration(duration)
                     + "\"");
         }
+    }
+
+    private void assertNumberFunction(final String s,
+                                      final Number expectedNumber,
+                                      int finalTokenStreamPosition,
+                                      final Function<ItalianDateTimeExtractor, Number> numberFunction) {
+        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
+        assertEquals("wrong number for string \"" + s + "\"",
+                expectedNumber, numberFunction.apply(new ItalianDateTimeExtractor(ts, NOW)));
+        assertEquals("wrong final token position for string \"" + s + "\"",
+                finalTokenStreamPosition, ts.getPosition());
+    }
+
+    private void assertNumberFunctionNull(final String s,
+                                          final Function<ItalianDateTimeExtractor, Number> numberFunction) {
+        assertNumberFunction(s, null, 0, numberFunction);
     }
 
     private void assertRelativeDuration(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
@@ -115,13 +132,19 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
     private void assertHour(final String s, final Number expectedHour, int finalTokenStreamPosition) {
-        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        assertEquals(expectedHour, new ItalianDateTimeExtractor(ts, NOW).hour());
-        assertEquals(finalTokenStreamPosition, ts.getPosition());
+        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::hour);
     }
 
     private void assertHourNull(final String s) {
-        assertHour(s, null, 0);
+        assertNumberFunctionNull(s, ItalianDateTimeExtractor::hour);
+    }
+
+    private void assertSpecialHour(final String s, final Number expectedHour, int finalTokenStreamPosition) {
+        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::specialHour);
+    }
+
+    private void assertSpecialHourNull(final String s) {
+        assertNumberFunctionNull(s, ItalianDateTimeExtractor::specialHour);
     }
 
 
@@ -245,7 +268,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testHour() {
-        assertHour("ventuno",          n(21), 2);
+        assertHour("ventuno test",     n(21), 2);
         assertHour("venti quattro",    n(24), 2);
         assertHour("le e zero e",      n(0),  3);
         assertHour("l'una e ventisei", n(1),  2);
@@ -260,5 +283,23 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertHourNull("venticinque");
         assertHourNull("le meno due");
         assertHourNull("alle cento cinquanta quattro");
+        assertHourNull("il sette");
+    }
+
+    @Test
+    public void testSpecialHour() {
+        assertSpecialHour("a mezzanotte",       n(24), 2);
+        assertSpecialHour("mezzo giorno",       n(12), 2);
+        assertSpecialHour("queste mezze notti", n(24), 3);
+        assertSpecialHour("questa sera e",      n(21), 2);
+        assertSpecialHour("stanotte test",      n(3),  1);
+    }
+
+    @Test
+    public void testSpecialHourNull() {
+        assertSpecialHourNull("ciao come va");
+        assertSpecialHourNull("e a mezzogiorno");
+        assertSpecialHourNull("mezza è notte");
+        assertSpecialHourNull("la cena");
     }
 }

@@ -1,11 +1,14 @@
 Modalità:
-- [x] durata relativa: fra due secondi, in mezz'ora, settimana scorsa
+- [x] durata relativa: fra due secondi, in mezz'ora, settimana scorsa, quest'anno (?)
 - [x] giorno/i relativo: giovedì prossimo, fra due lunedì
 - [x] mese relativo: settembre scorso, ad ottobre (non due settembri fa)
-- [ ] giorno speciale: domani, l'altro ieri, ieri l'altro, dopo domani pomeriggio, oggi
-- [ ] ora: alle 18, le sedici in punto, alle tre (solo num interi 0<=.<=24)
-- [ ] ora speciale: mezzanotte, mezzogiorno
-- [ ] momento giornata: mattino, di pomeriggio, alla sera, questa notte (anche "prossima notte"?)
+- [x] giorno speciale: domani, l'altro ieri, ieri l'altro, dopo domani pomeriggio, oggi
+- [x] ora: alle 18, le sedici in punto, alle tre (solo num interi 0<=.<=24)
+- [x] ora speciale: mezzanotte, mezzogiorno
+- [x] momento giornata: mattino, di pomeriggio, alla sera, questa notte (anche "prossima notte"?)
+- [ ] minuto
+- [ ] secondo
+- [ ] p.m. a.m.
 - [ ] giorno settimana: sabato
 - [ ] giorno: 6, il sette (solo num interi 0<=.<=31)
 - [ ] mese: gennaio, a novembre ...

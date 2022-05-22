@@ -33,21 +33,57 @@ public class ItalianDateTimeExtractor {
                 numberExtractor::extractOneNumberNoOrdinal);
     }
 
+    Number specialHour() {
+        int originalPosition = ts.getPosition();
+
+        if (ts.get(0).hasCategory("pre_special_hour")) {
+            // found a word that usually comes before special hours, e.g. questo
+            ts.movePositionForwardBy(1);
+        }
+
+        if (ts.get(0).hasCategory("special_hour")) {
+            // special hour found, e.g. mezzanotte, sera, pranzo
+            ts.movePositionForwardBy(1);
+            return ts.get(-1).getNumber();
+        }
+
+        if (ts.get(0).getValue().startsWith("mezz")) {
+            // sometimes e.g. "mezzogiorno" is split into "mezzo giorno"
+            if (ts.get(1).getValue().startsWith("giorn")) {
+                ts.movePositionForwardBy(2);
+                return new Number(12);
+            } else if (ts.get(1).getValue().startsWith("nott")) {
+                ts.movePositionForwardBy(2);
+                return new Number(24);
+            }
+        }
+
+        // no special hour found
+        ts.setPosition(originalPosition);
+        return null;
+    }
+
     Number hour() {
         int originalPosition = ts.getPosition();
 
         if (ts.get(0).hasCategory("pre_hour")) {
+            // found a word that usually comes before hours, e.g. alle
             ts.movePositionForwardBy(1);
+            // ^ numberLessThan1000 takes care of ignoring the "ignore" category, so only move by 1
         }
 
         final Number number = NumberExtractorUtils.numberLessThan1000(ts, false);
         if (number == null || number.isDecimal()
                 || number.integerValue() < 0 || number.integerValue() > 24) {
+            // no number found, or the number is not a valid hour, e.g. le ventisei
             ts.setPosition(originalPosition);
             return null;
         }
+
+        // found hour, e.g. alle diciannove
         return number;
     }
+
 
     Duration relativeSpecialDay() {
         return firstNotNull(this::relativeYesterday, this::relativeToday, this::relativeTomorrow);
