@@ -2,14 +2,13 @@ package org.dicio.numbers.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public final class Utils {
 
-    public static final double WHOLE_NUMBER_ACCURACY = 0.0001f;
-    public static final double WHOLE_FRACTION_ACCURACY = 0.01f;
+    public static final double WHOLE_NUMBER_ACCURACY = 0.0001;
+    public static final double WHOLE_FRACTION_ACCURACY = 0.01;
 
     public static final Pattern DUPLICATE_SPACES_PATTERN = Pattern.compile("  +");
 

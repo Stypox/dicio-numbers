@@ -95,6 +95,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertNumberInteger("654 e",                        T, 654,            F, 1);
         assertNumberInteger("un cento quattro, ",           F, 104,            F, 3);
         assertNumberInteger("nove mila, tre milioni",       T, 9000,           F, 2);
+        assertNumberInteger("una di notte",                 F, 1,              F, 1);
     }
 
     @Test
