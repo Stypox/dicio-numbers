@@ -6,6 +6,7 @@ import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.DurationExtractorUtils;
+import org.dicio.numbers.util.NumberExtractorUtils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -30,6 +31,22 @@ public class ItalianDateTimeExtractor {
         this.numberExtractor = new ItalianNumberExtractor(ts, false);
         this.durationExtractor = new DurationExtractorUtils(ts,
                 numberExtractor::extractOneNumberNoOrdinal);
+    }
+
+    Number hour() {
+        int originalPosition = ts.getPosition();
+
+        if (ts.get(0).hasCategory("pre_hour")) {
+            ts.movePositionForwardBy(1);
+        }
+
+        final Number number = NumberExtractorUtils.numberLessThan1000(ts, false);
+        if (number == null || number.isDecimal()
+                || number.integerValue() < 0 || number.integerValue() > 24) {
+            ts.setPosition(originalPosition);
+            return null;
+        }
+        return number;
     }
 
     Duration relativeSpecialDay() {

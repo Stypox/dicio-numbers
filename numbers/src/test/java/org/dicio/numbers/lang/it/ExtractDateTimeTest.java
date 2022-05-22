@@ -1,5 +1,6 @@
 package org.dicio.numbers.lang.it;
 
+import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.niceDuration;
 import static org.dicio.numbers.test.TestUtils.numberDeduceType;
 import static org.junit.Assert.assertEquals;
@@ -15,6 +16,7 @@ import static java.time.temporal.ChronoUnit.YEARS;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Duration;
+import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -110,6 +112,16 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     private void assertRelativeYesterdayNull(final String s) {
         assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeYesterday);
+    }
+
+    private void assertHour(final String s, final Number expectedHour, int finalTokenStreamPosition) {
+        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
+        assertEquals(expectedHour, new ItalianDateTimeExtractor(ts, NOW).hour());
+        assertEquals(finalTokenStreamPosition, ts.getPosition());
+    }
+
+    private void assertHourNull(final String s) {
+        assertHour(s, null, 0);
     }
 
 
@@ -229,5 +241,24 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeYesterdayNull("altri ieri");
         assertRelativeYesterdayNull("oggi");
         assertRelativeYesterdayNull("domani");
+    }
+
+    @Test
+    public void testHour() {
+        assertHour("ventuno",          n(21), 2);
+        assertHour("venti quattro",    n(24), 2);
+        assertHour("le e zero e",      n(0),  3);
+        assertHour("l'una e ventisei", n(1),  2);
+        assertHour("dodici in punto",  n(12), 1);
+        assertHour("alle diciassette", n(17), 2);
+        assertHour("l'un milione",     n(1),  2);
+    }
+
+    @Test
+    public void testHourNull() {
+        assertHourNull("ciao come va");
+        assertHourNull("venticinque");
+        assertHourNull("le meno due");
+        assertHourNull("alle cento cinquanta quattro");
     }
 }

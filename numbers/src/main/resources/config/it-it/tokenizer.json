@@ -121,6 +121,18 @@
     },
     {
       "categories": [
+        "date_time_ignore",
+        "pre_hour"
+      ],
+      "values": [
+        "le",
+        "l",
+        "alle",
+        "all"
+      ]
+    },
+    {
+      "categories": [
         "pre_relative_indicator",
         "post_relative_indicator",
         "positive"
