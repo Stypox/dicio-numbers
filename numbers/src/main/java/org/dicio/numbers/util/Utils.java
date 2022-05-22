@@ -2,6 +2,8 @@ package org.dicio.numbers.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public final class Utils {
@@ -104,5 +106,24 @@ public final class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * Calls the provided suppliers in order until one returns a non-null value, in which case
+     * returns such value. If all suppliers return null, this function in turn returns null.
+     *
+     * @param suppliers the suppliers to try to call, in order
+     * @param <T> the return type of the suppliers and of this function
+     * @return the result of the first supplier with a non-null value, or null
+     */
+    @SafeVarargs
+    public static <T> T firstNotNull(final Supplier<T>... suppliers) {
+        for (final Supplier<T> supplier : suppliers) {
+            final T result = supplier.get();
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
     }
 }

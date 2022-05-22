@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.dicio.numbers.util.Utils.WHOLE_NUMBER_ACCURACY;
 import static org.dicio.numbers.util.Utils.containsCodePoint;
 import static org.dicio.numbers.util.Utils.decimalPlacesNoFinalZeros;
+import static org.dicio.numbers.util.Utils.firstNotNull;
 import static org.dicio.numbers.util.Utils.isWhole;
 import static org.dicio.numbers.util.Utils.longPow;
 import static org.dicio.numbers.util.Utils.removeRedundantSpaces;
@@ -13,6 +14,7 @@ import static org.dicio.numbers.util.Utils.splitByModulus;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class UtilsTest {
@@ -117,5 +119,15 @@ public class UtilsTest {
         assertFalse(containsCodePoint("ç!?\"", "'".codePointAt(0)));
         assertFalse(containsCodePoint("@òç", "c".codePointAt(0)));
         assertFalse(containsCodePoint("àèç", "e".codePointAt(0)));
+    }
+
+    @Test
+    public void testFirstNotNull() {
+        assertNull(firstNotNull());
+        assertNull(firstNotNull(() -> null));
+        assertNull(firstNotNull(() -> null, () -> null, () -> null));
+        assertEquals(Integer.valueOf(5), firstNotNull(() -> 5));
+        assertEquals(Integer.valueOf(-2), firstNotNull(() -> -2, () -> 5, () -> null));
+        assertEquals(Integer.valueOf(5), firstNotNull(() -> null, () -> 5));
     }
 }
