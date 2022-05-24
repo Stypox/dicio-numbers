@@ -147,6 +147,22 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertNumberFunctionNull(s, ItalianDateTimeExtractor::specialHour);
     }
 
+    private void assertMinute(final String s, final Number expectedHour, int finalTokenStreamPosition) {
+        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::minute);
+    }
+
+    private void assertMinuteNull(final String s) {
+        assertNumberFunctionNull(s, ItalianDateTimeExtractor::minute);
+    }
+
+    private void assertSpecialMinute(final String s, final Number expectedHour, int finalTokenStreamPosition) {
+        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::specialMinute);
+    }
+
+    private void assertSpecialMinuteNull(final String s) {
+        assertNumberFunctionNull(s, ItalianDateTimeExtractor::specialMinute);
+    }
+
 
     @Test
     public void testRelativeDuration() {
@@ -301,5 +317,43 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertSpecialHourNull("e a mezzogiorno");
         assertSpecialHourNull("mezza è notte");
         assertSpecialHourNull("la cena");
+    }
+
+    @Test
+    public void testMinute() {
+        assertMinute("zero a b c",        n(0),  1);
+        assertMinute("cinquantanove",     n(59), 2);
+        assertMinute("quindici e",        n(15), 1);
+        assertMinute("venti e otto test", n(28), 3);
+        assertMinute("e due e",           n(2),  2); // this is an exception!
+    }
+
+    @Test
+    public void testMinuteNull() {
+        assertMinuteNull("ciao come va");
+        assertMinuteNull("sessanta");
+        assertMinuteNull("cento venti");
+        assertMinuteNull("meno sedici");
+    }
+
+    @Test
+    public void testSpecialMinute() {
+        assertSpecialMinute("un quarto e",              n(15.0),               2);
+        assertSpecialMinute("mezza test",               n(30.0),               1);
+        assertSpecialMinute("un mezzo",                 n(30.0),               2);
+        assertSpecialMinute("zero virgola due",         n(12.0),               3);
+        assertSpecialMinute("tredici ottantasettesimi", n(13.0 / 87.0 * 60.0), 3);
+    }
+
+    @Test
+    public void testSpecialMinuteNull() {
+        assertSpecialMinuteNull("ciao come va");
+        assertSpecialMinuteNull("due");
+        assertSpecialMinuteNull("cento dodici");
+        assertSpecialMinuteNull("meno un quarto");
+        assertSpecialMinuteNull("quattro quarti");
+        assertSpecialMinuteNull("zero mezzi");
+        assertSpecialMinuteNull("zero e virgola due");
+        assertSpecialMinuteNull("tredici e ottantasettesimi");
     }
 }

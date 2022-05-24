@@ -33,6 +33,24 @@ public class ItalianDateTimeExtractor {
                 numberExtractor::extractOneNumberNoOrdinal);
     }
 
+    Number specialMinute() {
+        final int originalPosition = ts.getPosition();
+
+        final Number number = numberExtractor.extractOneNumberNoOrdinal();
+        if (number != null && number.isDecimal()
+                && number.decimalValue() > 0.0 && number.decimalValue() < 1.0) {
+            return number.multiply(60);
+        }
+
+        ts.setPosition(originalPosition);
+        return null;
+    }
+
+    Number minute() {
+        return NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 59);
+    }
+
+
     Number specialHour() {
         int originalPosition = ts.getPosition();
 
@@ -72,9 +90,8 @@ public class ItalianDateTimeExtractor {
             // ^ numberLessThan1000 takes care of ignoring the "ignore" category, so only move by 1
         }
 
-        final Number number = NumberExtractorUtils.numberLessThan1000(ts, false);
-        if (number == null || number.isDecimal()
-                || number.integerValue() < 0 || number.integerValue() > 24) {
+        final Number number = NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 24);
+        if (number == null) {
             // no number found, or the number is not a valid hour, e.g. le ventisei
             ts.setPosition(originalPosition);
             return null;
