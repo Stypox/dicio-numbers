@@ -139,6 +139,22 @@ public class NumberExtractorUtils {
         return null;
     }
 
+    public static Number numberLessThan1000InRange(final TokenStream ts,
+                                                   final boolean allowOrdinal,
+                                                   final int fromInclusive,
+                                                   final int toInclusive) {
+        final int originalPosition = ts.getPosition();
+
+        final Number number = numberLessThan1000(ts, allowOrdinal);
+        if (number != null && number.isInteger() && number.integerValue() >= fromInclusive
+                && number.integerValue() <= toInclusive) {
+            return number;
+        }
+
+        ts.setPosition(originalPosition);
+        return null;
+    }
+
     public static Number numberLessThan1000(final TokenStream ts, final boolean allowOrdinal) {
         long hundred = -1, ten = -1, digit = -1;
         boolean ordinal = false;
