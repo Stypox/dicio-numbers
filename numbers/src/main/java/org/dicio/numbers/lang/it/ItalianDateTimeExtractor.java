@@ -164,12 +164,10 @@ public class ItalianDateTimeExtractor {
     Number hour() {
         int originalPosition = ts.getPosition();
 
-        if (ts.get(0).hasCategory("pre_hour")) {
-            // found a word that usually comes before hours, e.g. alle
-            ts.movePositionForwardBy(1);
-            // ^ numberLessThan1000 takes care of ignoring the "ignore" category, so only move by 1
-        }
+        // skip words that usually come before hours, e.g. alle, ore
+        ts.movePositionForwardBy(ts.indexOfWithoutCategory("pre_hour", 0));
 
+        // numberLessThan1000InRange takes care of ignoring the "ignore" category, so only move by 1
         final Number number = NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 24);
         if (number == null) {
             // no number found, or the number is not a valid hour, e.g. le ventisei

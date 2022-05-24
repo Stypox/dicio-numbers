@@ -135,6 +135,15 @@
     },
     {
       "categories": [
+        "pre_hour"
+      ],
+      "values": [
+        "ora",
+        "ore"
+      ]
+    },
+    {
+      "categories": [
         "date_time_ignore",
         "pre_special_hour"
       ],

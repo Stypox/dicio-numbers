@@ -346,9 +346,11 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertHour("dodici in punto",  n(12), 1);
         assertHour("alle diciassette", n(17), 2);
         assertHour("l'un milione",     n(1),  2);
+        assertHour("all'ora alle tre", n(3),  4);
+        assertHour("alle ore tredici", n(13), 3);
 
         // Ignored word at beginning should not be skipped! Caused by numberLessThan1000InRange
-        assertHour("e venti quattro",  n(24), 2); // But maybe it's not important...
+        assertHour("e venti quattro",  n(24), 3); // But maybe it's not important...
     }
 
     @Test
@@ -358,6 +360,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertHourNull("le meno due");
         assertHourNull("alle cento cinquanta quattro");
         assertHourNull("il sette");
+        assertHourNull("alle ore");
     }
 
     @Test
@@ -375,6 +378,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertSpecialHourNull("e a mezzogiorno");
         assertSpecialHourNull("mezza è notte");
         assertSpecialHourNull("la cena");
+        assertSpecialHourNull("alle ore cena");
     }
 
     @Test
@@ -489,6 +493,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testDayOfWeekNull() {
+        assertDayOfWeekNull("gennaio");
         assertDayOfWeekNull("vendro");
         assertDayOfWeekNull("ciao martedì");
         assertDayOfWeekNull("e ven to");
@@ -503,8 +508,9 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testMonthNameNull() {
-        assertDayOfWeekNull("genner");
-        assertDayOfWeekNull("ciao feb");
-        assertDayOfWeekNull("e dic to");
+        assertMonthNameNull("lunedì");
+        assertMonthNameNull("genner");
+        assertMonthNameNull("ciao feb");
+        assertMonthNameNull("e dic to");
     }
 }
