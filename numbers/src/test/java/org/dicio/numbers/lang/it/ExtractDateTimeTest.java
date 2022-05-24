@@ -341,12 +341,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     @Test
     public void testHour() {
         assertHour("ventuno test",     n(21), 2);
-        assertHour("venti quattro",    n(24), 2);
         assertHour("le e zero e",      n(0),  3);
         assertHour("l'una e ventisei", n(1),  2);
         assertHour("dodici in punto",  n(12), 1);
         assertHour("alle diciassette", n(17), 2);
         assertHour("l'un milione",     n(1),  2);
+
+        // Ignored word at beginning should not be skipped! Caused by numberLessThan1000InRange
+        assertHour("e venti quattro",  n(24), 2); // But maybe it's not important...
     }
 
     @Test
@@ -381,10 +383,12 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertMinute("cinquantanove ore", n(59), 2);
         assertMinute("quindici e",        n(15), 1);
         assertMinute("venti e otto s",    n(28), 3);
-        assertMinute("e due e",           n(2),  2); // this is an exception!
         assertMinute("sei minuti test",   n(6),  2);
         assertMinute("trentasei e min",   n(36), 2);
         assertMinute("44m e",             n(44), 2);
+
+        // Ignored word at beginning should not be skipped! Caused by numberLessThan1000InRange
+        assertMinute("e due e",           n(2),  2); // But maybe it's not important...
     }
 
     @Test
@@ -423,10 +427,12 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertSecond("cinquantanove ore", n(59), 2);
         assertSecond("quindici e",        n(15), 1);
         assertSecond("venti e otto m",    n(28), 3);
-        assertSecond("e due e",           n(2),  2); // this is an exception!
         assertSecond("sei secondo test",  n(6),  2);
         assertSecond("trentasei e sec",   n(36), 2);
         assertSecond("44s e",             n(44), 2);
+
+        // Ignored word at beginning should not be skipped! Caused by numberLessThan1000InRange
+        assertSecond("e due e",           n(2),  2); // But it's not important...
     }
 
     @Test
