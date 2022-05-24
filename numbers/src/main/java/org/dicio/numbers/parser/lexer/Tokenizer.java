@@ -138,8 +138,8 @@ public class Tokenizer {
                     }
                     // make sure to create a new DurationMapping object each time, since their
                     // restrictedAfterNumber value is changed in the for below
-                    durationMappings.put((String) w,
-                            new DurationMapping(new Duration().plus(multiplier, chronoUnit)));
+                    durationMappings.put((String) w, new DurationMapping(o.getKey(),
+                            new Duration().plus(multiplier, chronoUnit)));
                 }
             }
             for (final Object o : root.getArray("duration_restrict_after_number")) {
@@ -259,10 +259,10 @@ public class Tokenizer {
                     = new NumberToken(value, spacesFollowing, mapping.categories, mapping.number);
         }
 
-        final DurationMapping durationMapping = durationMappings.get(clean);
-        if (durationMapping != null) {
+        final DurationMapping dur = durationMappings.get(clean);
+        if (dur != null) {
             final DurationToken durationToken = new DurationToken(value, spacesFollowing,
-                    durationMapping.durationMultiplier, durationMapping.restrictedAfterNumber);
+                    dur.durationCategory, dur.durationMultiplier, dur.restrictedAfterNumber);
             if (matchedToken == null) {
                 return durationToken;
             } else {
@@ -341,10 +341,12 @@ public class Tokenizer {
     }
 
     private static final class DurationMapping {
+        final String durationCategory;
         final Duration durationMultiplier;
         boolean restrictedAfterNumber;
 
-        private DurationMapping(final Duration durationMultiplier) {
+        private DurationMapping(final String durationCategory, final Duration durationMultiplier) {
+            this.durationCategory = durationCategory;
             this.durationMultiplier = durationMultiplier;
             this.restrictedAfterNumber = false;
         }

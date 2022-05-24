@@ -20,7 +20,7 @@ public class TokenStreamTest {
     private static final List<Token> TOKENS = Arrays.asList(
             new Token("", " "),
             new MatchedToken("a", "\n ", Collections.singleton("ignore")),
-            new DurationToken("ms", "", new Duration().plus(new Number(1), ChronoUnit.MILLIS), false)
+            new DurationToken("ms", "", "", new Duration().plus(new Number(1), ChronoUnit.MILLIS), false)
     );
 
     private static final List<Token> TOKENS_IGNORES = Arrays.asList(
@@ -31,7 +31,7 @@ public class TokenStreamTest {
             new NumberToken("2022", " ", Collections.emptySet(), n(2022)),
             new MatchedToken("going", " ", Collections.singleton("test")),
             new MatchedToken("?", " ", Collections.singleton("ignore")),
-            new DurationToken("s", "", new Duration().plus(new Number(1), ChronoUnit.SECONDS), true),
+            new DurationToken("s", "", "", new Duration().plus(new Number(1), ChronoUnit.SECONDS), true),
             new NumberToken("?", " ", Collections.singleton("ignore"), n(-1))
     );
 
