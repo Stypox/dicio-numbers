@@ -322,18 +322,22 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     @Test
     public void testMinute() {
         assertMinute("zero a b c",        n(0),  1);
-        assertMinute("cinquantanove",     n(59), 2);
+        assertMinute("cinquantanove ore", n(59), 2);
         assertMinute("quindici e",        n(15), 1);
         assertMinute("venti e otto test", n(28), 3);
         assertMinute("e due e",           n(2),  2); // this is an exception!
+        assertMinute("sei minuti test",   n(6),  2);
+        assertMinute("trentasei e min",   n(36), 2);
+        assertMinute("44m e",             n(44), 2);
     }
 
     @Test
     public void testMinuteNull() {
         assertMinuteNull("ciao come va");
-        assertMinuteNull("sessanta");
+        assertMinuteNull("sessanta minuti");
         assertMinuteNull("cento venti");
         assertMinuteNull("meno sedici");
+        assertMinuteNull("12000 minuti");
     }
 
     @Test

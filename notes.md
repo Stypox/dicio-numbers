@@ -6,7 +6,8 @@ Modalità:
 - [x] ora: alle 18, le sedici in punto, alle tre (solo num interi 0<=.<=24)
 - [x] ora speciale: mezzanotte, mezzogiorno
 - [x] momento giornata: mattino, di pomeriggio, alla sera, questa notte (anche "prossima notte"?)
-- [ ] minuto
+- [x] minuto: cinquantanove, e diciotto minuti
+- [x] minuto speciale: e mezza, un quarto
 - [ ] secondo
 - [ ] p.m. a.m.
 - [ ] giorno settimana: sabato

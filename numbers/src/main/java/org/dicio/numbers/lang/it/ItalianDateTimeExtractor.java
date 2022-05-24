@@ -47,7 +47,18 @@ public class ItalianDateTimeExtractor {
     }
 
     Number minute() {
-        return NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 59);
+        final Number number = NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 59);
+        if (number == null) {
+            return null;
+        }
+
+        if (ts.get(0).isDurationToken()
+                && ts.get(0).asDurationToken().getDurationCategory().equals("1 MINUTES")) {
+            // skip "minuti" said after a minute count, e.g. ventiquattro minuti
+            ts.movePositionForwardBy(1);
+        }
+
+        return number;
     }
 
 
