@@ -163,6 +163,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertNumberFunctionNull(s, ItalianDateTimeExtractor::specialMinute);
     }
 
+    private void assertSecond(final String s, final Number expectedHour, int finalTokenStreamPosition) {
+        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::second);
+    }
+
+    private void assertSecondNull(final String s) {
+        assertNumberFunctionNull(s, ItalianDateTimeExtractor::second);
+    }
+
 
     @Test
     public void testRelativeDuration() {
@@ -324,7 +332,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertMinute("zero a b c",        n(0),  1);
         assertMinute("cinquantanove ore", n(59), 2);
         assertMinute("quindici e",        n(15), 1);
-        assertMinute("venti e otto test", n(28), 3);
+        assertMinute("venti e otto s",    n(28), 3);
         assertMinute("e due e",           n(2),  2); // this is an exception!
         assertMinute("sei minuti test",   n(6),  2);
         assertMinute("trentasei e min",   n(36), 2);
@@ -359,5 +367,26 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertSpecialMinuteNull("zero mezzi");
         assertSpecialMinuteNull("zero e virgola due");
         assertSpecialMinuteNull("tredici e ottantasettesimi");
+    }
+
+    @Test
+    public void testSecond() {
+        assertSecond("zero a b c",        n(0),  1);
+        assertSecond("cinquantanove ore", n(59), 2);
+        assertSecond("quindici e",        n(15), 1);
+        assertSecond("venti e otto m",    n(28), 3);
+        assertSecond("e due e",           n(2),  2); // this is an exception!
+        assertSecond("sei secondo test",  n(6),  2);
+        assertSecond("trentasei e sec",   n(36), 2);
+        assertSecond("44s e",             n(44), 2);
+    }
+
+    @Test
+    public void testSecondNull() {
+        assertSecondNull("ciao come va");
+        assertSecondNull("sessanta secondi");
+        assertSecondNull("cento venti");
+        assertSecondNull("meno sedici");
+        assertSecondNull("12000 secondi");
     }
 }

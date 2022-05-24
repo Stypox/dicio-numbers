@@ -33,6 +33,11 @@ public class ItalianDateTimeExtractor {
                 numberExtractor::extractOneNumberNoOrdinal);
     }
 
+
+    Number second() {
+        return minuteOrSecond("1 SECONDS");
+    }
+
     Number specialMinute() {
         final int originalPosition = ts.getPosition();
 
@@ -47,14 +52,18 @@ public class ItalianDateTimeExtractor {
     }
 
     Number minute() {
+        return minuteOrSecond("1 MINUTES");
+    }
+
+    private Number minuteOrSecond(final String durationCategory) {
         final Number number = NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 59);
         if (number == null) {
             return null;
         }
 
         if (ts.get(0).isDurationToken()
-                && ts.get(0).asDurationToken().getDurationCategory().equals("1 MINUTES")) {
-            // skip "minuti" said after a minute count, e.g. ventiquattro minuti
+                && ts.get(0).asDurationToken().getDurationCategory().equals(durationCategory)) {
+            // skip "minuti"/"secondi" said after a minute/second count, e.g. ventiquattro minuti
             ts.movePositionForwardBy(1);
         }
 
@@ -113,7 +122,7 @@ public class ItalianDateTimeExtractor {
     }
 
 
-    Duration relativeSpecialDay() {
+    private Duration relativeSpecialDay() {
         return firstNotNull(this::relativeYesterday, this::relativeToday, this::relativeTomorrow);
     }
 
