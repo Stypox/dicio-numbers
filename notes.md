@@ -8,13 +8,13 @@ Modalità:
 - [x] momento giornata: mattino, di pomeriggio, alla sera, questa notte (anche "prossima notte"?)
 - [x] minuto: cinquantanove, e diciotto minuti
 - [x] minuto speciale: e mezza, un quarto
-- [ ] secondo
-- [ ] p.m. a.m.
+- [x] secondo
+- [x] p.m. a.m.
 - [ ] giorno settimana: sabato
 - [ ] giorno: 6, il sette (solo num interi 0<=.<=31)
 - [ ] mese: gennaio, a novembre ...
 - [ ] anno: millenovecento, duemilasedici
-- [ ] bc: avanti cristo, dopo cristo, ...
+- [x] bc: avanti cristo, dopo cristo, ...
 
 GIORNO? MESE|(mese prossimo|scorso)|(prossimo|scorso mese)? ANNO|(anno prossimo|scorso)|(prossimo|scorso anno)? <ora>? -- nel millenovecentosettantaquattro, il due maggio, a giugno 2021, a novembre dell'anno prossimo
 

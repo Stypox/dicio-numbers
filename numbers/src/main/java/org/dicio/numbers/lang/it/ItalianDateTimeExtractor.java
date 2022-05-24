@@ -34,6 +34,47 @@ public class ItalianDateTimeExtractor {
     }
 
 
+    Boolean ampm() {
+        return bcadOrAmpm("ampm_before", "ampm_after", "ampm_identifier");
+    }
+
+    Boolean bcad() {
+        return bcadOrAmpm("bcad_before", "bcad_after", "bcad_identifier");
+    }
+
+    /**
+     * @return false if before+identifier matches, true if after+identifier matches, null otherwise
+     */
+    private Boolean bcadOrAmpm(final String before, final String after, final String identifier) {
+        final boolean result;
+        if (ts.get(0).hasCategory(before)) {
+            result = false;
+        } else if (ts.get(0).hasCategory(after)) {
+            result = true;
+        } else if (ts.get(0).hasCategory(identifier)) {
+            // identifier without no preceding before/after -> return "before" (a.m. or B.C.)
+            ts.movePositionForwardBy(1);
+            return false;
+        } else {
+            return null;
+        }
+
+        // we can't use ts.indexOfWithoutCategory, since some ignore words might be identifiers
+        final int originalPosition = ts.getPosition();
+        do {
+            ts.movePositionForwardBy(1);
+        } while (!ts.get(0).hasCategory(identifier) && ts.get(0).hasCategory("ignore"));
+
+        if (ts.get(0).hasCategory(identifier)) {
+            ts.movePositionForwardBy(1);
+            return result;
+        } else {
+            ts.setPosition(originalPosition);
+            return null;
+        }
+    }
+
+
     Number second() {
         return minuteOrSecond("1 SECONDS");
     }

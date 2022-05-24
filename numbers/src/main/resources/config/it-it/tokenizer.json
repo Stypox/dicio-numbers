@@ -95,7 +95,15 @@
         "duration_separator"
       ],
       "values": [
-        "di",
+        "di"
+      ]
+    },
+    {
+      "categories": [
+        "duration_separator",
+        "bcad_after"
+      ],
+      "values": [
         "d"
       ]
     },
@@ -131,11 +139,21 @@
         "pre_special_hour"
       ],
       "values": [
-        "a",
         "questo",
         "questa",
         "questi",
         "queste"
+      ]
+    },
+    {
+      "categories": [
+        "date_time_ignore",
+        "pre_special_hour",
+        "bcad_before",
+        "ampm_before"
+      ],
+      "values": [
+        "a"
       ]
     },
     {
@@ -163,6 +181,7 @@
         "post_relative_indicator",
         "positive",
         "tomorrow_adder",
+        "bcad_after",
         "compound_word_piece"
       ],
       "values": [
@@ -240,6 +259,54 @@
       ],
       "values": [
         "altro"
+      ]
+    },
+    {
+      "categories": [
+        "bcad_before"
+      ],
+      "values": [
+        "avanti"
+      ]
+    },
+    {
+      "categories": [
+        "bcad_identifier"
+      ],
+      "values": [
+        "cristo",
+        "c"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_before"
+      ],
+      "values": [
+        "ante"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_after"
+      ],
+      "values": [
+        "p",
+        "post"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_identifier"
+      ],
+      "values": [
+        "m",
+        "meridiem",
+        "meridian",
+        "meridiana",
+        "meridiano",
+        "meridiane",
+        "meridiani"
       ]
     }
   ],

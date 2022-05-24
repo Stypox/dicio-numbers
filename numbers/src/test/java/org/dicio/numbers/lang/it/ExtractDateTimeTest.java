@@ -83,6 +83,22 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertNumberFunction(s, null, 0, numberFunction);
     }
 
+    private void assertBooleanFunction(final String s,
+                                       final Boolean expectedBoolean,
+                                       int finalTokenStreamPosition,
+                                       final Function<ItalianDateTimeExtractor, Boolean> booleanFunction) {
+        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
+        assertEquals("wrong boolean for string \"" + s + "\"",
+                expectedBoolean, booleanFunction.apply(new ItalianDateTimeExtractor(ts, NOW)));
+        assertEquals("wrong final token position for string \"" + s + "\"",
+                finalTokenStreamPosition, ts.getPosition());
+    }
+
+    private void assertBooleanFunctionNull(final String s,
+                                           final Function<ItalianDateTimeExtractor, Boolean> booleanFunction) {
+        assertBooleanFunction(s, null, 0, booleanFunction);
+    }
+
     private void assertRelativeDuration(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
         assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeDuration);
     }
@@ -169,6 +185,22 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     private void assertSecondNull(final String s) {
         assertNumberFunctionNull(s, ItalianDateTimeExtractor::second);
+    }
+
+    private void assertBcad(final String s, final Boolean expectedAd, int finalTokenStreamPosition) {
+        assertBooleanFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::bcad);
+    }
+
+    private void assertBcadNull(final String s) {
+        assertBooleanFunctionNull(s, ItalianDateTimeExtractor::bcad);
+    }
+
+    private void assertAmpm(final String s, final Boolean expectedAd, int finalTokenStreamPosition) {
+        assertBooleanFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::ampm);
+    }
+
+    private void assertAmpmNull(final String s) {
+        assertBooleanFunctionNull(s, ItalianDateTimeExtractor::ampm);
     }
 
 
@@ -388,5 +420,41 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertSecondNull("cento venti");
         assertSecondNull("meno sedici");
         assertSecondNull("12000 secondi");
+    }
+
+    @Test
+    public void testBcad() {
+        assertBcad("a.C. test",   false, 3);
+        assertBcad("d.C. e",      true,  3);
+        assertBcad("dopo Cristo", true,  2);
+        assertBcad("c test",      false, 1);
+        assertBcad("a e Cristo",  false, 3);
+    }
+
+    @Test
+    public void testBcadNull() {
+        assertBcadNull("a.m.");
+        assertBcadNull("dopo test Cristo");
+        assertBcadNull("e avanti Cristo");
+        assertBcadNull("test c");
+        assertBcadNull("m");
+    }
+
+    @Test
+    public void testAmpm() {
+        assertAmpm("a.m. test",      false, 3);
+        assertAmpm("p.m. e",         true,  3);
+        assertAmpm("post meridiano", true,  2);
+        assertAmpm("meridian test",  false, 1);
+        assertAmpm("p e meridiem",   true,  3);
+    }
+
+    @Test
+    public void testAmpmNull() {
+        assertAmpmNull("a.C.");
+        assertAmpmNull("ante test meridiem");
+        assertAmpmNull("e post m");
+        assertAmpmNull("test m");
+        assertAmpmNull("c");
     }
 }
