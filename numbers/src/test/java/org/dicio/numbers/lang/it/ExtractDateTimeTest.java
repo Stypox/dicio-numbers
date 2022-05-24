@@ -203,6 +203,22 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertBooleanFunctionNull(s, ItalianDateTimeExtractor::ampm);
     }
 
+    private void assertDayOfWeek(final String s, final Number expectedHour) {
+        assertNumberFunction(s, expectedHour, 1, ItalianDateTimeExtractor::dayOfWeek);
+    }
+
+    private void assertDayOfWeekNull(final String s) {
+        assertNumberFunctionNull(s, ItalianDateTimeExtractor::dayOfWeek);
+    }
+
+    private void assertMonthName(final String s, final Number expectedHour) {
+        assertNumberFunction(s, expectedHour, 1, ItalianDateTimeExtractor::monthName);
+    }
+
+    private void assertMonthNameNull(final String s) {
+        assertNumberFunctionNull(s, ItalianDateTimeExtractor::monthName);
+    }
+
 
     @Test
     public void testRelativeDuration() {
@@ -456,5 +472,33 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertAmpmNull("e post m");
         assertAmpmNull("test m");
         assertAmpmNull("c");
+    }
+
+    @Test
+    public void testDayOfWeek() {
+        assertDayOfWeek("lunedì",         n(0));
+        assertDayOfWeek("domeniche test", n(6));
+        assertDayOfWeek("sab e",          n(5));
+    }
+
+    @Test
+    public void testDayOfWeekNull() {
+        assertDayOfWeekNull("vendro");
+        assertDayOfWeekNull("ciao martedì");
+        assertDayOfWeekNull("e ven to");
+    }
+
+    @Test
+    public void testMonthName() {
+        assertMonthName("gennaio",    n(0));
+        assertMonthName("dic e",      n(11));
+        assertMonthName("sett embre", n(8));
+    }
+
+    @Test
+    public void testMonthNameNull() {
+        assertDayOfWeekNull("genner");
+        assertDayOfWeekNull("ciao feb");
+        assertDayOfWeekNull("e dic to");
     }
 }

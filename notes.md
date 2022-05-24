@@ -10,9 +10,10 @@ Modalità:
 - [x] minuto speciale: e mezza, un quarto
 - [x] secondo
 - [x] p.m. a.m.
-- [ ] giorno settimana: sabato
+- [x] giorno settimana: sabato
 - [ ] giorno: 6, il sette (solo num interi 0<=.<=31)
-- [ ] mese: gennaio, a novembre ...
+- [x] nome mese: gennaio, a novembre ...
+- [ ] mese: 12
 - [ ] anno: millenovecento, duemilasedici
 - [x] bc: avanti cristo, dopo cristo, ...
 

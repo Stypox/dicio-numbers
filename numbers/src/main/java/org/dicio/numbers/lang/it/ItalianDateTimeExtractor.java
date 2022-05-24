@@ -34,6 +34,25 @@ public class ItalianDateTimeExtractor {
     }
 
 
+    Number monthName() {
+        if (ts.get(0).hasCategory("month_name")) {
+            ts.movePositionForwardBy(1);
+            return ts.get(-1).getNumber();
+        } else {
+            return null;
+        }
+    }
+
+    Number dayOfWeek() {
+        if (ts.get(0).hasCategory("day_of_week")) {
+            ts.movePositionForwardBy(1);
+            return ts.get(-1).getNumber();
+        } else {
+            return null;
+        }
+    }
+
+
     Boolean ampm() {
         return bcadOrAmpm("ampm_before", "ampm_after", "ampm_identifier");
     }
