@@ -67,36 +67,20 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         }
     }
 
-    private void assertNumberFunction(final String s,
-                                      final Number expectedNumber,
-                                      int finalTokenStreamPosition,
-                                      final Function<ItalianDateTimeExtractor, Number> numberFunction) {
+    private <T> void assertFunction(final String s,
+                                    final T expectedResult,
+                                    int finalTokenStreamPosition,
+                                    final Function<ItalianDateTimeExtractor, T> function) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        assertEquals("wrong number for string \"" + s + "\"",
-                expectedNumber, numberFunction.apply(new ItalianDateTimeExtractor(ts, NOW)));
+        assertEquals("wrong result for string \"" + s + "\"",
+                expectedResult, function.apply(new ItalianDateTimeExtractor(ts, NOW)));
         assertEquals("wrong final token position for string \"" + s + "\"",
                 finalTokenStreamPosition, ts.getPosition());
     }
 
-    private void assertNumberFunctionNull(final String s,
-                                          final Function<ItalianDateTimeExtractor, Number> numberFunction) {
-        assertNumberFunction(s, null, 0, numberFunction);
-    }
-
-    private void assertBooleanFunction(final String s,
-                                       final Boolean expectedBoolean,
-                                       int finalTokenStreamPosition,
-                                       final Function<ItalianDateTimeExtractor, Boolean> booleanFunction) {
-        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        assertEquals("wrong boolean for string \"" + s + "\"",
-                expectedBoolean, booleanFunction.apply(new ItalianDateTimeExtractor(ts, NOW)));
-        assertEquals("wrong final token position for string \"" + s + "\"",
-                finalTokenStreamPosition, ts.getPosition());
-    }
-
-    private void assertBooleanFunctionNull(final String s,
-                                           final Function<ItalianDateTimeExtractor, Boolean> booleanFunction) {
-        assertBooleanFunction(s, null, 0, booleanFunction);
+    private <T> void assertFunctionNull(final String s,
+                                              final Function<ItalianDateTimeExtractor, T> numberFunction) {
+        assertFunction(s, null, 0, numberFunction);
     }
 
     private void assertRelativeDuration(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
@@ -147,76 +131,76 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeYesterday);
     }
 
-    private void assertHour(final String s, final Number expectedHour, int finalTokenStreamPosition) {
-        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::hour);
+    private void assertHour(final String s, final Number expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::hour);
     }
 
     private void assertHourNull(final String s) {
-        assertNumberFunctionNull(s, ItalianDateTimeExtractor::hour);
+        assertFunctionNull(s, ItalianDateTimeExtractor::hour);
     }
 
-    private void assertSpecialHour(final String s, final Number expectedHour, int finalTokenStreamPosition) {
-        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::specialHour);
+    private void assertSpecialHour(final String s, final Number expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::specialHour);
     }
 
     private void assertSpecialHourNull(final String s) {
-        assertNumberFunctionNull(s, ItalianDateTimeExtractor::specialHour);
+        assertFunctionNull(s, ItalianDateTimeExtractor::specialHour);
     }
 
-    private void assertMinute(final String s, final Number expectedHour, int finalTokenStreamPosition) {
-        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::minute);
+    private void assertMinute(final String s, final Number expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::minute);
     }
 
     private void assertMinuteNull(final String s) {
-        assertNumberFunctionNull(s, ItalianDateTimeExtractor::minute);
+        assertFunctionNull(s, ItalianDateTimeExtractor::minute);
     }
 
-    private void assertSpecialMinute(final String s, final Number expectedHour, int finalTokenStreamPosition) {
-        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::specialMinute);
+    private void assertSpecialMinute(final String s, final Number expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::specialMinute);
     }
 
     private void assertSpecialMinuteNull(final String s) {
-        assertNumberFunctionNull(s, ItalianDateTimeExtractor::specialMinute);
+        assertFunctionNull(s, ItalianDateTimeExtractor::specialMinute);
     }
 
-    private void assertSecond(final String s, final Number expectedHour, int finalTokenStreamPosition) {
-        assertNumberFunction(s, expectedHour, finalTokenStreamPosition, ItalianDateTimeExtractor::second);
+    private void assertSecond(final String s, final Number expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::second);
     }
 
     private void assertSecondNull(final String s) {
-        assertNumberFunctionNull(s, ItalianDateTimeExtractor::second);
+        assertFunctionNull(s, ItalianDateTimeExtractor::second);
     }
 
     private void assertBcad(final String s, final Boolean expectedAd, int finalTokenStreamPosition) {
-        assertBooleanFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::bcad);
+        assertFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::bcad);
     }
 
     private void assertBcadNull(final String s) {
-        assertBooleanFunctionNull(s, ItalianDateTimeExtractor::bcad);
+        assertFunctionNull(s, ItalianDateTimeExtractor::bcad);
     }
 
     private void assertAmpm(final String s, final Boolean expectedAd, int finalTokenStreamPosition) {
-        assertBooleanFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::ampm);
+        assertFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::ampm);
     }
 
     private void assertAmpmNull(final String s) {
-        assertBooleanFunctionNull(s, ItalianDateTimeExtractor::ampm);
+        assertFunctionNull(s, ItalianDateTimeExtractor::ampm);
     }
 
-    private void assertDayOfWeek(final String s, final Number expectedHour) {
-        assertNumberFunction(s, expectedHour, 1, ItalianDateTimeExtractor::dayOfWeek);
+    private void assertDayOfWeek(final String s, final Number expected) {
+        assertFunction(s, expected, 1, ItalianDateTimeExtractor::dayOfWeek);
     }
 
     private void assertDayOfWeekNull(final String s) {
-        assertNumberFunctionNull(s, ItalianDateTimeExtractor::dayOfWeek);
+        assertFunctionNull(s, ItalianDateTimeExtractor::dayOfWeek);
     }
 
-    private void assertMonthName(final String s, final Number expectedHour) {
-        assertNumberFunction(s, expectedHour, 1, ItalianDateTimeExtractor::monthName);
+    private void assertMonthName(final String s, final Number expected) {
+        assertFunction(s, expected, 1, ItalianDateTimeExtractor::monthName);
     }
 
     private void assertMonthNameNull(final String s) {
-        assertNumberFunctionNull(s, ItalianDateTimeExtractor::monthName);
+        assertFunctionNull(s, ItalianDateTimeExtractor::monthName);
     }
 
 
