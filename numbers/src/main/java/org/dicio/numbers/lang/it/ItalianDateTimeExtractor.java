@@ -33,6 +33,12 @@ public class ItalianDateTimeExtractor {
                 numberExtractor::extractOneNumberNoOrdinal);
     }
 
+    private Number extractIntegerInRange(final long fromInclusive, final long toInclusive) {
+        // disallow fraction as / should be treated as a day/month/year separator
+        return NumberExtractorUtils.extractOneIntegerInRange(ts, fromInclusive, toInclusive,
+                () -> numberExtractor.numberSignPoint(false, false));
+    }
+
 
     Number monthName() {
         if (ts.get(0).hasCategory("month_name")) {
@@ -116,7 +122,7 @@ public class ItalianDateTimeExtractor {
     }
 
     private Number minuteOrSecond(final String durationCategory) {
-        final Number number = NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 59);
+        final Number number = extractIntegerInRange(0, 59);
         if (number == null) {
             return null;
         }
@@ -167,8 +173,7 @@ public class ItalianDateTimeExtractor {
         // skip words that usually come before hours, e.g. alle, ore
         ts.movePositionForwardBy(ts.indexOfWithoutCategory("pre_hour", 0));
 
-        // numberLessThan1000InRange takes care of ignoring the "ignore" category, so only move by 1
-        final Number number = NumberExtractorUtils.numberLessThan1000InRange(ts, false, 0, 24);
+        final Number number = extractIntegerInRange(0, 24);
         if (number == null) {
             // no number found, or the number is not a valid hour, e.g. le ventisei
             ts.setPosition(originalPosition);
@@ -246,17 +251,13 @@ public class ItalianDateTimeExtractor {
 
     Duration relativeDayOfWeekDuration() {
         return relativeIndicatorDuration(() -> {
-            Number number = numberExtractor.extractOneNumberNoOrdinal();
+            Number number = extractIntegerInRange(1, Long.MAX_VALUE);
             if (number == null) {
                 // there does not need to be a number, e.g. giovedì prossimo
                 number = new Number(1);
             } else {
                 // found a number, e.g. fra due
                 ts.movePositionForwardBy(ts.indexOfWithoutCategory("date_time_ignore", 0));
-                if (!number.isInteger() || number.lessThan(1)) {
-                    // invalid number for relative week duration, e.g. fra 1.5 martedì
-                    return null;
-                }
             }
 
             if (ts.get(0).hasCategory("day_of_week")) {

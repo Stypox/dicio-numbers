@@ -6,6 +6,7 @@ import org.dicio.numbers.unit.Number;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class NumberExtractorUtils {
 
@@ -52,6 +53,22 @@ public class NumberExtractorUtils {
             textAndNumbers.add(number);
             currentText.append(ts.get(-1).getSpacesFollowing()); // spaces after the number
         }
+    }
+
+    public static Number extractOneIntegerInRange(final TokenStream ts,
+                                                  final long fromInclusive,
+                                                  final long toInclusive,
+                                                  final Supplier<Number> numberSupplier) {
+        final int originalPosition = ts.getPosition();
+        final Number number = numberSupplier.get();
+
+        if (number == null || !number.isInteger()
+                || number.integerValue() < fromInclusive || number.integerValue() > toInclusive) {
+            ts.setPosition(originalPosition);
+            return null;
+        }
+
+        return number;
     }
 
 
@@ -135,22 +152,6 @@ public class NumberExtractorUtils {
         }
 
         // multiplier is too big, reset to previous position
-        ts.setPosition(originalPosition);
-        return null;
-    }
-
-    public static Number numberLessThan1000InRange(final TokenStream ts,
-                                                   final boolean allowOrdinal,
-                                                   final int fromInclusive,
-                                                   final int toInclusive) {
-        final int originalPosition = ts.getPosition();
-
-        final Number number = numberLessThan1000(ts, allowOrdinal);
-        if (number != null && number.isInteger() && number.integerValue() >= fromInclusive
-                && number.integerValue() <= toInclusive) {
-            return number;
-        }
-
         ts.setPosition(originalPosition);
         return null;
     }

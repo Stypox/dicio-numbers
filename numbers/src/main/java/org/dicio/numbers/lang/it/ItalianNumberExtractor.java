@@ -32,7 +32,7 @@ public class ItalianNumberExtractor {
             // first try with suffix multiplier, e.g. dozen
             Number number = numberSuffixMultiplier();
             if (number == null) {
-                number = numberSignPoint(true); // then try with normal number
+                number = numberSignPoint(true, true); // then try with normal number
             }
 
             if (number != null) {
@@ -49,12 +49,12 @@ public class ItalianNumberExtractor {
             // first try with suffix multiplier, e.g. dozen
             Number number = numberSuffixMultiplier();
             if (number == null) {
-                number = numberSignPoint(false); // then try without ordinal
+                number = numberSignPoint(false, true); // then try without ordinal
             }
 
             if (number == null) {
                 // maybe an ordinal number?
-                number = numberSignPoint(true);
+                number = numberSignPoint(true, true);
             } else {
                 // a number was found, maybe it has a valid denominator?
                 // note that e.g. "a couple halves" ends up here, but that's valid
@@ -71,7 +71,7 @@ public class ItalianNumberExtractor {
         // first try with suffix multiplier, e.g. dozen
         Number number = numberSuffixMultiplier();
         if (number == null) {
-            number = numberSignPoint(false); // then try without ordinal
+            number = numberSignPoint(false, true); // then try without ordinal
         }
 
         if (number != null) {
@@ -127,14 +127,14 @@ public class ItalianNumberExtractor {
         }
     }
 
-    Number numberSignPoint(final boolean allowOrdinal) {
+    Number numberSignPoint(final boolean allowOrdinal, final boolean allowFraction) {
         if (ts.get(0).hasCategory("sign")) {
             // parse sign from e.g. "minus twelve"
 
             boolean negative = ts.get(0).hasCategory("negative");
             ts.movePositionForwardBy(1);
 
-            final Number n = numberPoint(allowOrdinal);
+            final Number n = numberPoint(allowOrdinal, allowFraction);
             if (n == null) {
                 ts.movePositionForwardBy(-1); // rewind
                 return null;
@@ -143,10 +143,10 @@ public class ItalianNumberExtractor {
             }
 
         }
-        return numberPoint(allowOrdinal);
+        return numberPoint(allowOrdinal, allowFraction);
     }
 
-    Number numberPoint(final boolean allowOrdinal) {
+    Number numberPoint(final boolean allowOrdinal, final boolean allowFraction) {
         Number n = numberInteger(allowOrdinal);
         if (n == null || n.isOrdinal()) {
             // numbers can not start with just "virgola"
@@ -191,7 +191,7 @@ public class ItalianNumberExtractor {
                 }
             }
 
-        } else if (ts.get(0).hasCategory("fraction_separator")) {
+        } else if (allowFraction && ts.get(0).hasCategory("fraction_separator")) {
             // parse fraction from e.g. "twenty divided by one hundred"
 
             int separatorLength = 1;

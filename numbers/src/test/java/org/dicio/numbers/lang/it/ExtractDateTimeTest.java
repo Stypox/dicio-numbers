@@ -325,16 +325,12 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     @Test
     public void testHour() {
         assertHour("ventuno test",     n(21), 2);
-        assertHour("le e zero e",      n(0),  3);
+        assertHour("le zero e",        n(0),  2);
         assertHour("l'una e ventisei", n(1),  2);
         assertHour("dodici in punto",  n(12), 1);
         assertHour("alle diciassette", n(17), 2);
-        assertHour("l'un milione",     n(1),  2);
         assertHour("all'ora alle tre", n(3),  4);
         assertHour("alle ore tredici", n(13), 3);
-
-        // Ignored word at beginning should not be skipped! Caused by numberLessThan1000InRange
-        assertHour("e venti quattro",  n(24), 3); // But maybe it's not important...
     }
 
     @Test
@@ -345,6 +341,9 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertHourNull("alle cento cinquanta quattro");
         assertHourNull("il sette");
         assertHourNull("alle ore");
+        assertHourNull("le e zero e");
+        assertHourNull("e venti quattro");
+        assertHourNull("l'un milione");
     }
 
     @Test
@@ -374,9 +373,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertMinute("sei minuti test",   n(6),  2);
         assertMinute("trentasei e min",   n(36), 2);
         assertMinute("44m e",             n(44), 2);
-
-        // Ignored word at beginning should not be skipped! Caused by numberLessThan1000InRange
-        assertMinute("e due e",           n(2),  2); // But maybe it's not important...
     }
 
     @Test
@@ -386,6 +382,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertMinuteNull("cento venti");
         assertMinuteNull("meno sedici");
         assertMinuteNull("12000 minuti");
+        assertMinuteNull("e due e");
     }
 
     @Test
@@ -418,9 +415,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertSecond("sei secondo test",  n(6),  2);
         assertSecond("trentasei e sec",   n(36), 2);
         assertSecond("44s e",             n(44), 2);
-
-        // Ignored word at beginning should not be skipped! Caused by numberLessThan1000InRange
-        assertSecond("e due e",           n(2),  2); // But it's not important...
     }
 
     @Test
@@ -430,6 +424,8 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertSecondNull("cento venti");
         assertSecondNull("meno sedici");
         assertSecondNull("12000 secondi");
+        assertSecondNull("dodici mila");
+        assertSecondNull("e due e");
     }
 
     @Test
