@@ -53,6 +53,9 @@ public class ItalianDateTimeExtractor {
         if (ts.get(0).hasCategory("day_of_week")) {
             ts.movePositionForwardBy(1);
             return ts.get(-1).getNumber();
+        } else if (ts.get(0).isValue("mar")) {
+            ts.movePositionForwardBy(1);
+            return new Number(1); // special case, since mar already used for march
         } else {
             return null;
         }

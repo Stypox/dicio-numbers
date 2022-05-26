@@ -469,6 +469,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDayOfWeek("lunedì",         n(0));
         assertDayOfWeek("domeniche test", n(6));
         assertDayOfWeek("sab e",          n(5));
+        assertDayOfWeek("mar",            n(1));
     }
 
     @Test
@@ -484,6 +485,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertMonthName("gennaio",    n(0));
         assertMonthName("dic e",      n(11));
         assertMonthName("sett embre", n(8));
+        assertMonthName("mar",        n(2));
     }
 
     @Test
