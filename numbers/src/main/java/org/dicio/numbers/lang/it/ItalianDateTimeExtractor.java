@@ -1,6 +1,7 @@
 package org.dicio.numbers.lang.it;
 
 import static org.dicio.numbers.util.Utils.firstNotNull;
+import static org.dicio.numbers.util.Utils.roundToInt;
 
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Duration;
@@ -33,29 +34,29 @@ public class ItalianDateTimeExtractor {
                 numberExtractor::extractOneNumberNoOrdinal);
     }
 
-    private Number extractIntegerInRange(final long fromInclusive, final long toInclusive) {
+    private Integer extractIntegerInRange(final int fromInclusive, final int toInclusive) {
         // disallow fraction as / should be treated as a day/month/year separator
         return NumberExtractorUtils.extractOneIntegerInRange(ts, fromInclusive, toInclusive,
                 () -> numberExtractor.numberSignPoint(false, false));
     }
 
 
-    Number monthName() {
+    Integer monthName() {
         if (ts.get(0).hasCategory("month_name")) {
             ts.movePositionForwardBy(1);
-            return ts.get(-1).getNumber();
+            return (int) ts.get(-1).getNumber().integerValue();
         } else {
             return null;
         }
     }
 
-    Number dayOfWeek() {
+    Integer dayOfWeek() {
         if (ts.get(0).hasCategory("day_of_week")) {
             ts.movePositionForwardBy(1);
-            return ts.get(-1).getNumber();
+            return (int) ts.get(-1).getNumber().integerValue();
         } else if (ts.get(0).isValue("mar")) {
             ts.movePositionForwardBy(1);
-            return new Number(1); // special case, since mar already used for march
+            return 1; // special case, since mar already used for march
         } else {
             return null;
         }
@@ -103,29 +104,29 @@ public class ItalianDateTimeExtractor {
     }
 
 
-    Number second() {
+    Integer second() {
         return minuteOrSecond("1 SECONDS");
     }
 
-    Number specialMinute() {
+    Integer specialMinute() {
         final int originalPosition = ts.getPosition();
 
         final Number number = numberExtractor.extractOneNumberNoOrdinal();
         if (number != null && number.isDecimal()
                 && number.decimalValue() > 0.0 && number.decimalValue() < 1.0) {
-            return number.multiply(60);
+            return roundToInt(number.decimalValue() * 60);
         }
 
         ts.setPosition(originalPosition);
         return null;
     }
 
-    Number minute() {
+    Integer minute() {
         return minuteOrSecond("1 MINUTES");
     }
 
-    private Number minuteOrSecond(final String durationCategory) {
-        final Number number = extractIntegerInRange(0, 59);
+    private Integer minuteOrSecond(final String durationCategory) {
+        final Integer number = extractIntegerInRange(0, 59);
         if (number == null) {
             return null;
         }
@@ -140,7 +141,7 @@ public class ItalianDateTimeExtractor {
     }
 
 
-    Number specialHour() {
+    Integer specialHour() {
         int originalPosition = ts.getPosition();
 
         if (ts.get(0).hasCategory("pre_special_hour")) {
@@ -151,17 +152,17 @@ public class ItalianDateTimeExtractor {
         if (ts.get(0).hasCategory("special_hour")) {
             // special hour found, e.g. mezzanotte, sera, pranzo
             ts.movePositionForwardBy(1);
-            return ts.get(-1).getNumber();
+            return (int) ts.get(-1).getNumber().integerValue();
         }
 
         if (ts.get(0).getValue().startsWith("mezz")) {
             // sometimes e.g. "mezzogiorno" is split into "mezzo giorno"
             if (ts.get(1).getValue().startsWith("giorn")) {
                 ts.movePositionForwardBy(2);
-                return new Number(12);
+                return 12;
             } else if (ts.get(1).getValue().startsWith("nott")) {
                 ts.movePositionForwardBy(2);
-                return new Number(24);
+                return 24;
             }
         }
 
@@ -170,13 +171,13 @@ public class ItalianDateTimeExtractor {
         return null;
     }
 
-    Number hour() {
+    Integer hour() {
         int originalPosition = ts.getPosition();
 
         // skip words that usually come before hours, e.g. alle, ore
         ts.movePositionForwardBy(ts.indexOfWithoutCategory("pre_hour", 0));
 
-        final Number number = extractIntegerInRange(0, 24);
+        final Integer number = extractIntegerInRange(0, 24);
         if (number == null) {
             // no number found, or the number is not a valid hour, e.g. le ventisei
             ts.setPosition(originalPosition);
@@ -254,10 +255,10 @@ public class ItalianDateTimeExtractor {
 
     Duration relativeDayOfWeekDuration() {
         return relativeIndicatorDuration(() -> {
-            Number number = extractIntegerInRange(1, Long.MAX_VALUE);
+            Integer number = extractIntegerInRange(1, Integer.MAX_VALUE);
             if (number == null) {
                 // there does not need to be a number, e.g. giovedì prossimo
-                number = new Number(1);
+                number = 1;
             } else {
                 // found a number, e.g. fra due
                 ts.movePositionForwardBy(ts.indexOfWithoutCategory("date_time_ignore", 0));
@@ -271,7 +272,7 @@ public class ItalianDateTimeExtractor {
                         // add a week if the two days coincide
                         + (daysDifference == 0 ? DAYS_IN_WEEK : 0)
                         // sum some additional weeks if the input says so
-                        + (number.integerValue() - 1) * DAYS_IN_WEEK;
+                        + (number - 1) * DAYS_IN_WEEK;
                 ts.movePositionForwardBy(1);
                 return new Duration().plus(new Number(daysOffset), ChronoUnit.DAYS);
             } else {

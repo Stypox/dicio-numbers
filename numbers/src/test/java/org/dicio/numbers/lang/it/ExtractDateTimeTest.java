@@ -1,6 +1,5 @@
 package org.dicio.numbers.lang.it;
 
-import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.niceDuration;
 import static org.dicio.numbers.test.TestUtils.numberDeduceType;
 import static org.junit.Assert.assertEquals;
@@ -16,7 +15,6 @@ import static java.time.temporal.ChronoUnit.YEARS;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Duration;
-import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -79,7 +77,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
     private <T> void assertFunctionNull(final String s,
-                                              final Function<ItalianDateTimeExtractor, T> numberFunction) {
+                                        final Function<ItalianDateTimeExtractor, T> numberFunction) {
         assertFunction(s, null, 0, numberFunction);
     }
 
@@ -131,7 +129,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeYesterday);
     }
 
-    private void assertHour(final String s, final Number expected, int finalTokenStreamPosition) {
+    private void assertHour(final String s, final int expected, int finalTokenStreamPosition) {
         assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::hour);
     }
 
@@ -139,7 +137,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::hour);
     }
 
-    private void assertSpecialHour(final String s, final Number expected, int finalTokenStreamPosition) {
+    private void assertSpecialHour(final String s, final int expected, int finalTokenStreamPosition) {
         assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::specialHour);
     }
 
@@ -147,7 +145,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::specialHour);
     }
 
-    private void assertMinute(final String s, final Number expected, int finalTokenStreamPosition) {
+    private void assertMinute(final String s, final int expected, int finalTokenStreamPosition) {
         assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::minute);
     }
 
@@ -155,7 +153,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::minute);
     }
 
-    private void assertSpecialMinute(final String s, final Number expected, int finalTokenStreamPosition) {
+    private void assertSpecialMinute(final String s, final int expected, int finalTokenStreamPosition) {
         assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::specialMinute);
     }
 
@@ -163,7 +161,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::specialMinute);
     }
 
-    private void assertSecond(final String s, final Number expected, int finalTokenStreamPosition) {
+    private void assertSecond(final String s, final int expected, int finalTokenStreamPosition) {
         assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::second);
     }
 
@@ -187,7 +185,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::ampm);
     }
 
-    private void assertDayOfWeek(final String s, final Number expected) {
+    private void assertDayOfWeek(final String s, final int expected) {
         assertFunction(s, expected, 1, ItalianDateTimeExtractor::dayOfWeek);
     }
 
@@ -195,7 +193,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::dayOfWeek);
     }
 
-    private void assertMonthName(final String s, final Number expected) {
+    private void assertMonthName(final String s, final int expected) {
         assertFunction(s, expected, 1, ItalianDateTimeExtractor::monthName);
     }
 
@@ -324,13 +322,13 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testHour() {
-        assertHour("ventuno test",     n(21), 2);
-        assertHour("le zero e",        n(0),  2);
-        assertHour("l'una e ventisei", n(1),  2);
-        assertHour("dodici in punto",  n(12), 1);
-        assertHour("alle diciassette", n(17), 2);
-        assertHour("all'ora alle tre", n(3),  4);
-        assertHour("alle ore tredici", n(13), 3);
+        assertHour("ventuno test",     21, 2);
+        assertHour("le zero e",        0,  2);
+        assertHour("l'una e ventisei", 1,  2);
+        assertHour("dodici in punto",  12, 1);
+        assertHour("alle diciassette", 17, 2);
+        assertHour("all'ora alle tre", 3,  4);
+        assertHour("alle ore tredici", 13, 3);
     }
 
     @Test
@@ -348,11 +346,11 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testSpecialHour() {
-        assertSpecialHour("a mezzanotte",       n(24), 2);
-        assertSpecialHour("mezzo giorno",       n(12), 2);
-        assertSpecialHour("queste mezze notti", n(24), 3);
-        assertSpecialHour("questa sera e",      n(21), 2);
-        assertSpecialHour("stanotte test",      n(3),  1);
+        assertSpecialHour("a mezzanotte",      24, 2);
+        assertSpecialHour("mezzo giorno",      12, 2);
+        assertSpecialHour("queste mezze notti",24, 3);
+        assertSpecialHour("questa sera e",     21, 2);
+        assertSpecialHour("stanotte test",     3,  1);
     }
 
     @Test
@@ -366,13 +364,13 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testMinute() {
-        assertMinute("zero a b c",        n(0),  1);
-        assertMinute("cinquantanove ore", n(59), 2);
-        assertMinute("quindici e",        n(15), 1);
-        assertMinute("venti e otto s",    n(28), 3);
-        assertMinute("sei minuti test",   n(6),  2);
-        assertMinute("trentasei e min",   n(36), 2);
-        assertMinute("44m e",             n(44), 2);
+        assertMinute("zero a b c",       0,  1);
+        assertMinute("cinquantanove ore",59, 2);
+        assertMinute("quindici e",       15, 1);
+        assertMinute("venti e otto s",   28, 3);
+        assertMinute("sei minuti test",  6,  2);
+        assertMinute("trentasei e min",  36, 2);
+        assertMinute("44m e",            44, 2);
     }
 
     @Test
@@ -387,11 +385,11 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testSpecialMinute() {
-        assertSpecialMinute("un quarto e",              n(15.0),               2);
-        assertSpecialMinute("mezza test",               n(30.0),               1);
-        assertSpecialMinute("un mezzo",                 n(30.0),               2);
-        assertSpecialMinute("zero virgola due",         n(12.0),               3);
-        assertSpecialMinute("tredici ottantasettesimi", n(13.0 / 87.0 * 60.0), 3);
+        assertSpecialMinute("un quarto e",              15, 2);
+        assertSpecialMinute("mezza test",               30, 1);
+        assertSpecialMinute("un mezzo",                 30, 2);
+        assertSpecialMinute("zero virgola due",         12, 3);
+        assertSpecialMinute("tredici ottantasettesimi", 9,  3); // 13/87*60 is 8.97 -> rounded to 9
     }
 
     @Test
@@ -408,13 +406,13 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testSecond() {
-        assertSecond("zero a b c",        n(0),  1);
-        assertSecond("cinquantanove ore", n(59), 2);
-        assertSecond("quindici e",        n(15), 1);
-        assertSecond("venti e otto m",    n(28), 3);
-        assertSecond("sei secondo test",  n(6),  2);
-        assertSecond("trentasei e sec",   n(36), 2);
-        assertSecond("44s e",             n(44), 2);
+        assertSecond("zero a b c",       0,  1);
+        assertSecond("cinquantanove ore",59, 2);
+        assertSecond("quindici e",       15, 1);
+        assertSecond("venti e otto m",   28, 3);
+        assertSecond("sei secondo test", 6,  2);
+        assertSecond("trentasei e sec",  36, 2);
+        assertSecond("44s e",            44, 2);
     }
 
     @Test
@@ -466,10 +464,10 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testDayOfWeek() {
-        assertDayOfWeek("lunedì",         n(0));
-        assertDayOfWeek("domeniche test", n(6));
-        assertDayOfWeek("sab e",          n(5));
-        assertDayOfWeek("mar",            n(1));
+        assertDayOfWeek("lunedì",         0);
+        assertDayOfWeek("domeniche test", 6);
+        assertDayOfWeek("sab e",          5);
+        assertDayOfWeek("mar",            1);
     }
 
     @Test
@@ -482,10 +480,10 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testMonthName() {
-        assertMonthName("gennaio",    n(0));
-        assertMonthName("dic e",      n(11));
-        assertMonthName("sett embre", n(8));
-        assertMonthName("mar",        n(2));
+        assertMonthName("gennaio",    0);
+        assertMonthName("dic e",      11);
+        assertMonthName("sett embre", 8);
+        assertMonthName("mar",        2);
     }
 
     @Test

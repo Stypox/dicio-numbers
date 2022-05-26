@@ -55,10 +55,10 @@ public class NumberExtractorUtils {
         }
     }
 
-    public static Number extractOneIntegerInRange(final TokenStream ts,
-                                                  final long fromInclusive,
-                                                  final long toInclusive,
-                                                  final Supplier<Number> numberSupplier) {
+    public static Integer extractOneIntegerInRange(final TokenStream ts,
+                                                   final int fromInclusive,
+                                                   final int toInclusive,
+                                                   final Supplier<Number> numberSupplier) {
         final int originalPosition = ts.getPosition();
         final Number number = numberSupplier.get();
 
@@ -68,7 +68,7 @@ public class NumberExtractorUtils {
             return null;
         }
 
-        return number;
+        return (int) number.integerValue();
     }
 
 

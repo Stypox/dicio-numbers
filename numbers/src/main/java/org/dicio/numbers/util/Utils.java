@@ -71,6 +71,18 @@ public final class Utils {
     }
 
     /**
+     * @param number the number to round
+     * @return the nearest int to the number
+     */
+    public static int roundToInt(final double number) {
+        if (number < 0) {
+            return (int) number + (number % 1 <= -0.5 ? -1 : 0);
+        } else {
+            return (int) number + (number % 1 >= 0.5 ? 1 : 0);
+        }
+    }
+
+    /**
      * @param n the number to split
      * @param splitModulus the modulus to apply to split the number
      * @return the splits (which could be 0), in opposite order,
