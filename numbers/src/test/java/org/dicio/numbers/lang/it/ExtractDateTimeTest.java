@@ -17,6 +17,7 @@ import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Duration;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
@@ -199,6 +200,10 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     private void assertMonthNameNull(final String s) {
         assertFunctionNull(s, ItalianDateTimeExtractor::monthName);
+    }
+
+    private void assertDate(final String s, final LocalDate expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::date);
     }
 
 
@@ -492,5 +497,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertMonthNameNull("genner");
         assertMonthNameNull("ciao feb");
         assertMonthNameNull("e dic to");
+    }
+
+    @Test
+    public void testDate() {
+        assertDate("04/09-4096",                                  LocalDate.of(4096,  9, 4),  5);
+        assertDate("giovedì 26 maggio 2022",                      LocalDate.of(2022,  5, 26), 4);
+        assertDate("lun dodici giu duemila dodici avanti cristo", LocalDate.of(-2012, 6, 12), 8);
+        assertDate("quattrocento settanta sei d.C.",              LocalDate.of(476,   1, 1),  7);
+        assertDate("quattromila avanti cristo",                   LocalDate.of(-4000, 1, 1),  4);
     }
 }

@@ -1,6 +1,6 @@
 {
   "spaces": " \t\n\f\r:;_!?<>|=()[]{}»«*~^`'\"",
-  "characters_as_word": "%‰#-+.,/°ª",
+  "characters_as_word": "%‰#-+.,\\/°ª",
   "compound_word_piece_category": "compound_word_piece",
   "raw_number_categories": [
     "number",
@@ -66,8 +66,17 @@
       ],
       "values": [
         "fratto",
-        "diviso",
-        "/"
+        "diviso"
+      ]
+    },
+    {
+      "categories": [
+        "fraction_separator",
+        "date_time_ignore"
+      ],
+      "values": [
+        "/",
+        "\\"
       ]
     },
     {
@@ -86,7 +95,16 @@
         "negative"
       ],
       "values": [
-        "meno",
+        "meno"
+      ]
+    },
+    {
+      "categories": [
+        "sign",
+        "negative",
+        "date_time_ignore"
+      ],
+      "values": [
         "-"
       ]
     },

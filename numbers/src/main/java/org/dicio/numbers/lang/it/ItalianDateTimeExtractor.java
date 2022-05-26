@@ -10,6 +10,7 @@ import org.dicio.numbers.util.DurationExtractorUtils;
 import org.dicio.numbers.util.NumberExtractorUtils;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
@@ -38,6 +39,74 @@ public class ItalianDateTimeExtractor {
         // disallow fraction as / should be treated as a day/month/year separator
         return NumberExtractorUtils.extractOneIntegerInRange(ts, fromInclusive, toInclusive,
                 () -> numberExtractor.numberSignPoint(false, false));
+    }
+
+
+    LocalDate date() {
+        LocalDate result = now.toLocalDate();
+
+        final Integer dayOfWeek = dayOfWeek();
+        final Integer day = tryOrSkipIgnore("date_time_ignore", dayOfWeek == null,
+                () -> extractIntegerInRange(1, 31));
+
+        if (day == null) {
+            if (dayOfWeek != null) {
+                // TODO fai cose
+                return result;
+            }
+            result = result.withDayOfMonth(1);
+        } else {
+            result = result.withDayOfMonth(day);
+        }
+
+        final Integer month = tryOrSkipIgnore("date_time_ignore", day == null,
+                () -> {
+                    final Integer number = monthName();
+                    if (number != null) {
+                        return number + 1;
+                    }
+                    return extractIntegerInRange(1, 12);
+                });
+
+        if (month == null) {
+            if (day != null) {
+                return result;
+            }
+            result = result.withMonth(1);
+        } else {
+            result = result.withMonth(month);
+        }
+
+        // if month is null then day is also null, otherwise we would have returned above
+        final Integer year = tryOrSkipIgnore("date_time_ignore", month == null,
+                () -> extractIntegerInRange(0, Integer.MAX_VALUE));
+        if (year == null) {
+            if (month == null) {
+                return null;
+            }
+            return result;
+        }
+
+        final Boolean bcad = bcad();
+        return result.withYear(year * (bcad == null || bcad ? 1 : -1));
+    }
+
+    <T> T tryOrSkipIgnore(final String skipCategory,
+                          final boolean disallowSkippingIgnore,
+                          final Supplier<T> function) {
+        if (disallowSkippingIgnore) {
+            return function.get();
+        }
+
+        do {
+            final T result = function.get();
+            if (result != null) {
+                return result;
+            }
+            ts.movePositionForwardBy(1);
+        } while (ts.get(-1).hasCategory(skipCategory) && !ts.finished());
+
+        return null;
     }
 
 
