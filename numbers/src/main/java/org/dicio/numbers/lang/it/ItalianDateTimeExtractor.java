@@ -81,10 +81,10 @@ public class ItalianDateTimeExtractor {
         final Integer year = tryOrSkipIgnore("date_time_ignore", month == null,
                 () -> extractIntegerInRange(0, Integer.MAX_VALUE));
         if (year == null) {
-            if (month == null) {
-                return null;
+            if (month != null) {
+                return result;
             }
-            return result;
+            return null;
         }
 
         final Boolean bcad = bcad();
@@ -98,6 +98,7 @@ public class ItalianDateTimeExtractor {
             return function.get();
         }
 
+        final int originalPosition = ts.getPosition();
         do {
             final T result = function.get();
             if (result != null) {
@@ -106,6 +107,8 @@ public class ItalianDateTimeExtractor {
             ts.movePositionForwardBy(1);
         } while (ts.get(-1).hasCategory(skipCategory) && !ts.finished());
 
+        // found nothing, restore position
+        ts.setPosition(originalPosition);
         return null;
     }
 

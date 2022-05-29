@@ -501,10 +501,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testDate() {
-        assertDate("04/09-4096",                                  LocalDate.of(4096,  9, 4),  5);
-        assertDate("giovedì 26 maggio 2022",                      LocalDate.of(2022,  5, 26), 4);
-        assertDate("lun dodici giu duemila dodici avanti cristo", LocalDate.of(-2012, 6, 12), 8);
-        assertDate("quattrocento settanta sei d.C.",              LocalDate.of(476,   1, 1),  7);
-        assertDate("quattromila avanti cristo",                   LocalDate.of(-4000, 1, 1),  4);
+        assertDate("04/09-4096",                                  LocalDate.of(4096,  9,  4),  5);
+        assertDate("giovedì 26 maggio 2022",                      LocalDate.of(2022,  5,  26), 4);
+        assertDate("lun dodici giu duemila dodici avanti cristo", LocalDate.of(-2012, 6,  12), 8);
+        assertDate("quattrocento settanta sei d.C.",              LocalDate.of(476,   1,  1),  7);
+        assertDate("quattromila avanti cristo",                   LocalDate.of(-4000, 1,  1),  4);
+        assertDate("ventisette",                                  LocalDate.of(2022,  5,  27), 2);
+        assertDate("duemila dodici",                              LocalDate.of(2012,  1,  1),  3);
+        assertDate("novembre",                                    LocalDate.of(2022,  11, 1),  1);
+        assertDate("novembre",                                    LocalDate.of(2022,  11, 1),  1);
     }
 }
