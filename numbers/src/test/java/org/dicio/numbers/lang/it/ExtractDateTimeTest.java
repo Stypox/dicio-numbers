@@ -506,9 +506,11 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDate("lun dodici giu duemila dodici avanti cristo", LocalDate.of(-2012, 6,  12), 8);
         assertDate("quattrocento settanta sei d.C.",              LocalDate.of(476,   1,  1),  7);
         assertDate("quattromila avanti cristo",                   LocalDate.of(-4000, 1,  1),  4);
-        assertDate("ventisette",                                  LocalDate.of(2022,  5,  27), 2);
+        assertDate("martedì ventisette",                          LocalDate.of(2022,  5,  27), 3);
         assertDate("duemila dodici",                              LocalDate.of(2012,  1,  1),  3);
         assertDate("novembre",                                    LocalDate.of(2022,  11, 1),  1);
-        assertDate("novembre",                                    LocalDate.of(2022,  11, 1),  1);
+        assertDate("martedì",                                     LocalDate.of(2022,  5,  10), 1);
+        assertDate("domenica duemilatredici",                     LocalDate.of(2022,  5,  15), 1);
+        assertDate("lunedì novembre",                             LocalDate.of(2022,  5,  9),  1);
     }
 }
