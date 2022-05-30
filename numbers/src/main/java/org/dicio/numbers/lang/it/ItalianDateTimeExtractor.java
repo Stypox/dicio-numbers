@@ -51,7 +51,7 @@ public class ItalianDateTimeExtractor {
 
         if (day == null) {
             if (dayOfWeek != null) {
-                // TODO maybe enforce in the future?
+                // TODO maybe enforce the date to be in the future?
                 return result.plus(dayOfWeek - result.getDayOfWeek().ordinal(), ChronoUnit.DAYS);
             }
             result = result.withDayOfMonth(1);

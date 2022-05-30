@@ -119,7 +119,8 @@
     {
       "categories": [
         "duration_separator",
-        "bcad_after"
+        "bcad_after",
+        "date_time_ignore"
       ],
       "values": [
         "d"
@@ -135,7 +136,16 @@
         "la",
         "i",
         "gli",
-        "che"
+        "che",
+        "del",
+        "dello",
+        "della",
+        "dell",
+        "dei",
+        "degli",
+        "degl",
+        "delle",
+        "de"
       ]
     },
     {
