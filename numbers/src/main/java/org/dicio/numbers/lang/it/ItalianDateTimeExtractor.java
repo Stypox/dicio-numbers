@@ -12,6 +12,7 @@ import org.dicio.numbers.util.NumberExtractorUtils;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
@@ -41,6 +42,27 @@ public class ItalianDateTimeExtractor {
                 () -> numberExtractor.numberSignPoint(false, false));
     }
 
+
+    LocalTime time() {
+        final Integer hour = firstNotNull(this::specialHour, this::hour);
+        if (hour == null) {
+            return null;
+        }
+        LocalTime result = LocalTime.of(hour, 0);
+
+        final Integer minute = tryOrSkipIgnore("date_time_ignore", false,
+                () -> firstNotNull(this::specialMinute, this::minute));
+        if (minute == null) {
+            return result;
+        }
+        result = result.withMinute(minute);
+
+        final Integer second = tryOrSkipIgnore("date_time_ignore", false, this::second);
+        if (second == null) {
+            return result;
+        }
+        return result.withSecond(second);
+    }
 
     LocalDate date() {
         LocalDate result = now.toLocalDate();
@@ -234,7 +256,7 @@ public class ItalianDateTimeExtractor {
                 return 12;
             } else if (ts.get(1).getValue().startsWith("nott")) {
                 ts.movePositionForwardBy(2);
-                return 24;
+                return 0;
             }
         }
 
@@ -257,7 +279,7 @@ public class ItalianDateTimeExtractor {
         }
 
         // found hour, e.g. alle diciannove
-        return number;
+        return number % 24; // transform 24 into 0
     }
 
 

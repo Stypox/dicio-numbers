@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
 
@@ -210,6 +211,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::date);
     }
 
+    private void assertTime(final String s, final LocalTime expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::time);
+    }
+
+    private void assertTimeNull(final String s) {
+        assertFunctionNull(s, ItalianDateTimeExtractor::time);
+    }
+
 
     @Test
     public void testRelativeDuration() {
@@ -355,11 +364,11 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testSpecialHour() {
-        assertSpecialHour("a mezzanotte",      24, 2);
-        assertSpecialHour("mezzo giorno",      12, 2);
-        assertSpecialHour("queste mezze notti",24, 3);
-        assertSpecialHour("questa sera e",     21, 2);
-        assertSpecialHour("stanotte test",     3,  1);
+        assertSpecialHour("a mezzanotte",       0,  2);
+        assertSpecialHour("mezzo giorno",       12, 2);
+        assertSpecialHour("queste mezze notti", 0,  3);
+        assertSpecialHour("questa sera e",      21, 2);
+        assertSpecialHour("stanotte test",      3,  1);
     }
 
     @Test
@@ -525,5 +534,26 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDateNull("sono martedì");
         assertDateNull("e duemilaquindici");
         assertDateNull("del due maggio");
+        assertDateNull("domani");
+    }
+
+    @Test
+    public void testTime() {
+        assertTime("13:28.33 test",                             LocalTime.of(13, 28, 33), 4);
+        assertTime("mezzogiorno e mezzo",                       LocalTime.of(12, 30, 0),  3);
+        assertTime("alle quattordici e",                        LocalTime.of(14, 0,  0),  2);
+        assertTime("le ventitre e cinquantun min e 17 secondi", LocalTime.of(23, 51, 17), 10);
+        assertTime("mezzanotte del dodici",                     LocalTime.of(0,  12, 0),  3);
+        assertTime("sera",                                      LocalTime.of(21, 0,  0),  1);
+        assertTime("ventiquattro e zero",                       LocalTime.of(0,  0,  0),  4);
+    }
+
+    @Test
+    public void testTimeNull() {
+        assertTimeNull("ciao come va");
+        assertTimeNull("sessantuno");
+        assertTimeNull("30:59");
+        assertTimeNull("meno sedici");
+        assertTimeNull("quattro milioni");
     }
 }
