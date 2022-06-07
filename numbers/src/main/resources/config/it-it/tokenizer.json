@@ -317,6 +317,22 @@
     },
     {
       "categories": [
+        "bcad_before_combined"
+      ],
+      "values": [
+        "ac"
+      ]
+    },
+    {
+      "categories": [
+        "bcad_after_combined"
+      ],
+      "values": [
+        "dc"
+      ]
+    },
+    {
+      "categories": [
         "ampm_before"
       ],
       "values": [
@@ -344,6 +360,22 @@
         "meridiano",
         "meridiane",
         "meridiani"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_before_combined"
+      ],
+      "values": [
+        "am"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_after_combined"
+      ],
+      "values": [
+        "pm"
       ]
     }
   ],

@@ -136,41 +136,47 @@ public class ItalianDateTimeExtractor {
 
 
     Boolean ampm() {
-        return bcadOrAmpm("ampm_before", "ampm_after", "ampm_identifier");
+        return bcadOrAmpm("ampm");
     }
 
     Boolean bcad() {
-        return bcadOrAmpm("bcad_before", "bcad_after", "bcad_identifier");
+        return bcadOrAmpm("bcad");
     }
 
     /**
+     * @param prefix either "bcad" or "ampm", i.e. the prefix to use for the following categories:
+     *               _before, _after, _identifier, _before_combined, _after_combined
      * @return false if before+identifier matches, true if after+identifier matches, null otherwise
      */
-    private Boolean bcadOrAmpm(final String before, final String after, final String identifier) {
+    private Boolean bcadOrAmpm(final String prefix) {
         final boolean result;
-        if (ts.get(0).hasCategory(before)) {
+        ts.movePositionForwardBy(1);
+        if (ts.get(-1).hasCategory(prefix + "_before")) {
             result = false;
-        } else if (ts.get(0).hasCategory(after)) {
+        } else if (ts.get(-1).hasCategory(prefix + "_after")) {
             result = true;
-        } else if (ts.get(0).hasCategory(identifier)) {
-            // identifier without no preceding before/after -> return "before" (a.m. or B.C.)
-            ts.movePositionForwardBy(1);
+        } else if (ts.get(-1).hasCategory(prefix + "_identifier")
+                || ts.get(-1).hasCategory(prefix + "_before_combined")) {
+            // identifier without no preceding before/after, or found found am or bc in a single
+            // word -> return "before" (a.m. or B.C.)
             return false;
+        } else if (ts.get(-1).hasCategory(prefix + "_after_combined")) {
+            // found pm or ad in a single word -> return "after"
+            return true;
         } else {
+            // nothing related to bc/ad/am/pm here
+            ts.movePositionForwardBy(-1);
             return null;
         }
 
         // we can't use ts.indexOfWithoutCategory, since some ignore words might be identifiers
-        final int originalPosition = ts.getPosition();
-        do {
-            ts.movePositionForwardBy(1);
-        } while (!ts.get(0).hasCategory(identifier) && ts.get(0).hasCategory("ignore"));
-
-        if (ts.get(0).hasCategory(identifier)) {
+        final Boolean foundIdentifier = ts.tryOrSkipCategory("ignore", true,
+                () -> ts.get(0).hasCategory(prefix + "_identifier") ? true : null);
+        if (foundIdentifier != null) {
             ts.movePositionForwardBy(1);
             return result;
         } else {
-            ts.setPosition(originalPosition);
+            ts.movePositionForwardBy(-1);
             return null;
         }
     }
