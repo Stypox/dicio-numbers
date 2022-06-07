@@ -50,14 +50,14 @@ public class ItalianDateTimeExtractor {
         }
         LocalTime result = LocalTime.of(hour, 0);
 
-        final Integer minute = tryOrSkipIgnore("date_time_ignore", false,
+        final Integer minute = ts.tryOrSkipDateTimeIgnore(true,
                 () -> firstNotNull(this::specialMinute, this::minute));
         if (minute == null) {
             return result;
         }
         result = result.withMinute(minute);
 
-        final Integer second = tryOrSkipIgnore("date_time_ignore", false, this::second);
+        final Integer second = ts.tryOrSkipDateTimeIgnore(true, this::second);
         if (second == null) {
             return result;
         }
@@ -68,7 +68,7 @@ public class ItalianDateTimeExtractor {
         LocalDate result = now.toLocalDate();
 
         final Integer dayOfWeek = dayOfWeek();
-        final Integer day = tryOrSkipIgnore("date_time_ignore", dayOfWeek == null,
+        final Integer day = ts.tryOrSkipDateTimeIgnore(dayOfWeek != null,
                 () -> extractIntegerInRange(1, 31));
 
         if (day == null) {
@@ -81,14 +81,13 @@ public class ItalianDateTimeExtractor {
             result = result.withDayOfMonth(day);
         }
 
-        final Integer month = tryOrSkipIgnore("date_time_ignore", day == null,
-                () -> {
-                    final Integer number = monthName();
-                    if (number != null) {
-                        return number + 1;
-                    }
-                    return extractIntegerInRange(1, 12);
-                });
+        final Integer month = ts.tryOrSkipDateTimeIgnore(day != null, () -> {
+            final Integer number = monthName();
+            if (number != null) {
+                return number + 1;
+            }
+            return extractIntegerInRange(1, 12);
+        });
 
         if (month == null) {
             if (day != null) {
@@ -100,7 +99,7 @@ public class ItalianDateTimeExtractor {
         }
 
         // if month is null then day is also null, otherwise we would have returned above
-        final Integer year = tryOrSkipIgnore("date_time_ignore", month == null,
+        final Integer year = ts.tryOrSkipDateTimeIgnore(month != null,
                 () -> extractIntegerInRange(0, Integer.MAX_VALUE));
         if (year == null) {
             if (month != null) {
@@ -111,27 +110,6 @@ public class ItalianDateTimeExtractor {
 
         final Boolean bcad = bcad();
         return result.withYear(year * (bcad == null || bcad ? 1 : -1));
-    }
-
-    <T> T tryOrSkipIgnore(final String skipCategory,
-                          final boolean disallowSkippingIgnore,
-                          final Supplier<T> function) {
-        if (disallowSkippingIgnore) {
-            return function.get();
-        }
-
-        final int originalPosition = ts.getPosition();
-        do {
-            final T result = function.get();
-            if (result != null) {
-                return result;
-            }
-            ts.movePositionForwardBy(1);
-        } while (ts.get(-1).hasCategory(skipCategory) && !ts.finished());
-
-        // found nothing, restore position
-        ts.setPosition(originalPosition);
-        return null;
     }
 
 
