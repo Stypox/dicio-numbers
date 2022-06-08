@@ -43,6 +43,10 @@ public class ItalianDateTimeExtractor {
     }
 
 
+    LocalDateTime extractDateTime() {
+        return ts.extractEarliestNotNull(this::dateTime);
+    }
+
     LocalDateTime dateTime() {
         // first try preferring having a date first, then try with time first
         return ts.firstWhichUsesMostTokens(() -> dateTime(false), () -> dateTime(true));
@@ -274,7 +278,7 @@ public class ItalianDateTimeExtractor {
     Integer specialMinute() {
         final int originalPosition = ts.getPosition();
 
-        final Number number = numberExtractor.extractOneNumberNoOrdinal();
+        final Number number = numberExtractor.numberNoOrdinal();
         if (number != null && number.isDecimal()
                 && number.decimalValue() > 0.0 && number.decimalValue() < 1.0) {
             return roundToInt(number.decimalValue() * 60);

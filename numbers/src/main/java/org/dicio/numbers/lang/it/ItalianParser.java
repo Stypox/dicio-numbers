@@ -34,6 +34,7 @@ public class ItalianParser extends NumberParser {
 
     @Override
     public LocalDateTime extractDateTime(final String utterance, final LocalDateTime now) {
-        return null;
+        return new ItalianDateTimeExtractor(new TokenStream(tokenizer.tokenize(utterance)), now)
+                .extractDateTime();
     }
 }
