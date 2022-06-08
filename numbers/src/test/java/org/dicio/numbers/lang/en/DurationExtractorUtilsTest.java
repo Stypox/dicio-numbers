@@ -33,7 +33,7 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
     public Duration extractDuration(final TokenStream ts, final boolean shortScale) {
         final EnglishNumberExtractor numberExtractor
                 = new EnglishNumberExtractor(ts, shortScale, false);
-        return new DurationExtractorUtils(ts, numberExtractor::extractOneNumberNoOrdinal)
+        return new DurationExtractorUtils(ts, numberExtractor::numberNoOrdinal)
                 .extractDuration();
     }
 

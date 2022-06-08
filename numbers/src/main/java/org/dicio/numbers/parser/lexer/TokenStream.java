@@ -1,5 +1,8 @@
 package org.dicio.numbers.parser.lexer;
 
+import org.dicio.numbers.unit.Number;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -100,5 +103,35 @@ public class TokenStream {
 
         setPosition(bestPosition);
         return bestResult;
+    }
+
+    public List<Object> extractMixedTextAndObjects(final Supplier<Object> supplier) {
+        // the called functions will add objects to textAndNumbers and reuse currentText for strings
+        List<Object> textAndObjects = new ArrayList<>();
+        final StringBuilder currentText = new StringBuilder();
+
+        while (!finished()) {
+            final Object object = supplier.get();
+
+            if (object == null) {
+                // no number here, add the text of the current token to currentText instead
+                currentText.append(get(0).getValue()).append(get(0).getSpacesFollowing());
+                movePositionForwardBy(1);
+            } else {
+                if (currentText.length() != 0) {
+                    textAndObjects.add(currentText.toString()); // add the text before the number
+                    currentText.setLength(0); // clear the string builder efficiently
+                }
+                textAndObjects.add(object);
+                currentText.append(get(-1).getSpacesFollowing()); // spaces after the number
+            }
+        }
+
+        if (currentText.length() != 0) {
+            // add leftover text (this can be done here since the functions above reuse currentText)
+            textAndObjects.add(currentText.toString());
+        }
+
+        return textAndObjects;
     }
 }

@@ -33,8 +33,7 @@ public class ItalianDateTimeExtractor {
         this.ts = tokenStream;
         this.now = now;
         this.numberExtractor = new ItalianNumberExtractor(ts, false);
-        this.durationExtractor = new DurationExtractorUtils(ts,
-                numberExtractor::extractOneNumberNoOrdinal);
+        this.durationExtractor = new DurationExtractorUtils(ts, numberExtractor::numberNoOrdinal);
     }
 
     private Integer extractIntegerInRange(final int fromInclusive, final int toInclusive) {

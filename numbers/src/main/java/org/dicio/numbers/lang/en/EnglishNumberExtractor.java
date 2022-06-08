@@ -25,49 +25,42 @@ public class EnglishNumberExtractor {
 
     public List<Object> extractNumbers() {
         if (preferOrdinal) {
-            return extractNumbersWith(this::extractNumbersPreferOrdinal);
+            return ts.extractMixedTextAndObjects(this::numberPreferOrdinal);
         } else {
-            return extractNumbersWith(this::extractNumbersPreferFraction);
+            return ts.extractMixedTextAndObjects(this::numberPreferFraction);
         }
     }
 
-    void extractNumbersPreferOrdinal(final List<Object> textAndNumbers,
-                                     final StringBuilder currentText) {
-        while (!ts.finished()) {
-            // first try with suffix multiplier, e.g. dozen
-            Number number = numberSuffixMultiplier();
-            if (number == null) {
-                number = numberSignPoint(true); // then try with normal number
-            }
-
-            // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
-            number = divideByDenominatorIfPossible(number);
-            addNumberOrText(ts, number, textAndNumbers, currentText);
+    Number numberPreferOrdinal() {
+        // first try with suffix multiplier, e.g. dozen
+        Number number = numberSuffixMultiplier();
+        if (number == null) {
+            number = numberSignPoint(true); // then try with normal number
         }
+
+        // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
+        return divideByDenominatorIfPossible(number);
     }
 
-    void extractNumbersPreferFraction(final List<Object> textAndNumbers,
-                                      final StringBuilder currentText) {
-        while (!ts.finished()) {
-            // first try with suffix multiplier, e.g. dozen
-            Number number = numberSuffixMultiplier();
-            if (number == null) {
-                number = numberSignPoint(false); // then try without ordinal
-            }
-
-            // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
-            // note that e.g. "a couple halves" ends up here, but that's valid
-            number = divideByDenominatorIfPossible(number);
-
-            if (number == null) {
-                // maybe an ordinal number?
-                number = numberSignPoint(true);
-            }
-            addNumberOrText(ts, number, textAndNumbers, currentText);
+    Number numberPreferFraction() {
+        // first try with suffix multiplier, e.g. dozen
+        Number number = numberSuffixMultiplier();
+        if (number == null) {
+            number = numberSignPoint(false); // then try without ordinal
         }
+
+        // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
+        // note that e.g. "a couple halves" ends up here, but that's valid
+        number = divideByDenominatorIfPossible(number);
+
+        if (number == null) {
+            // maybe an ordinal number?
+            number = numberSignPoint(true);
+        }
+        return number;
     }
 
-    Number extractOneNumberNoOrdinal() {
+    Number numberNoOrdinal() {
         // for now this function is used internally just for duration parsing, but maybe it could
         // be exposed to library users, giving more control over how ordinals are handled.
 

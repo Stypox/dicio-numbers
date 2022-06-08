@@ -31,8 +31,7 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
     public Duration extractDuration(final TokenStream ts, final boolean shortScale) {
         final ItalianNumberExtractor numberExtractor
                 = new ItalianNumberExtractor(ts, false);
-        return new DurationExtractorUtils(ts, numberExtractor::extractOneNumberNoOrdinal)
-                .extractDuration();
+        return new DurationExtractorUtils(ts, numberExtractor::numberNoOrdinal).extractDuration();
     }
 
     private void assertDuration(final String s, final java.time.Duration duration) {
