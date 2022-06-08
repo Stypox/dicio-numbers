@@ -1,9 +1,11 @@
 package org.dicio.numbers.lang.it;
 
+import static org.dicio.numbers.lang.it.ItalianDateTimeExtractor.isMomentOfDayPm;
 import static org.dicio.numbers.test.TestUtils.niceDuration;
 import static org.dicio.numbers.test.TestUtils.numberDeduceType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -99,36 +101,36 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeMonthDuration);
     }
 
-    private void assertRelativeDayOfWeekDuration(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
-        assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeDayOfWeekDuration);
+    private void assertRelativeDayOfWeekDuration(final String s, final int expectedDuration, int finalTokenStreamPosition) {
+        assertFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeDayOfWeekDuration);
     }
 
     private void assertRelativeDayOfWeekDurationNull(final String s) {
-        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeDayOfWeekDuration);
+        assertFunctionNull(s, ItalianDateTimeExtractor::relativeDayOfWeekDuration);
     }
 
-    private void assertRelativeTomorrow(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
-        assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeTomorrow);
+    private void assertRelativeTomorrow(final String s, final int expectedDuration, int finalTokenStreamPosition) {
+        assertFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeTomorrow);
     }
 
     private void assertRelativeTomorrowNull(final String s) {
-        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeTomorrow);
+        assertFunctionNull(s, ItalianDateTimeExtractor::relativeTomorrow);
     }
 
     private void assertRelativeToday(final String s) {
-        assertRelativeDurationFunction(s, new Duration(), 1, ItalianDateTimeExtractor::relativeToday);
+        assertFunction(s, 0, 1, ItalianDateTimeExtractor::relativeToday);
     }
 
     private void assertRelativeTodayNull(final String s) {
-        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeToday);
+        assertFunctionNull(s, ItalianDateTimeExtractor::relativeToday);
     }
 
-    private void assertRelativeYesterday(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
-        assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeYesterday);
+    private void assertRelativeYesterday(final String s, final int expectedDuration, int finalTokenStreamPosition) {
+        assertFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeYesterday);
     }
 
     private void assertRelativeYesterdayNull(final String s) {
-        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeYesterday);
+        assertFunctionNull(s, ItalianDateTimeExtractor::relativeYesterday);
     }
 
     private void assertHour(final String s, final int expected, int finalTokenStreamPosition) {
@@ -139,12 +141,20 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::hour);
     }
 
-    private void assertSpecialHour(final String s, final int expected, int finalTokenStreamPosition) {
-        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::specialHour);
+    private void assertMomentOfDay(final String s, final int expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::momentOfDay);
     }
 
-    private void assertSpecialHourNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::specialHour);
+    private void assertMomentOfDayNull(final String s) {
+        assertFunctionNull(s, ItalianDateTimeExtractor::momentOfDay);
+    }
+
+    private void assertNoonMidnightLike(final String s, final int expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::noonMidnightLike);
+    }
+
+    private void assertNoonMidnightLikeNull(final String s) {
+        assertFunctionNull(s, ItalianDateTimeExtractor::noonMidnightLike);
     }
 
     private void assertMinute(final String s, final int expected, int finalTokenStreamPosition) {
@@ -262,13 +272,13 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testRelativeDayOfWeekDuration() {
-        assertRelativeDayOfWeekDuration("giovedì prossimo",     t(2, DAYS),   2);
-        assertRelativeDayOfWeekDuration("giovedi scorso",       t(-5, DAYS),  2);
-        assertRelativeDayOfWeekDuration("tra due domeniche si", t(12, DAYS),  3);
-        assertRelativeDayOfWeekDuration("due e domenica e fa",  t(-9, DAYS),  5);
-        assertRelativeDayOfWeekDuration("tre lunedì e prima e", t(-15, DAYS), 4);
-        assertRelativeDayOfWeekDuration("martedì prossimo",     t(7, DAYS),   2);
-        assertRelativeDayOfWeekDuration("un martedì fa",        t(-7, DAYS),   3);
+        assertRelativeDayOfWeekDuration("giovedì prossimo",     2,   2);
+        assertRelativeDayOfWeekDuration("giovedi scorso",       -5,  2);
+        assertRelativeDayOfWeekDuration("tra due domeniche si", 12,  3);
+        assertRelativeDayOfWeekDuration("due e domenica e fa",  -9,  5);
+        assertRelativeDayOfWeekDuration("tre lunedì e prima e", -15, 4);
+        assertRelativeDayOfWeekDuration("martedì prossimo",     7,   2);
+        assertRelativeDayOfWeekDuration("un martedì fa",        -7,  3);
     }
 
     @Test
@@ -283,11 +293,11 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testRelativeTomorrow() {
-        assertRelativeTomorrow("domani andiamo",            t(1, DAYS), 1);
-        assertRelativeTomorrow("dopodomani e",              t(2, DAYS), 2);
-        assertRelativeTomorrow("dopo l'domani test",        t(2, DAYS), 3);
-        assertRelativeTomorrow("dopo e dopodomani e",       t(3, DAYS), 4);
-        assertRelativeTomorrow("dopo dopo dopo dopodomani", t(5, DAYS), 5);
+        assertRelativeTomorrow("domani andiamo",            1, 1);
+        assertRelativeTomorrow("dopodomani e",              2, 2);
+        assertRelativeTomorrow("dopo di domani test",       2, 3);
+        assertRelativeTomorrow("dopo e dopodomani e",       3, 4);
+        assertRelativeTomorrow("dopo dopo dopo dopodomani", 5, 5);
     }
 
     @Test
@@ -319,13 +329,13 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testRelativeYesterday() {
-        assertRelativeYesterday("ieri sono stato",            t(-1, DAYS), 1);
-        assertRelativeYesterday("altro l'ieri test",          t(-2, DAYS), 3);
-        assertRelativeYesterday("ieri l'altro e",             t(-2, DAYS), 3);
-        assertRelativeYesterday("ieri l'altro l'altro",       t(-2, DAYS), 3);
-        assertRelativeYesterday("altro ieri altro",           t(-2, DAYS), 2);
-        assertRelativeYesterday("altroieri",                  t(-2, DAYS), 2);
-        assertRelativeYesterday("altro l'altro l'altro ieri", t(-4, DAYS), 6);
+        assertRelativeYesterday("ieri sono stato",            -1, 1);
+        assertRelativeYesterday("altro l'ieri test",          -2, 3);
+        assertRelativeYesterday("ieri l'altro e",             -2, 3);
+        assertRelativeYesterday("ieri l'altro l'altro",       -2, 3);
+        assertRelativeYesterday("altro ieri altro",           -2, 2);
+        assertRelativeYesterday("altroieri",                  -2, 2);
+        assertRelativeYesterday("altro l'altro l'altro ieri", -4, 6);
     }
 
     @Test
@@ -363,32 +373,68 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
     @Test
-    public void testSpecialHour() {
-        assertSpecialHour("a mezzanotte",       0,  2);
-        assertSpecialHour("mezzo giorno",       12, 2);
-        assertSpecialHour("queste mezze notti", 0,  3);
-        assertSpecialHour("questa sera e",      21, 2);
-        assertSpecialHour("stanotte test",      3,  1);
+    public void testNoonMidnightLike() {
+        assertNoonMidnightLike("a mezzanotte",       0,  2);
+        assertNoonMidnightLike("mezzo giorno",       12, 2);
+        assertNoonMidnightLike("queste mezze notti", 0,  3);
     }
 
     @Test
-    public void testSpecialHourNull() {
-        assertSpecialHourNull("ciao come va");
-        assertSpecialHourNull("e a mezzogiorno");
-        assertSpecialHourNull("mezza è notte");
-        assertSpecialHourNull("la cena");
-        assertSpecialHourNull("alle ore cena");
+    public void testNoonMidnightLikeNull() {
+        assertNoonMidnightLikeNull("ciao come va");
+        assertNoonMidnightLikeNull("questa sera e");
+        assertNoonMidnightLikeNull("stanotte test");
+        assertNoonMidnightLikeNull("dopo cena");
+        assertNoonMidnightLikeNull("prima del pranzo");
+        assertNoonMidnightLikeNull("e a mezzogiorno");
+        assertNoonMidnightLikeNull("mezza è notte");
+        assertNoonMidnightLikeNull("la mezzanotte");
+        assertNoonMidnightLikeNull("alle ore mezzogiorno");
+        assertNoonMidnightLikeNull("fra mezza notte");
+    }
+
+    @Test
+    public void testMomentOfDay() {
+        assertMomentOfDay("a mezzanotte",       0,  2);
+        assertMomentOfDay("mezzo giorno",       12, 2);
+        assertMomentOfDay("queste mezze notti", 0,  3);
+        assertMomentOfDay("questa sera e",      21, 2);
+        assertMomentOfDay("stanotte test",      3,  1);
+        assertMomentOfDay("dopo cena",          21, 2);
+        assertMomentOfDay("prima del pranzo",   11, 3);
+    }
+
+    @Test
+    public void testMomentOfDayNull() {
+        assertMomentOfDayNull("ciao come va");
+        assertMomentOfDayNull("e a mezzogiorno");
+        assertMomentOfDayNull("mezza è notte");
+        assertMomentOfDayNull("la cena");
+        assertMomentOfDayNull("alle ore cena");
+        assertMomentOfDayNull("fra cena");
+    }
+
+    @Test
+    public void testIsMomentOfDayPm() {
+        assertEquals(Boolean.FALSE, isMomentOfDayPm(0));
+        assertEquals(Boolean.FALSE, isMomentOfDayPm(5));
+        assertEquals(Boolean.FALSE, isMomentOfDayPm(11));
+        assertEquals(Boolean.TRUE, isMomentOfDayPm(12));
+        assertEquals(Boolean.TRUE, isMomentOfDayPm(18));
+        assertEquals(Boolean.TRUE, isMomentOfDayPm(24));
+        //noinspection ConstantConditions
+        assertNull(isMomentOfDayPm(null));
     }
 
     @Test
     public void testMinute() {
-        assertMinute("zero a b c",       0,  1);
-        assertMinute("cinquantanove ore",59, 2);
-        assertMinute("quindici e",       15, 1);
-        assertMinute("venti e otto s",   28, 3);
-        assertMinute("sei minuti test",  6,  2);
-        assertMinute("trentasei e min",  36, 2);
-        assertMinute("44m e",            44, 2);
+        assertMinute("zero a b c",        0,  1);
+        assertMinute("cinquantanove ore", 59, 2);
+        assertMinute("quindici e",        15, 1);
+        assertMinute("venti e otto s",    28, 3);
+        assertMinute("sei minuti test",   6,  2);
+        assertMinute("trentasei e min",   36, 2);
+        assertMinute("44m e",             44, 2);
     }
 
     @Test
@@ -424,13 +470,13 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testSecond() {
-        assertSecond("zero a b c",       0,  1);
-        assertSecond("cinquantanove ore",59, 2);
-        assertSecond("quindici e",       15, 1);
-        assertSecond("venti e otto m",   28, 3);
-        assertSecond("sei secondo test", 6,  2);
-        assertSecond("trentasei e sec",  36, 2);
-        assertSecond("44s e",            44, 2);
+        assertSecond("zero a b c",        0,  1);
+        assertSecond("cinquantanove ore", 59, 2);
+        assertSecond("quindici e",        15, 1);
+        assertSecond("venti e otto m",    28, 3);
+        assertSecond("sei secondo test",  6,  2);
+        assertSecond("trentasei e sec",   36, 2);
+        assertSecond("44s e",             44, 2);
     }
 
     @Test
@@ -547,7 +593,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertTime("alle quattordici e",                        LocalTime.of(14, 0,  0),  2);
         assertTime("le ventitre e cinquantun min e 17 secondi", LocalTime.of(23, 51, 17), 10);
         assertTime("mezzanotte del dodici",                     LocalTime.of(0,  12, 0),  3);
-        assertTime("sera",                                      LocalTime.of(21, 0,  0),  1);
         assertTime("ventiquattro e zero",                       LocalTime.of(0,  0,  0),  4);
     }
 

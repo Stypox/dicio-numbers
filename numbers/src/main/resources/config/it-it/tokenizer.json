@@ -156,7 +156,15 @@
       ],
       "values": [
         "le",
-        "l",
+        "l"
+      ]
+    },
+    {
+      "categories": [
+        "pre_hour",
+        "pre_special_hour"
+      ],
+      "values": [
         "alle",
         "all"
       ]
@@ -219,7 +227,8 @@
         "positive",
         "tomorrow_adder",
         "bcad_after",
-        "compound_word_piece"
+        "compound_word_piece",
+        "pre_special_hour"
       ],
       "values": [
         "dopo"
@@ -576,8 +585,10 @@
         "ordinal",
         "digit",
         "compound_word_piece",
+        "pre_relative_indicator",
         "post_relative_indicator",
-        "negative"
+        "negative",
+        "pre_special_hour"
       ],
       "values": {
         "prima": 1
@@ -804,7 +815,17 @@
     },
     {
       "categories": [
-        "special_hour"
+        "noon_midnight_like",
+        "moment_of_day"
+      ],
+      "values": {
+        "mezzogiorno": 12,
+        "mezzanotte": 0
+      }
+    },
+    {
+      "categories": [
+        "moment_of_day"
       ],
       "values": {
         "notte": 3,
@@ -817,15 +838,13 @@
         "stamattina": 9,
         "stamani": 9,
         "stamane": 9,
-        "mezzogiorno": 12,
         "pranzo": 12,
         "cena": 20,
         "pomeriggio": 15,
         "pomeriggi": 15,
         "sera": 21,
         "sere": 21,
-        "stasera": 21,
-        "mezzanotte": 0
+        "stasera": 21
       }
     }
   ],

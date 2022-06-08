@@ -19,9 +19,10 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ItalianDateTimeExtractor {
-    
-    private static final long DAYS_IN_WEEK = DayOfWeek.values().length;
-    private static final long MONTHS_IN_YEAR = Month.values().length;
+
+    private static final int HOURS_IN_DAY = 24;
+    private static final int DAYS_IN_WEEK = DayOfWeek.values().length; // 7
+    private static final int MONTHS_IN_YEAR = Month.values().length; // 12
 
     private final TokenStream ts;
     private final LocalDateTime now;
@@ -44,7 +45,8 @@ public class ItalianDateTimeExtractor {
 
 
     LocalTime time() {
-        final Integer hour = firstNotNull(this::specialHour, this::hour);
+        // try both with a normal hour and with "mezzogiorno"/"mezzanotte"
+        final Integer hour = firstNotNull(this::noonMidnightLike, this::hour);
         if (hour == null) {
             return null;
         }
@@ -219,28 +221,53 @@ public class ItalianDateTimeExtractor {
     }
 
 
-    Integer specialHour() {
+    static Boolean isMomentOfDayPm(final Integer momentOfDay) {
+        if (momentOfDay == null) {
+            return null;
+        }
+        return momentOfDay >= 12;
+    }
+
+    Integer noonMidnightLike() {
+        return noonMidnightLikeOrMomentOfDay("noon_midnight_like");
+    }
+
+    Integer momentOfDay() {
+        // noon_midnight_like is a part of moment_of_day, so noon and midnight are included
+        return noonMidnightLikeOrMomentOfDay("moment_of_day");
+    }
+
+    private Integer noonMidnightLikeOrMomentOfDay(final String category) {
         int originalPosition = ts.getPosition();
 
+        int relativeIndicator = 0; // 0 = not found, otherwise the sign, +1 or -1
         if (ts.get(0).hasCategory("pre_special_hour")) {
-            // found a word that usually comes before special hours, e.g. questo
-            ts.movePositionForwardBy(1);
+            // found a word that usually comes before special hours, e.g. questo, dopo
+            if (ts.get(0).hasCategory("pre_relative_indicator")) {
+                relativeIndicator = ts.get(0).hasCategory("negative") ? -1 : 1;
+                // only move to next not ignore if we got a relative indicator
+                ts.movePositionForwardBy(ts.indexOfWithoutCategory("date_time_ignore", 1));
+            } else {
+                ts.movePositionForwardBy(1);
+            }
         }
 
-        if (ts.get(0).hasCategory("special_hour")) {
+        if (ts.get(0).hasCategory(category)) {
             // special hour found, e.g. mezzanotte, sera, pranzo
             ts.movePositionForwardBy(1);
-            return (int) ts.get(-1).getNumber().integerValue();
+            return ((int) ts.get(-1).getNumber().integerValue() + HOURS_IN_DAY + relativeIndicator)
+                    % HOURS_IN_DAY;
         }
 
+        // noon/midnight have both the categores noon_midnight_like and moment_of_day, always try
         if (ts.get(0).getValue().startsWith("mezz")) {
             // sometimes e.g. "mezzogiorno" is split into "mezzo giorno"
             if (ts.get(1).getValue().startsWith("giorn")) {
                 ts.movePositionForwardBy(2);
-                return 12;
+                return 12 + relativeIndicator;
             } else if (ts.get(1).getValue().startsWith("nott")) {
                 ts.movePositionForwardBy(2);
-                return 0;
+                return (HOURS_IN_DAY + relativeIndicator) % HOURS_IN_DAY;
             }
         }
 
@@ -255,7 +282,7 @@ public class ItalianDateTimeExtractor {
         // skip words that usually come before hours, e.g. alle, ore
         ts.movePositionForwardBy(ts.indexOfWithoutCategory("pre_hour", 0));
 
-        final Integer number = extractIntegerInRange(0, 24);
+        final Integer number = extractIntegerInRange(0, HOURS_IN_DAY);
         if (number == null) {
             // no number found, or the number is not a valid hour, e.g. le ventisei
             ts.setPosition(originalPosition);
@@ -263,15 +290,20 @@ public class ItalianDateTimeExtractor {
         }
 
         // found hour, e.g. alle diciannove
-        return number % 24; // transform 24 into 0
+        return number % HOURS_IN_DAY; // transform 24 into 0
     }
 
 
-    private Duration relativeSpecialDay() {
-        return firstNotNull(this::relativeYesterday, this::relativeToday, this::relativeTomorrow);
+    private LocalDate relativeSpecialDay() {
+        final Integer days = firstNotNull(this::relativeYesterday, this::relativeToday,
+                this::relativeTomorrow, this::relativeDayOfWeekDuration);
+        if (days == null) {
+            return null;
+        }
+        return now.toLocalDate().plusDays(days);
     }
 
-    Duration relativeYesterday() {
+    Integer relativeYesterday() {
         int originalPosition = ts.getPosition();
 
         // collect as many adders ("altro") preceding yesterday ("ieri") as possible
@@ -297,19 +329,19 @@ public class ItalianDateTimeExtractor {
         }
 
         // found relative yesterday, e.g. altro altro ieri, ieri l'altro
-        return new Duration().plus(new Number(-dayCount), ChronoUnit.DAYS);
+        return -dayCount;
     }
 
-    Duration relativeToday() {
+    Integer relativeToday() {
         if (ts.get(0).hasCategory("today")) {
             ts.movePositionForwardBy(1);
-            return new Duration(); // no offset
+            return 0; // no offset
         } else {
             return null;
         }
     }
 
-    Duration relativeTomorrow() {
+    Integer relativeTomorrow() {
         int originalPosition = ts.getPosition();
 
         // collect as many "dopo" preceding "domani" as possible
@@ -328,10 +360,10 @@ public class ItalianDateTimeExtractor {
         ++dayCount;
 
         // found relative tomorrow, e.g. domani, dopo dopo domani
-        return new Duration().plus(new Number(dayCount), ChronoUnit.DAYS);
+        return dayCount;
     }
 
-    Duration relativeDayOfWeekDuration() {
+    Integer relativeDayOfWeekDuration() {
         return relativeIndicatorDuration(() -> {
             Integer number = extractIntegerInRange(1, Integer.MAX_VALUE);
             if (number == null) {
@@ -344,28 +376,24 @@ public class ItalianDateTimeExtractor {
 
             if (ts.get(0).hasCategory("day_of_week")) {
                 // found a day of week, e.g. giovedì
-                final long daysDifference
-                        = ts.get(0).getNumber().integerValue() - now.getDayOfWeek().ordinal();
-                final long daysOffset = (daysDifference + DAYS_IN_WEEK) % DAYS_IN_WEEK
+                final int daysDifference
+                        = (int) ts.get(0).getNumber().integerValue() - now.getDayOfWeek().ordinal();
+                final int daysOffset = (daysDifference + DAYS_IN_WEEK) % DAYS_IN_WEEK
                         // add a week if the two days coincide
                         + (daysDifference == 0 ? DAYS_IN_WEEK : 0)
                         // sum some additional weeks if the input says so
                         + (number - 1) * DAYS_IN_WEEK;
                 ts.movePositionForwardBy(1);
-                return new Duration().plus(new Number(daysOffset), ChronoUnit.DAYS);
+                return daysOffset;
             } else {
                 return null;
             }
 
-        }, duration -> {
-            final long daysOffset = duration.getDays().integerValue();
-            final long newDaysOffset = daysOffset % DAYS_IN_WEEK == 0
-                    // the congruency modulo DAYS_IN_WEEK is 0: just use a minus to maintain it
-                    ? -daysOffset
-                    // keep congruency modulo DAYS_IN_WEEK, taking care of additional weeks
-                    : 2 * (daysOffset % DAYS_IN_WEEK) - DAYS_IN_WEEK - daysOffset;
-            return new Duration().plus(new Number(newDaysOffset), ChronoUnit.DAYS);
-        });
+        }, daysOffset -> daysOffset % DAYS_IN_WEEK == 0
+                // the congruency modulo DAYS_IN_WEEK is 0: just use a minus to maintain it
+                ? -daysOffset
+                // keep congruency modulo DAYS_IN_WEEK, taking care of additional weeks
+                : 2 * (daysOffset % DAYS_IN_WEEK) - DAYS_IN_WEEK - daysOffset);
     }
 
     Duration relativeMonthDuration() {
@@ -397,9 +425,8 @@ public class ItalianDateTimeExtractor {
                 duration -> duration.multiply(new Number(-1)));
     }
 
-    private Duration relativeIndicatorDuration(
-            final Supplier<Duration> durationExtractor,
-            final Function<Duration, Duration> oppositeDuration) {
+    private <T> T relativeIndicatorDuration(final Supplier<T> durationExtractor,
+                                            final Function<T, T> oppositeDuration) {
         final int originalTsPosition = ts.getPosition();
 
         int relativeIndicator = 0; // 0 = not found, otherwise the sign, +1 or -1
@@ -409,7 +436,7 @@ public class ItalianDateTimeExtractor {
             ts.movePositionForwardBy(ts.indexOfWithoutCategory("date_time_ignore", 1));
         }
 
-        final Duration result = durationExtractor.get();
+        final T result = durationExtractor.get();
         if (result == null) {
             // no duration found, e.g. tra sei ciao
             ts.setPosition(originalTsPosition);
