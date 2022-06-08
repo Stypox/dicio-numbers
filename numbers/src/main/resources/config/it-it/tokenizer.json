@@ -110,7 +110,8 @@
     },
     {
       "categories": [
-        "duration_separator"
+        "duration_separator",
+        "date_time_ignore"
       ],
       "values": [
         "di"
@@ -885,7 +886,8 @@
       "giorno",
       "giorni",
       "giornata",
-      "giornate"
+      "giornate",
+      "gg"
     ],
     "1 WEEKS": [
       "settimana",
@@ -919,6 +921,7 @@
     "ms",
     "s",
     "m",
-    "h"
+    "h",
+    "gg"
   ]
 }
