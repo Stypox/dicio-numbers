@@ -44,6 +44,59 @@ public class ItalianDateTimeExtractor {
     }
 
 
+    LocalDateTime dateTime() {
+        // first try preferring having a date first, then try with time first
+        return ts.firstWhichUsesMostTokens(() -> dateTime(false), () -> dateTime(true));
+    }
+
+    private LocalDateTime dateTime(final boolean timeFirst) {
+        LocalDate date = null;
+        LocalTime time = null;
+
+        if (!timeFirst) {
+            final Duration duration
+                    = firstNotNull(this::relativeDuration, this::relativeMonthDuration);
+            if (duration == null) {
+                // no normal relative duration found: start extracting a date normally
+                date = firstNotNull(this::relativeSpecialDay, this::date);
+            } else if (duration.getNanos().equals(0) && !duration.getDays().equals(0)) {
+                // duration contains a specified day and no specified time, so a time can follow
+                date = duration.applyAsOffsetToDateTime(now).toLocalDate();
+            } else if (!duration.getNanos().equals(0) && duration.getDays().equals(0)
+                    && duration.getMonths().equals(0) && duration.getYears().equals(0)) {
+                // duration contains a specified time, so a date could follow
+                time = duration.applyAsOffsetToDateTime(now).toLocalTime();
+            } else if (duration.getNanos().equals(0)) {
+                // duration contains mixed date&time, or specifies units >=month, nothing can follow
+                return duration.applyAsOffsetToDateTime(now);
+            }
+        }
+
+        if (time == null) {
+            time = ts.tryOrSkipDateTimeIgnore(date != null, this::timeWithAmpm);
+        }
+
+        if (date == null && time != null) {
+            // try to extract a date after the time
+            final int originalPosition = ts.getPosition();
+            final Duration duration = ts.tryOrSkipDateTimeIgnore(true, this::relativeDuration);
+            if (duration == null) {
+                date = ts.tryOrSkipDateTimeIgnore(true,
+                        () -> firstNotNull(this::relativeSpecialDay, this::date));
+            } else if (duration.getNanos().equals(0) && !duration.getDays().equals(0)) {
+                date = duration.applyAsOffsetToDateTime(now).toLocalDate();
+            } else {
+                ts.setPosition(originalPosition);
+            }
+        }
+
+        if (date == null) {
+            return time == null ? null : time.atDate(now.toLocalDate());
+        } else {
+            return time == null ? date.atTime(now.toLocalTime()) : date.atTime(time);
+        }
+    }
+
     LocalTime timeWithAmpm() {
         LocalTime time = time();
         Boolean pm;

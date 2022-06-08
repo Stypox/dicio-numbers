@@ -237,6 +237,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::timeWithAmpm);
     }
 
+    private void assertDateTime(final String s, final LocalDateTime expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::dateTime);
+    }
+
+    private void assertDateTimeNull(final String s) {
+        assertFunctionNull(s, ItalianDateTimeExtractor::dateTime);
+    }
+
 
     @Test
     public void testRelativeDuration() {
@@ -634,5 +642,33 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertTimeWithAmpmNull("30:59");
         assertTimeWithAmpmNull("meno sedici");
         assertTimeWithAmpmNull("quattro milioni");
+    }
+
+    @Test
+    public void testDateTime() {
+        assertDateTime("domani alle 12:45",                                LocalDateTime.of(2022, 5,  11, 12, 45, 0),  4);
+        assertDateTime("26/12/2003 19:18:59",                              LocalDateTime.of(2003, 12, 26, 19, 18, 59), 8);
+        assertDateTime("19:18:59 26/12/2003",                              LocalDateTime.of(2003, 12, 26, 19, 18, 59), 8);
+        assertDateTime("lunedì prossimo alle ventidue",                    LocalDateTime.of(2022, 5,  16, 22, 0,  0),  5);
+        assertDateTime("le 6 post meridiem di martedì prossimo",           LocalDateTime.of(2022, 5,  17, 18, 0,  0),  7);
+        assertDateTime("ventisette luglio alle nove e trentanove di sera", LocalDateTime.of(2022, 7,  27, 21, 39, 0),  10);
+        assertDateTime("ieri sera alle 5 e mezza",                         LocalDateTime.of(2022, 5,  9,  17, 30, 0),  6);
+        assertDateTime("domani sera alle undici",                          LocalDateTime.of(2022, 5,  11, 23, 0,  0),  4);
+        assertDateTime("ieri e mattina test",                              LocalDateTime.of(2022, 5,  9,  9,  0,  0),  3);
+        assertDateTime("domenica alle 2:45 p.m.",                          LocalDateTime.of(2022, 5,  15, 14, 45, 0),  7);
+        assertDateTime("ventun gennaio dopo la cena",                      LocalDateTime.of(2022, 1,  21, 21, 0,  0),  6);
+        assertDateTime("fra due giorni alle quattro e 40 di pomeriggio",   LocalDateTime.of(2022, 5,  12, 16, 40, 0),  9);
+        assertDateTime("ventitre millisecondi",     NOW.withDayOfMonth(23),  2);
+        assertDateTime("fra tre mesi",              NOW.plusMonths(3),       3);
+        assertDateTime("in quindici gg",            NOW.plusDays(15),        3);
+        assertDateTime("trenta due nanosecondi fa", NOW.minusNanos(32),      4);
+        assertDateTime("sette novembre del 193 a.C.", NOW.withYear(-193).withMonth(11).withDayOfMonth(7), 7);
+    }
+
+    @Test
+    public void testDateTimeNull() {
+        assertDateTimeNull("ciao come va");
+        assertDateTimeNull("il ventun gennaio dopo cena");
+        assertDateTimeNull("meno centotre millisecondi");
     }
 }
