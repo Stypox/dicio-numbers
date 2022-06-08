@@ -82,4 +82,23 @@ public class TokenStream {
     public <T> T tryOrSkipDateTimeIgnore(final boolean doTrySkipping, final Supplier<T> function) {
         return tryOrSkipCategory("date_time_ignore", doTrySkipping, function);
     }
+
+    @SafeVarargs
+    public final <T> T firstWhichUsesMostTokens(final Supplier<T>... suppliers) {
+        final int originalPosition = getPosition();
+        T bestResult = null;
+        int bestPosition = originalPosition;
+
+        for (final Supplier<T> supplier : suppliers) {
+            setPosition(originalPosition);
+            final T result = supplier.get();
+            if (result != null && getPosition() > bestPosition) {
+                bestResult = result;
+                bestPosition = getPosition();
+            }
+        }
+
+        setPosition(bestPosition);
+        return bestResult;
+    }
 }
