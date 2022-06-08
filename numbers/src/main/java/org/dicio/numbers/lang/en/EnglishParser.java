@@ -6,7 +6,6 @@ import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.util.DurationExtractorUtils;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 public class EnglishParser extends NumberParser {
@@ -34,9 +33,7 @@ public class EnglishParser extends NumberParser {
     }
 
     @Override
-    public LocalDateTime extractDateTime(final String utterance,
-                                         final boolean anchorDate,
-                                         final LocalTime defaultTime) {
+    public LocalDateTime extractDateTime(final String utterance, LocalDateTime now) {
         return null;
     }
 }
