@@ -1,7 +1,5 @@
 package org.dicio.numbers.parser.lexer;
 
-import org.dicio.numbers.unit.Number;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -133,5 +131,16 @@ public class TokenStream {
         }
 
         return textAndObjects;
+    }
+
+    public <T> T extractEarliestNotNull(final Supplier<T> supplier) {
+        while (!finished()) {
+            final T result = supplier.get();
+            if (result != null) {
+                return result;
+            }
+            movePositionForwardBy(1);
+        }
+        return null;
     }
 }
