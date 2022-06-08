@@ -44,6 +44,37 @@ public class ItalianDateTimeExtractor {
     }
 
 
+    LocalTime timeWithAmpm() {
+        LocalTime time = time();
+        Boolean pm;
+        if (time == null) {
+            // if there is no time, maybe there is a moment of day (not am/pm though) preceding?
+            final Integer momentOfDay = momentOfDay();
+            if (momentOfDay == null) {
+                return null;
+            }
+
+            time = ts.tryOrSkipDateTimeIgnore(true, this::time);
+            if (time == null) {
+                // found moment of day without a specific time
+                return LocalTime.of(momentOfDay, 0);
+            } else {
+                // use moment of day before time to determine am/pm
+                pm = isMomentOfDayPm(momentOfDay);
+            }
+        } else {
+            // found a time, now look for am/pm or a moment of day
+            pm = ts.tryOrSkipDateTimeIgnore(true,
+                    () -> firstNotNull(this::ampm, () -> isMomentOfDayPm(momentOfDay())));
+        }
+
+        if (pm != null && pm && !isMomentOfDayPm(time.getHour())) {
+            // time must be in the afternoon, but time is not already in the afternoon, correct it
+            time = time.withHour((time.getHour() + 12) % HOURS_IN_DAY);
+        }
+        return time;
+    }
+
     LocalTime time() {
         // try both with a normal hour and with "mezzogiorno"/"mezzanotte"
         final Integer hour = firstNotNull(this::noonMidnightLike, this::hour);

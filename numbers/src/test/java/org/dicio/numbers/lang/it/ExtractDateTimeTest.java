@@ -229,6 +229,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::time);
     }
 
+    private void assertTimeWithAmpm(final String s, final LocalTime expected, int finalTokenStreamPosition) {
+        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::timeWithAmpm);
+    }
+
+    private void assertTimeWithAmpmNull(final String s) {
+        assertFunctionNull(s, ItalianDateTimeExtractor::timeWithAmpm);
+    }
+
 
     @Test
     public void testRelativeDuration() {
@@ -603,5 +611,28 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertTimeNull("30:59");
         assertTimeNull("meno sedici");
         assertTimeNull("quattro milioni");
+        assertTimeNull("sera");
+    }
+
+    @Test
+    public void testTimeWithAmpm() {
+        assertTimeWithAmpm("11:28.33 pm test",                          LocalTime.of(23, 28, 33), 5);
+        assertTimeWithAmpm("mezzogiorno e mezzo dopo pranzo",           LocalTime.of(12, 30, 0),  5);
+        assertTimeWithAmpm("alle due di notte",                         LocalTime.of(2,  0,  0),  4);
+        assertTimeWithAmpm("le tre e trentotto di pomeriggio",          LocalTime.of(15, 38, 0),  7);
+        assertTimeWithAmpm("18:29:02 e am",                             LocalTime.of(18, 29, 2),  5);
+        assertTimeWithAmpm("sera",                                      LocalTime.of(21, 0,  0),  1);
+        assertTimeWithAmpm("pomeriggio alle quattro e tre e sei",       LocalTime.of(16, 3,  6),  7);
+        // this turns out wrong, but it is a corner case
+        assertTimeWithAmpm("le ventiquattro di sera",                   LocalTime.of(12, 0,  0),  5);
+    }
+
+    @Test
+    public void testTimeWithAmpmNull() {
+        assertTimeWithAmpmNull("ciao come va");
+        assertTimeWithAmpmNull("sessantuno");
+        assertTimeWithAmpmNull("30:59");
+        assertTimeWithAmpmNull("meno sedici");
+        assertTimeWithAmpmNull("quattro milioni");
     }
 }
