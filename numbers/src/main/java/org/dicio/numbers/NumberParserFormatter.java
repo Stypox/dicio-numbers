@@ -11,9 +11,9 @@ import org.dicio.numbers.formatter.param.PronounceNumberParameters;
 import org.dicio.numbers.parser.NumberParser;
 import org.dicio.numbers.parser.param.ExtractDurationParams;
 import org.dicio.numbers.parser.param.ExtractNumberParams;
+import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.MixedFraction;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

@@ -1,8 +1,7 @@
 package org.dicio.numbers.formatter.param;
 
 import org.dicio.numbers.formatter.NumberFormatter;
-
-import java.time.Duration;
+import org.dicio.numbers.unit.Duration;
 
 public class NiceDurationParameters {
     // TODO documentation

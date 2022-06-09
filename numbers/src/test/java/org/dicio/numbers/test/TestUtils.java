@@ -66,7 +66,11 @@ public class TestUtils {
         if (duration.isNegative()) {
             return "minus " + niceDuration(duration.negated());
         } else {
-            return new EnglishFormatter().niceDuration(duration, true);
+            return new EnglishFormatter().niceDuration(
+                    new org.dicio.numbers.unit.Duration()
+                            .plus(new Number(duration.getNano()), ChronoUnit.NANOS)
+                            .plus(new Number(duration.getSeconds()), ChronoUnit.SECONDS),
+                    true);
         }
     }
 }

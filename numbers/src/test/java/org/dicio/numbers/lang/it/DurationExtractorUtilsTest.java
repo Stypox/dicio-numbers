@@ -15,8 +15,11 @@ import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.DurationExtractorUtilsTestBase;
 import org.dicio.numbers.unit.Duration;
+import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.DurationExtractorUtils;
 import org.junit.Test;
+
+import java.time.temporal.ChronoUnit;
 
 /**
  * TODO also test extractDurationAtCurrentPosition
@@ -108,7 +111,7 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
         // TODO there are no fractions of second here since the formatter does not support them
         final java.time.Duration[] alternatives = {
                 t(1), t(5 * MINUTE), t(2 * HOUR), t(16 * DAY), t(WEEK), t(3 * MONTH), t(5 * YEAR),
-                t(1e9 * YEAR), t(17 * WEEK), t(45)
+                t(1e8 * YEAR), t(17 * WEEK), t(45)
         };
 
         final NumberParserFormatter npf = new NumberParserFormatter(new ItalianFormatter(), null);
@@ -120,7 +123,11 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
                 }
             }
 
-            final String formatted = npf.niceDuration(durationToTest).get();
+            final String formatted = npf.niceDuration(
+                    new Duration()
+                            .plus(new Number(durationToTest.getSeconds()), ChronoUnit.SECONDS)
+                            .plus(new Number(durationToTest.getNano()), ChronoUnit.NANOS)
+            ).get();
             final TokenStream ts = new TokenStream(tokenizer.tokenize(formatted));
             assertDuration(formatted, ts, true, durationToTest); // short scale is unused in italian
             assertTrue(ts.finished());
