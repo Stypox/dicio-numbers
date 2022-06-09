@@ -6,7 +6,6 @@ import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.function.BiFunction;
 
 import static org.dicio.numbers.test.TestUtils.F;
@@ -29,7 +28,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
                                       final int finalTokenStreamPosition,
                                       final BiFunction<EnglishNumberExtractor, TokenStream, Number> numberFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Number number = numberFunction.apply(new EnglishNumberExtractor(ts, shortScale, false), ts);
+        final Number number = numberFunction.apply(new EnglishNumberExtractor(ts, shortScale), ts);
         assertEquals("wrong value for string " + s, value, number);
         assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
     }
@@ -83,15 +82,6 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertNumberFunction(s, true, value, finalTokenStreamPosition,
                 (enp, ts) -> enp.divideByDenominatorIfPossible(startingNumber));
     }
-
-    private void assertExtractNumbers(final String s, final boolean shortScale, final boolean preferOrdinal, final Object... results) {
-        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final List<Object> objects = new EnglishNumberExtractor(ts, shortScale, preferOrdinal)
-                .extractNumbers();
-        assertArrayEquals("Invalid result array: " + objects.toString(), results, objects.toArray());
-        assertTrue(ts.finished());
-    }
-
 
 
     @Test
@@ -392,31 +382,5 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertDivideByDenominatorIfPossible("a ten",     null,       null,      0);
         assertDivideByDenominatorIfPossible("a people",  null,       null,      0);
         assertDivideByDenominatorIfPossible("a tenth",   n(2.8, F),  n(2.8, F), 0);
-    }
-
-    @Test
-    public void testExtractNumbers() {
-        assertExtractNumbers(" hello  ciao!, 3/5 or four sevenths?", T, F, " hello  ciao!, ", n(3.0 / 5.0, F), " or ", n(4.0 / 7.0, F), "?");
-        assertExtractNumbers(" hello  ciao!, four sevenths or 3/5?", T, T, " hello  ciao!, ", n(4.0 / 7.0, F), " or ", n(3.0 / 5.0, F), "?");
-        assertExtractNumbers("three billionth plus two",             T, T, n(3000000000L, T),           " ",       n(2, F));
-        assertExtractNumbers("one billionth and sixteen sixty four", T, F, n(1.0 / 1000000000.0, F),    " and ",   n(1664, F));
-        assertExtractNumbers("two billionths minus fifty eight",     F, T, n(2000000000000L, T),        " ",       n(-58, F));
-        assertExtractNumbers("nine billionths times eleven",         F, F, n(9.0 / 1000000000000.0, F), " times ", n(11, F));
-        assertExtractNumbers("three halves, not eleven quarters",    F, T, n(3.0 / 2.0, F), ", not ", n(11.0 / 4.0, F));
-        assertExtractNumbers("six pairs equals a dozen ",            F, T, n(12, F), " equals ", n(12, F), " ");
-        assertExtractNumbers("a dozen scores is not a gross",        F, T, n(240, F), " is not ", n(144, F));
-        assertExtractNumbers("6 quadrillionths of a cake",           F, T, n(6e24, T), " of a cake");
-        assertExtractNumbers("is nineteen sixty four quadrillionth", F, F, "is ", n(1964e-24, F));
-    }
-
-    @Test
-    public void testNumberParserExtractNumbers() {
-        final NumberParserFormatter npf
-                = new NumberParserFormatter(null, new EnglishParser());
-        assertArrayEquals(new Object[] {"I'm ", new Number(23), " years old."}, npf.extractNumbers("I'm twenty three years old.").get().toArray());
-        assertArrayEquals(new Object[] {"The ", new Number(1e30).setOrdinal(true)}, npf.extractNumbers("The quintillionth").shortScale(false).get().toArray());
-        assertArrayEquals(new Object[] {new Number(1e-18)}, npf.extractNumbers("One quintillionth").preferOrdinal(false).get().toArray());
-        assertArrayEquals(new Object[] {new Number(1000000000000000000L).setOrdinal(true)}, npf.extractNumbers("One quintillionth").preferOrdinal(true).get().toArray());
-        assertArrayEquals(new Object[] {new Number(1000000000000L)}, npf.extractNumbers("One billion").shortScale(false).preferOrdinal(true).get().toArray());
     }
 }
