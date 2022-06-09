@@ -244,16 +244,14 @@ public class ItalianDateTimeExtractor {
             result = false;
         } else if (ts.get(-1).hasCategory(prefix + "_after")) {
             result = true;
-        } else if (ts.get(-1).hasCategory(prefix + "_identifier")
-                || ts.get(-1).hasCategory(prefix + "_before_combined")) {
-            // identifier without no preceding before/after, or found found am or bc in a single
-            // word -> return "before" (a.m. or B.C.)
+        } else if (ts.get(-1).hasCategory(prefix + "_before_combined")) {
+            // found am or bc in a single word -> return "before"
             return false;
         } else if (ts.get(-1).hasCategory(prefix + "_after_combined")) {
             // found pm or ad in a single word -> return "after"
             return true;
         } else {
-            // nothing related to bc/ad/am/pm here
+            // nothing related to bc/ad/am/pm here (even if the identifier might match on its own)
             ts.movePositionForwardBy(-1);
             return null;
         }

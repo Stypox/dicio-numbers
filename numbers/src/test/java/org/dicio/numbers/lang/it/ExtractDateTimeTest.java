@@ -512,7 +512,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertBcad("d.C. e",      true,  3);
         assertBcad("dc test e",   true,  1);
         assertBcad("dopo Cristo", true,  2);
-        assertBcad("c test",      false, 1);
         assertBcad("a e Cristo",  false, 3);
     }
 
@@ -523,6 +522,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertBcadNull("e avanti Cristo");
         assertBcadNull("test c");
         assertBcadNull("m");
+        assertBcadNull("c test");
     }
 
     @Test
@@ -531,7 +531,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertAmpm("p.m. e",         true,  3);
         assertAmpm("am e test",      false, 1);
         assertAmpm("post meridiano", true,  2);
-        assertAmpm("meridian test",  false, 1);
         assertAmpm("p e meridiem",   true,  3);
     }
 
@@ -543,6 +542,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertAmpmNull("test m");
         assertAmpmNull("c");
         assertAmpmNull("aem");
+        assertAmpmNull("meridian test");
     }
 
     @Test
