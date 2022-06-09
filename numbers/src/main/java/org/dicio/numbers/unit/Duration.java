@@ -139,6 +139,11 @@ public class Duration {
     }
 
 
+    @Override
+    public String toString() {
+        return toJavaDuration().toString();
+    }
+
     public java.time.Duration toJavaDuration() {
         return multiplyDurationBy(ChronoUnit.NANOS, nanos)
                 .plus(multiplyDurationBy(ChronoUnit.DAYS, days))
