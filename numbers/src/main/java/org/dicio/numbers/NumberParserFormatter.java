@@ -9,6 +9,8 @@ import org.dicio.numbers.formatter.param.NiceTimeParameters;
 import org.dicio.numbers.formatter.param.NiceYearParameters;
 import org.dicio.numbers.formatter.param.PronounceNumberParameters;
 import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.lexer.TokenStream;
+import org.dicio.numbers.parser.param.ExtractDateTimeParams;
 import org.dicio.numbers.parser.param.ExtractDurationParams;
 import org.dicio.numbers.parser.param.ExtractNumberParams;
 import org.dicio.numbers.unit.Duration;
@@ -154,9 +156,9 @@ public final class NumberParserFormatter {
      * parsed as "I am ", 23, " years old".
      *
      * @param utterance the text to extract numbers from
-     * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberParser#extractNumbers(String, boolean, boolean)}. See {@link
-     *         ExtractNumberParams}.
+     * @return an instance of a utility class that enables customizing various parameters and then
+     *         allows calling {@link NumberParser#extractNumber(TokenStream, boolean, boolean)} in
+     *         multiple ways. See {@link ExtractNumberParams}.
      */
     public ExtractNumberParams extractNumber(final String utterance) {
         return new ExtractNumberParams(parser, utterance);
@@ -164,16 +166,27 @@ public final class NumberParserFormatter {
 
     /**
      * Used to extract a duration from a string. For example, "Set a timer for three minutes and
-     * five seconds" would be parsed as 185 seconds. If the user said multiple durations not next to
-     * one another inside the string, only the first one will be returned. For example, "400 days
-     * are more than one year" would be parsed only as 365 days.
+     * five seconds" would be parsed as "Set a timer for ", 185 seconds.
      *
      * @param utterance the text to extract a duration from
-     * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberParser#extractDuration(String, boolean)}. See {@link
-     *         ExtractDurationParams}.
+     * @return an instance of a utility class that enables customizing various parameters and then
+     *         allows calling {@link NumberParser#extractDuration(TokenStream, boolean)} in multiple
+     *         ways. See {@link ExtractDurationParams}.
      */
     public ExtractDurationParams extractDuration(final String utterance) {
         return new ExtractDurationParams(parser, utterance);
+    }
+
+    /**
+     * Used to extract a date&time from a string. For example, "Set an alarm at five p.m." would be
+     * parsed as "Set an alarm ", today at 5 PM.
+     *
+     * @param utterance the text to extract a date&time from
+     * @return an instance of a utility class that enables customizing various parameters and then
+     *         allows calling {@link NumberParser#extractDateTime(TokenStream, LocalDateTime)} in
+     *         multiple ways. See {@link ExtractDateTimeParams}.
+     */
+    public ExtractDateTimeParams extractDateTime(final String utterance) {
+        return new ExtractDateTimeParams(parser, utterance);
     }
 }
