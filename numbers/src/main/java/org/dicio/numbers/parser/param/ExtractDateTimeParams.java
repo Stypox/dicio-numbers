@@ -1,20 +1,18 @@
 package org.dicio.numbers.parser.param;
 
 import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.lexer.TokenStream;
 
 import java.time.LocalDateTime;
+import java.util.function.Supplier;
 
-public class ExtractDateTimeParams {
+public class ExtractDateTimeParams extends NumberParserParams<LocalDateTime> {
     // TODO documentation
-    private final NumberParser numberParser;
-    private final String utterance;
-
     // default values
     private LocalDateTime now = LocalDateTime.now();
 
     public ExtractDateTimeParams(final NumberParser numberParser, final String utterance) {
-        this.numberParser = numberParser;
-        this.utterance = utterance;
+        super(numberParser, utterance);
     }
 
     public ExtractDateTimeParams now(final LocalDateTime now) {
@@ -22,7 +20,8 @@ public class ExtractDateTimeParams {
         return this;
     }
 
-    public LocalDateTime get() {
-        return numberParser.extractDateTime(utterance, now);
+    @Override
+    protected Supplier<LocalDateTime> getExtractorAtCurrentPosition(final TokenStream tokenStream) {
+        return numberParser.extractDateTime(tokenStream, now);
     }
 }

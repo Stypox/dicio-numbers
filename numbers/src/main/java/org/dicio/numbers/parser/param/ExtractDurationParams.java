@@ -1,18 +1,18 @@
 package org.dicio.numbers.parser.param;
 
 import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Duration;
 
-public class ExtractDurationParams {
-    private final NumberParser numberParser;
-    private final String utterance;
+import java.util.function.Supplier;
 
+public class ExtractDurationParams extends NumberParserParams<Duration> {
+    // TODO documentation
     // default values
     private boolean shortScale = true;
 
     public ExtractDurationParams(final NumberParser numberParser, final String utterance) {
-        this.numberParser = numberParser;
-        this.utterance = utterance;
+        super(numberParser, utterance);
     }
 
     /**
@@ -28,13 +28,8 @@ public class ExtractDurationParams {
         return this;
     }
 
-    /**
-     * Calls {@link NumberParser#extractDuration(String, boolean)} with
-     * the stored parameters.
-     *
-     * @return the duration contained in the utterance, or null if there is no duration
-     */
-    public Duration get() {
-        return numberParser.extractDuration(utterance, shortScale);
+    @Override
+    protected Supplier<Duration> getExtractorAtCurrentPosition(final TokenStream tokenStream) {
+        return numberParser.extractDuration(tokenStream, shortScale);
     }
 }

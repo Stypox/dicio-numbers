@@ -21,11 +21,11 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
     public void testNumberParserExtractDuration() {
         final NumberParserFormatter npf
                 = new NumberParserFormatter(null, new ItalianParser());
-        assertNull(npf.extractDuration("ciao come stai?").get());
-        assertNull(npf.extractDuration("un miliardo di euro").shortScale(true).get());
-        assertNull(npf.extractDuration("un milione").shortScale(false).get());
-        assertEquals(t(DAY), npf.extractDuration("ventiquattro ore non sono due giorni").get().toJavaDuration());
-        assertEquals(t(2 * DAY), npf.extractDuration("due giorni non sono ventiquattro ore").get().toJavaDuration());
-        assertEquals(t(3 * MONTH + 2 * DAY), npf.extractDuration("tre mesi e due giorni").get().toJavaDuration());
+        assertNull(npf.extractDuration("ciao come stai?").getFirst());
+        assertNull(npf.extractDuration("un miliardo di euro").shortScale(true).getFirst());
+        assertNull(npf.extractDuration("un milione").shortScale(false).getFirst());
+        assertEquals(t(DAY), npf.extractDuration("ventiquattro ore non sono due giorni").getFirst().toJavaDuration());
+        assertEquals(t(2 * DAY), npf.extractDuration("due giorni non sono ventiquattro ore").getFirst().toJavaDuration());
+        assertEquals(t(3 * MONTH + 2 * DAY), npf.extractDuration("tre mesi e due giorni").getFirst().toJavaDuration());
     }
 }

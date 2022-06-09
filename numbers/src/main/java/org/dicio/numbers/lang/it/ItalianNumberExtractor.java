@@ -4,26 +4,14 @@ import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.NumberExtractorUtils;
 
-import java.util.List;
-
 import static org.dicio.numbers.util.NumberExtractorUtils.*;
 
 public class ItalianNumberExtractor {
 
     private final TokenStream ts;
-    private final boolean preferOrdinal;
 
-    ItalianNumberExtractor(final TokenStream tokenStream, final boolean preferOrdinal) {
+    ItalianNumberExtractor(final TokenStream tokenStream) {
         this.ts = tokenStream;
-        this.preferOrdinal = preferOrdinal;
-    }
-
-    public List<Object> extractNumbers() {
-        if (preferOrdinal) {
-            return ts.extractMixedTextAndObjects(this::numberPreferOrdinal);
-        } else {
-            return ts.extractMixedTextAndObjects(this::numberPreferFraction);
-        }
     }
 
     Number numberPreferOrdinal() {

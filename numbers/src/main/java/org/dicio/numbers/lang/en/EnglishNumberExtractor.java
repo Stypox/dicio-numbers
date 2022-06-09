@@ -5,30 +5,17 @@ import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.NumberExtractorUtils;
 
-import java.util.List;
-
 import static org.dicio.numbers.util.NumberExtractorUtils.*;
 
 public class EnglishNumberExtractor {
 
     private final TokenStream ts;
     private final boolean shortScale;
-    private final boolean preferOrdinal;
 
     EnglishNumberExtractor(final TokenStream tokenStream,
-                           final boolean shortScale,
-                           final boolean preferOrdinal) {
+                           final boolean shortScale) {
         this.ts = tokenStream;
         this.shortScale = shortScale;
-        this.preferOrdinal = preferOrdinal;
-    }
-
-    public List<Object> extractNumbers() {
-        if (preferOrdinal) {
-            return ts.extractMixedTextAndObjects(this::numberPreferOrdinal);
-        } else {
-            return ts.extractMixedTextAndObjects(this::numberPreferFraction);
-        }
     }
 
     Number numberPreferOrdinal() {

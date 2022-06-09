@@ -28,29 +28,11 @@ public class DurationExtractorUtils {
     }
 
     /**
-     * Extract a duration at any position (after the current one) in the token stream provided in
-     * the constructor
-     * @return the found duration, or null if no duration was found
-     */
-    public Duration extractDuration() {
-        while (!ts.finished()) {
-            final Duration result = extractDurationAtCurrentPosition();
-            if (result != null) {
-                return result; // duration found at the current position
-            }
-
-            ts.movePositionForwardBy(1); // try to find a duration at the next token
-        }
-
-        return null; // no duration found in all of the token stream
-    }
-
-    /**
      * Extract a duration at the current position (i.e. no words will be skipped, not even ignorable
      * words) in the token stream provided in the constructor
      * @return the found duration, or null if no duration was found
      */
-    public Duration extractDurationAtCurrentPosition() {
+    public Duration duration() {
         final int originalPosition = ts.getPosition();
         final Number firstNumber = extractOneNumberNoOrdinal.get();
         Duration result = durationAfterNullableNumber(firstNumber);

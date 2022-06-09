@@ -32,7 +32,7 @@ public class ItalianDateTimeExtractor {
     ItalianDateTimeExtractor(final TokenStream tokenStream, final LocalDateTime now) {
         this.ts = tokenStream;
         this.now = now;
-        this.numberExtractor = new ItalianNumberExtractor(ts, false);
+        this.numberExtractor = new ItalianNumberExtractor(ts);
         this.durationExtractor = new DurationExtractorUtils(ts, numberExtractor::numberNoOrdinal);
     }
 
@@ -42,10 +42,6 @@ public class ItalianDateTimeExtractor {
                 () -> numberExtractor.numberSignPoint(false, false));
     }
 
-
-    LocalDateTime extractDateTime() {
-        return ts.extractEarliestNotNull(this::dateTime);
-    }
 
     LocalDateTime dateTime() {
         // first try preferring having a date first, then try with time first
@@ -506,7 +502,7 @@ public class ItalianDateTimeExtractor {
     }
 
     Duration relativeDuration() {
-        return relativeIndicatorDuration(durationExtractor::extractDurationAtCurrentPosition,
+        return relativeIndicatorDuration(durationExtractor::duration,
                 duration -> duration.multiply(new Number(-1)));
     }
 

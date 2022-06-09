@@ -10,7 +10,7 @@ import org.dicio.numbers.formatter.param.NiceYearParameters;
 import org.dicio.numbers.formatter.param.PronounceNumberParameters;
 import org.dicio.numbers.parser.NumberParser;
 import org.dicio.numbers.parser.param.ExtractDurationParams;
-import org.dicio.numbers.parser.param.ExtractNumbersParams;
+import org.dicio.numbers.parser.param.ExtractNumberParams;
 import org.dicio.numbers.unit.MixedFraction;
 
 import java.time.Duration;
@@ -65,7 +65,7 @@ public final class NumberParserFormatter {
      *         calling {@link NumberFormatter#niceNumber(MixedFraction, boolean)}. See
      *         {@link NiceNumberParameters}.
      */
-    public final NiceNumberParameters niceNumber(final double number) {
+    public NiceNumberParameters niceNumber(final double number) {
         return new NiceNumberParameters(formatter, number);
     }
 
@@ -78,7 +78,7 @@ public final class NumberParserFormatter {
      *         calling {@link NumberFormatter#pronounceNumber(double, int, boolean, boolean,
      *         boolean)}. See {@link PronounceNumberParameters}.
      */
-    public final PronounceNumberParameters pronounceNumber(final double number) {
+    public PronounceNumberParameters pronounceNumber(final double number) {
         return new PronounceNumberParameters(formatter, number);
     }
 
@@ -91,7 +91,7 @@ public final class NumberParserFormatter {
      *         calling {@link NumberFormatter#niceDate(LocalDate, LocalDate)}. See {@link
      *         NiceDateParameters}.
      */
-    public final NiceDateParameters niceDate(final LocalDate date) {
+    public NiceDateParameters niceDate(final LocalDate date) {
         return new NiceDateParameters(formatter, date);
     }
 
@@ -103,7 +103,7 @@ public final class NumberParserFormatter {
      * @return an instance of a utility class that enables customizing various parameters before
      *         calling {@link NumberFormatter#niceYear(LocalDate)}. See {@link NiceYearParameters}.
      */
-    public final NiceYearParameters niceYear(final LocalDate date) {
+    public NiceYearParameters niceYear(final LocalDate date) {
         // note: useless encapsulation, since niceYear has only the mandatory date parameter, but
         // keep for consistency
         return new NiceYearParameters(formatter, date);
@@ -118,7 +118,7 @@ public final class NumberParserFormatter {
      *         calling {@link NumberFormatter#niceTime(LocalTime, boolean, boolean, boolean)}. See
      *         {@link NiceTimeParameters}.
      */
-    public final NiceTimeParameters niceTime(final LocalTime time) {
+    public NiceTimeParameters niceTime(final LocalTime time) {
         return new NiceTimeParameters(formatter, time);
     }
 
@@ -132,7 +132,7 @@ public final class NumberParserFormatter {
      *         calling {@link NumberFormatter#niceDateTime(LocalDate, LocalDate, LocalTime, boolean,
      *         boolean)}. See {@link NiceDateTimeParameters}.
      */
-    public final NiceDateTimeParameters niceDateTime(final LocalDateTime dateTime) {
+    public NiceDateTimeParameters niceDateTime(final LocalDateTime dateTime) {
         return new NiceDateTimeParameters(formatter, dateTime);
     }
 
@@ -145,7 +145,7 @@ public final class NumberParserFormatter {
      *         calling {@link NumberFormatter#niceDuration(Duration, boolean)}. See {@link
      *         NiceDurationParameters}.
      */
-    public final NiceDurationParameters niceDuration(final Duration duration) {
+    public NiceDurationParameters niceDuration(final Duration duration) {
         return new NiceDurationParameters(formatter, duration);
     }
 
@@ -156,10 +156,10 @@ public final class NumberParserFormatter {
      * @param utterance the text to extract numbers from
      * @return an instance of a utility class that enables customizing various parameters before
      *         calling {@link NumberParser#extractNumbers(String, boolean, boolean)}. See {@link
-     *         ExtractNumbersParams}.
+     *         ExtractNumberParams}.
      */
-    public final ExtractNumbersParams extractNumbers(final String utterance) {
-        return new ExtractNumbersParams(parser, utterance);
+    public ExtractNumberParams extractNumber(final String utterance) {
+        return new ExtractNumberParams(parser, utterance);
     }
 
     /**
@@ -173,7 +173,7 @@ public final class NumberParserFormatter {
      *         calling {@link NumberParser#extractDuration(String, boolean)}. See {@link
      *         ExtractDurationParams}.
      */
-    public final ExtractDurationParams extractDuration(final String utterance) {
+    public ExtractDurationParams extractDuration(final String utterance) {
         return new ExtractDurationParams(parser, utterance);
     }
 }

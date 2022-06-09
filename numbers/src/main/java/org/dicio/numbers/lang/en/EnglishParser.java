@@ -3,10 +3,11 @@ package org.dicio.numbers.lang.en;
 import org.dicio.numbers.parser.NumberParser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Duration;
+import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.DurationExtractorUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.function.Supplier;
 
 public class EnglishParser extends NumberParser {
 
@@ -16,24 +17,29 @@ public class EnglishParser extends NumberParser {
 
 
     @Override
-    public List<Object> extractNumbers(final String utterance,
-                                       final boolean shortScale,
-                                       final boolean preferOrdinal) {
-        return new EnglishNumberExtractor(new TokenStream(tokenizer.tokenize(utterance)),
-                shortScale, preferOrdinal).extractNumbers();
-    }
-
-    @Override
-    public Duration extractDuration(final String utterance, final boolean shortScale) {
-        final TokenStream tokenStream = new TokenStream(tokenizer.tokenize(utterance));
+    public Supplier<Number> extractNumber(final TokenStream tokenStream,
+                                          final boolean shortScale,
+                                          final boolean preferOrdinal) {
         final EnglishNumberExtractor numberExtractor
-                = new EnglishNumberExtractor(tokenStream, shortScale, false);
-        return new DurationExtractorUtils(tokenStream, numberExtractor::numberNoOrdinal)
-                .extractDuration();
+                = new EnglishNumberExtractor(tokenStream, shortScale);
+        if (preferOrdinal) {
+            return numberExtractor::numberPreferOrdinal;
+        } else {
+            return numberExtractor::numberPreferFraction;
+        }
     }
 
     @Override
-    public LocalDateTime extractDateTime(final String utterance, LocalDateTime now) {
-        return null;
+    public Supplier<Duration> extractDuration(final TokenStream tokenStream,
+                                              final boolean shortScale) {
+        final EnglishNumberExtractor numberExtractor
+                = new EnglishNumberExtractor(tokenStream, shortScale);
+        return new DurationExtractorUtils(tokenStream, numberExtractor::numberNoOrdinal)::duration;
+    }
+
+    @Override
+    public Supplier<LocalDateTime> extractDateTime(final TokenStream tokenStream,
+                                                   final LocalDateTime now) {
+        return () -> null;
     }
 }
