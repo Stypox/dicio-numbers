@@ -1,5 +1,7 @@
 package org.dicio.numbers.util;
 
+import org.dicio.numbers.unit.Number;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -68,6 +70,14 @@ public final class Utils {
         } else {
             return (long) number + (number % 1 >= 0.5 ? 1 : 0);
         }
+    }
+
+    /**
+     * @param number the number on which to operate
+     * @return the difference between the number and the number rounded to long
+     */
+    public static double remainderFromRoundingToLong(final double number) {
+        return number - roundToLong(number);
     }
 
     /**

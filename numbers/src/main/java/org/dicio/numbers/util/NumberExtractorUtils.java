@@ -43,7 +43,7 @@ public class NumberExtractorUtils {
             } else {
                 // a big number in raw form, e.g. 1250067, 5839th
                 ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
-                return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
+                return ts.get(ordinal ? -2 : -1).getNumber().withOrdinal(ordinal);
             }
 
         } else {
@@ -69,7 +69,7 @@ public class NumberExtractorUtils {
             }
 
             if (group.isOrdinal()) {
-                groups.setOrdinal(true);
+                groups = groups.withOrdinal(true);
                 break; // ordinal numbers terminate at the ordinal group
             }
             lastMultiplier = group.isDecimal() ? group.decimalValue() : group.integerValue();
@@ -100,10 +100,10 @@ public class NumberExtractorUtils {
                 ts.movePositionForwardBy(nextNotIgnore + 1);
                 if (groupValue == null) {
                     // the multiplier alone, e.g. a million
-                    return multiplier.setOrdinal(ordinal);
+                    return multiplier.withOrdinal(ordinal);
                 } else {
                     // number smaller than 1000 followed by a multiplier, e.g. thirteen billion
-                    return multiplier.multiply(groupValue).setOrdinal(ordinal);
+                    return multiplier.multiply(groupValue).withOrdinal(ordinal);
                 }
             }
         } else {
@@ -228,7 +228,7 @@ public class NumberExtractorUtils {
             return null;
         } else {
             return new Number((hundred < 0 ? 0 : hundred) + (ten < 0 ? 0 : ten)
-                    + (digit < 0 ? 0 : digit)).setOrdinal(ordinal); // e.g. one hundred and twelve
+                    + (digit < 0 ? 0 : digit), ordinal); // e.g. one hundred and twelve
         }
     }
 

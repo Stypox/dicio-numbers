@@ -121,7 +121,7 @@ public class ItalianNumberExtractor {
                 ts.movePositionForwardBy(-1); // rewind
                 return null;
             } else {
-                return n.multiply(negative ? -1 : 1).setOrdinal(n.isOrdinal());
+                return n.multiply(negative ? -1 : 1).withOrdinal(n.isOrdinal());
             }
 
         }
@@ -222,7 +222,7 @@ public class ItalianNumberExtractor {
                 if (ts.get(0).hasCategory("ordinal_suffix")) {
                     if (allowOrdinal) {
                         ts.movePositionForwardBy(1);
-                        return n.setOrdinal(true); // ordinal number, e.g. 20,056,789th
+                        return n.withOrdinal(true); // ordinal number, e.g. 20,056,789th
                     } else {
                         ts.setPosition(originalPosition);
                         return null; // found ordinal number, revert since allowOrdinal is false

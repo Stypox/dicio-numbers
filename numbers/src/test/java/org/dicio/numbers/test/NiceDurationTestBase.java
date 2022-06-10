@@ -37,7 +37,7 @@ public abstract class NiceDurationTestBase {
         assertTrue(seconds >= 0 && seconds < 60);
 
         assertEquals(expected, pf.niceDuration(new Duration()
-                        .plus(new Number(seconds + 60 * (minutes + 60 * (hours + 24 * days))), ChronoUnit.SECONDS))
+                        .plus(seconds + 60 * (minutes + 60 * (hours + 24 * days)), ChronoUnit.SECONDS))
                 .speech(speech).get());
     }
 }

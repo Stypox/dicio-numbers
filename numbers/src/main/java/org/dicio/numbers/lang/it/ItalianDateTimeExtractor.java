@@ -58,14 +58,14 @@ public class ItalianDateTimeExtractor {
             if (duration == null) {
                 // no normal relative duration found: start extracting a date normally
                 date = firstNotNull(this::relativeSpecialDay, this::date);
-            } else if (duration.getNanos().equals(0) && !duration.getDays().equals(0)) {
+            } else if (duration.getNanos() == 0 && duration.getDays() != 0) {
                 // duration contains a specified day and no specified time, so a time can follow
                 date = duration.applyAsOffsetToDateTime(now).toLocalDate();
-            } else if (!duration.getNanos().equals(0) && duration.getDays().equals(0)
-                    && duration.getMonths().equals(0) && duration.getYears().equals(0)) {
+            } else if (duration.getNanos() != 0 && duration.getDays() == 0
+                    && duration.getMonths() == 0 && duration.getYears() == 0) {
                 // duration contains a specified time, so a date could follow
                 time = duration.applyAsOffsetToDateTime(now).toLocalTime();
-            } else if (duration.getNanos().equals(0)) {
+            } else if (duration.getNanos() == 0) {
                 // duration contains mixed date&time, or specifies units >=month, nothing can follow
                 return duration.applyAsOffsetToDateTime(now);
             }
@@ -82,7 +82,7 @@ public class ItalianDateTimeExtractor {
             if (duration == null) {
                 date = ts.tryOrSkipDateTimeIgnore(true,
                         () -> firstNotNull(this::relativeSpecialDay, this::date));
-            } else if (duration.getNanos().equals(0) && !duration.getDays().equals(0)) {
+            } else if (duration.getNanos() == 0 && duration.getDays() != 0) {
                 date = duration.applyAsOffsetToDateTime(now).toLocalDate();
             } else {
                 ts.setPosition(originalPosition);
@@ -486,24 +486,24 @@ public class ItalianDateTimeExtractor {
                         // add a year if the two months coincide
                         + (monthsDifference == 0 ? MONTHS_IN_YEAR : 0);
                 ts.movePositionForwardBy(1);
-                return new Duration().plus(new Number(monthsOffset), ChronoUnit.MONTHS);
+                return new Duration(0, 0, monthsOffset, 0);
             }
             return null;
 
         }, duration -> {
-            final long monthsOffset = duration.getMonths().integerValue();
+            final long monthsOffset = duration.getMonths();
             final long newMonthsOffset = monthsOffset == MONTHS_IN_YEAR
                     // the congruency modulo MONTHS_IN_YEAR is 0: just use a minus to maintain it
                     ? -MONTHS_IN_YEAR
                     // keep congruency modulo MONTHS_IN_YEAR
                     : monthsOffset - MONTHS_IN_YEAR;
-            return new Duration().plus(new Number(newMonthsOffset), ChronoUnit.MONTHS);
+            return new Duration(0, 0, newMonthsOffset, 0);
         });
     }
 
     Duration relativeDuration() {
         return relativeIndicatorDuration(durationExtractor::duration,
-                duration -> duration.multiply(new Number(-1)));
+                duration -> duration.multiply(-1));
     }
 
     private <T> T relativeIndicatorDuration(final Supplier<T> durationExtractor,

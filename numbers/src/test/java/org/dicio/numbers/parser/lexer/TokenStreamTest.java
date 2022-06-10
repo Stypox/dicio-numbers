@@ -1,13 +1,12 @@
 package org.dicio.numbers.parser.lexer;
 
 import static org.dicio.numbers.test.TestUtils.n;
+import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import org.dicio.numbers.unit.Duration;
-import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.time.temporal.ChronoUnit;
@@ -20,7 +19,7 @@ public class TokenStreamTest {
     private static final List<Token> TOKENS = Arrays.asList(
             new Token("", " "),
             new MatchedToken("a", "\n ", Collections.singleton("ignore")),
-            new DurationToken("ms", "", "", new Duration().plus(new Number(1), ChronoUnit.MILLIS), false)
+            new DurationToken("ms", "", "", t(1, ChronoUnit.MILLIS), false)
     );
 
     private static final List<Token> TOKENS_IGNORES = Arrays.asList(
@@ -31,7 +30,7 @@ public class TokenStreamTest {
             new NumberToken("2022", " ", Collections.emptySet(), n(2022)),
             new MatchedToken("going", " ", Collections.singleton("test")),
             new MatchedToken("?", " ", Collections.singleton("ignore")),
-            new DurationToken("s", "", "", new Duration().plus(new Number(1), ChronoUnit.SECONDS), true),
+            new DurationToken("s", "", "", t(1, ChronoUnit.SECONDS), true),
             new NumberToken("?", " ", Collections.singleton("ignore"), n(-1))
     );
 

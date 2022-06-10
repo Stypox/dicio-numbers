@@ -52,7 +52,7 @@ public class NumberParserParamsTest extends NumberParserParamsTestBase {
 
     @Test
     public void testDurationFirst() {
-        assertDurationFirst("Set a two minute and two billion second timer", F, t(2 * MINUTE + 2000000000000L));
+        assertDurationFirst("Set a two minute and two billion nanosecond timer", F, t(2 * MINUTE + 2000L));
         assertDurationFirst("you know two years ago are not billions of days", T, t(2 * YEAR));
     }
 

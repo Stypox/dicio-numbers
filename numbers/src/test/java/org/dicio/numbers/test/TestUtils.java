@@ -31,11 +31,11 @@ public class TestUtils {
     }
 
     public static Number n(final long value, final boolean ordinal) {
-        return new Number(value).setOrdinal(ordinal);
+        return new Number(value, ordinal);
     }
 
     public static Number n(final double value, final boolean ordinal) {
-        return new Number(value).setOrdinal(ordinal);
+        return new Number(value, ordinal);
     }
 
     public static Number n(final long value) {
@@ -58,6 +58,10 @@ public class TestUtils {
         return Duration.ofSeconds((long) seconds, (int)((seconds % 1.0) * 1e9));
     }
 
+    public static org.dicio.numbers.unit.Duration t(final double number, final ChronoUnit chronoUnit) {
+        return new org.dicio.numbers.unit.Duration().plus(number, chronoUnit);
+    }
+
     public static String niceDuration(final org.dicio.numbers.unit.Duration duration) {
         return niceDuration(duration.toJavaDuration());
     }
@@ -67,10 +71,7 @@ public class TestUtils {
             return "minus " + niceDuration(duration.negated());
         } else {
             return new EnglishFormatter().niceDuration(
-                    new org.dicio.numbers.unit.Duration()
-                            .plus(new Number(duration.getNano()), ChronoUnit.NANOS)
-                            .plus(new Number(duration.getSeconds()), ChronoUnit.SECONDS),
-                    true);
+                    new org.dicio.numbers.unit.Duration(duration), true);
         }
     }
 }

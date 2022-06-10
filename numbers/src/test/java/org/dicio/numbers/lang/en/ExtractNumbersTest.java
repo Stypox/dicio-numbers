@@ -40,7 +40,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberGroupLongScale(final String s, final boolean allowOrdinal, final double lastMultiplier, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, true, numberDeduceType(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+        assertNumberFunction(s, true, numberDeduceType(value).withOrdinal(isOrdinal), finalTokenStreamPosition,
                 (enp, ts) -> EnglishNumberExtractor.numberGroupLongScale(ts, allowOrdinal, lastMultiplier));
     }
 
@@ -49,7 +49,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberInteger(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+        assertNumberFunction(s, shortScale, numberDeduceType(value).withOrdinal(isOrdinal), finalTokenStreamPosition,
                 (enp, ts) -> enp.numberInteger(allowOrdinal));
     }
 
@@ -59,7 +59,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberPoint(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal),
+        assertNumberFunction(s, shortScale, numberDeduceType(value).withOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp, ts) -> enp.numberPoint(allowOrdinal));
     }
 
@@ -69,7 +69,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberSignPoint(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal),
+        assertNumberFunction(s, shortScale, numberDeduceType(value).withOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp, ts) -> enp.numberSignPoint(allowOrdinal));
     }
 

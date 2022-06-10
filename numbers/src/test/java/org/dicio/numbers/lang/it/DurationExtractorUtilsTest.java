@@ -15,11 +15,8 @@ import org.dicio.numbers.NumberParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.DurationExtractorUtilsTestBase;
 import org.dicio.numbers.unit.Duration;
-import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.DurationExtractorUtils;
 import org.junit.Test;
-
-import java.time.temporal.ChronoUnit;
 
 /**
  * TODO also test extractDurationAtCurrentPosition
@@ -123,11 +120,7 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
                 }
             }
 
-            final String formatted = npf.niceDuration(
-                    new Duration()
-                            .plus(new Number(durationToTest.getSeconds()), ChronoUnit.SECONDS)
-                            .plus(new Number(durationToTest.getNano()), ChronoUnit.NANOS)
-            ).get();
+            final String formatted = npf.niceDuration(new Duration(durationToTest)).get();
             final TokenStream ts = new TokenStream(tokenizer.tokenize(formatted));
             assertDuration(formatted, ts, true, durationToTest); // short scale is unused in italian
             assertTrue(ts.finished());

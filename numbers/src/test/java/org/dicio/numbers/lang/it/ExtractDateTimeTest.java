@@ -2,7 +2,7 @@ package org.dicio.numbers.lang.it;
 
 import static org.dicio.numbers.lang.it.ItalianDateTimeExtractor.isMomentOfDayPm;
 import static org.dicio.numbers.test.TestUtils.niceDuration;
-import static org.dicio.numbers.test.TestUtils.numberDeduceType;
+import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -22,7 +22,6 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.function.Function;
 
 public class ExtractDateTimeTest extends WithTokenizerTestBase {
@@ -36,10 +35,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
 
-    private Duration t(final double number, final ChronoUnit chronoUnit) {
-        return new Duration().plus(numberDeduceType(number), chronoUnit);
-    }
-
     private void assertRelativeDurationFunction(final String s,
                                                 final Duration expectedDuration,
                                                 final int finalTokenStreamPosition,
@@ -52,10 +47,10 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertTrue("wrong relative duration for string \"" + s + "\": expected \""
                         + niceDuration(expectedDuration) + "\" but got \""
                         + niceDuration(actualDuration) + "\"",
-                expectedDuration.getNanos().equals(actualDuration.getNanos())
-                        && expectedDuration.getDays().equals(actualDuration.getDays())
-                        && expectedDuration.getMonths().equals(actualDuration.getMonths())
-                        && expectedDuration.getYears().equals(actualDuration.getYears()));
+                expectedDuration.getNanos() == actualDuration.getNanos()
+                        && expectedDuration.getDays() == actualDuration.getDays()
+                        && expectedDuration.getMonths() == actualDuration.getMonths()
+                        && expectedDuration.getYears() == actualDuration.getYears());
     }
 
     private void assertRelativeDurationFunctionNull(final String s,

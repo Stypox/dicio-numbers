@@ -38,7 +38,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberInteger(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, numberDeduceType(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+        assertNumberFunction(s, numberDeduceType(value).withOrdinal(isOrdinal), finalTokenStreamPosition,
                 (enp) -> enp.numberInteger(allowOrdinal));
     }
 
@@ -47,7 +47,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, numberDeduceType(value).setOrdinal(isOrdinal),
+        assertNumberFunction(s, numberDeduceType(value).withOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp) -> enp.numberPoint(allowOrdinal, true));
     }
 
@@ -56,7 +56,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberSignPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, numberDeduceType(value).setOrdinal(isOrdinal),
+        assertNumberFunction(s, numberDeduceType(value).withOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp) -> enp.numberSignPoint(allowOrdinal, true));
     }
 
