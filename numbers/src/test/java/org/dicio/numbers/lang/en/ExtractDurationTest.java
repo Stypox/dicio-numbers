@@ -5,7 +5,7 @@ import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import org.dicio.numbers.NumberParserFormatter;
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.junit.Test;
 
@@ -17,8 +17,8 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
 
     @Test
     public void testNumberParserExtractDuration() {
-        final NumberParserFormatter npf
-                = new NumberParserFormatter(null, new EnglishParser());
+        final ParserFormatter npf
+                = new ParserFormatter(null, new EnglishParser());
         assertNull(npf.extractDuration("hello how are you").getFirst());
         assertNull(npf.extractDuration("one billion euros").shortScale(true).getFirst());
         assertNull(npf.extractDuration("a million").shortScale(false).getFirst());

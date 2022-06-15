@@ -4,12 +4,12 @@ import org.junit.Test;
 
 import java.util.Locale;
 
-import static org.dicio.numbers.NumberParserFormatterBuilder.ParserFormatterPair;
-import static org.dicio.numbers.NumberParserFormatterBuilder.parserFormatterPairForLocale;
+import static org.dicio.numbers.ParserFormatterBuilder.ParserFormatterPair;
+import static org.dicio.numbers.ParserFormatterBuilder.parserFormatterPairForLocale;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class NumberParserFormatterBuilderTest {
+public class ParserFormatterBuilderTest {
 
     @Test
     public void parserFormatterPairForLocaleEnglish() {
@@ -21,7 +21,7 @@ public class NumberParserFormatterBuilderTest {
 
     @Test
     public void numberParserFormatterConstructorEnglish() {
-        final NumberParserFormatter npf = new NumberParserFormatter(Locale.ENGLISH);
+        final ParserFormatter npf = new ParserFormatter(Locale.ENGLISH);
         final ParserFormatterPair pfp = parserFormatterPairForLocale(Locale.ENGLISH);
 
         assertEquals(pfp.formatter.pronounceNumber(42534, 0, true, false, false),
@@ -37,6 +37,6 @@ public class NumberParserFormatterBuilderTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void numberParserFormatterConstructorUnsupported() {
-        new NumberParserFormatter(Locale.ROOT);
+        new ParserFormatter(Locale.ROOT);
     }
 }

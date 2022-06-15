@@ -4,7 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
 
@@ -14,7 +14,7 @@ import java.util.function.Function;
 
 public abstract class NumberParserParamsTestBase {
 
-    protected abstract NumberParser numberParser();
+    protected abstract Parser numberParser();
 
     private <T, R> void assertNppFirst(final NumberParserParams<T> npp,
                                        final Function<T, R> transformActualResult,

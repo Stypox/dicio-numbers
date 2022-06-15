@@ -4,8 +4,8 @@ import com.grack.nanojson.JsonObject;
 import com.grack.nanojson.JsonParser;
 import com.grack.nanojson.JsonParserException;
 
-import org.dicio.numbers.NumberParserFormatter;
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.ParserFormatter;
+import org.dicio.numbers.formatter.Formatter;
 import org.dicio.numbers.util.ResourceOpener;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,18 +21,18 @@ import static org.junit.Assert.assertNotNull;
 public abstract class DateTimeTestBase {
 
     private JsonObject root;
-    protected NumberFormatter nf;
-    protected NumberParserFormatter pf; // useful for overriding classes
+    protected Formatter nf;
+    protected ParserFormatter pf; // useful for overriding classes
 
     public abstract String configFolder();
-    public abstract NumberFormatter buildNumberFormatter();
+    public abstract Formatter buildNumberFormatter();
 
     @Before
     public void setup() throws FileNotFoundException, JsonParserException {
         root = JsonParser.object().from(
                 ResourceOpener.getResourceAsStream(configFolder() + "/date_time_test.json"));
         nf = buildNumberFormatter();
-        pf = new NumberParserFormatter(nf, null);
+        pf = new ParserFormatter(nf, null);
     }
 
     @Test

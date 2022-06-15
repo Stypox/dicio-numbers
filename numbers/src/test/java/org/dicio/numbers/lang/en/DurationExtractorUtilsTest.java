@@ -13,7 +13,7 @@ import static org.dicio.numbers.test.TestUtils.YEAR;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertTrue;
 
-import org.dicio.numbers.NumberParserFormatter;
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.DurationExtractorUtilsTestBase;
 import org.dicio.numbers.unit.Duration;
@@ -102,7 +102,7 @@ public class DurationExtractorUtilsTest extends DurationExtractorUtilsTestBase {
                 t(1e8 * YEAR), t(17 * WEEK), t(45)
         };
 
-        final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
+        final ParserFormatter npf = new ParserFormatter(new EnglishFormatter(), null);
         for (int i = 0; i < (1 << alternatives.length); ++i) {
             java.time.Duration durationToTest = java.time.Duration.ZERO;
             for (int j = 0; j < alternatives.length; ++j) {

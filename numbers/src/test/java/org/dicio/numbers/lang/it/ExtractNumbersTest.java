@@ -1,6 +1,6 @@
 package org.dicio.numbers.lang.it;
 
-import org.dicio.numbers.NumberParserFormatter;
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Number;
@@ -133,7 +133,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
 
     @Test
     public void testNumberIntegerWithFormatter() {
-        final NumberParserFormatter npf = new NumberParserFormatter(new ItalianFormatter(), null);
+        final ParserFormatter npf = new ParserFormatter(new ItalianFormatter(), null);
         for (int i = 0; i < 1100000000;) {
             if (i < 2200) {
                 ++i; // test all numbers from 0 to 2200
@@ -157,7 +157,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
 
     @Test(timeout = 2000) // 20000 formats + parses take <1s, use 2s timeout just for slower PCs
     public void testNumberIntegerPerformance() {
-        final NumberParserFormatter npf = new NumberParserFormatter(new ItalianFormatter(), null);
+        final ParserFormatter npf = new ParserFormatter(new ItalianFormatter(), null);
         final long startingValue = 54378960497L;
         for (long i = startingValue; i < startingValue + 10000; ++i) {
             // short scale not ordinal

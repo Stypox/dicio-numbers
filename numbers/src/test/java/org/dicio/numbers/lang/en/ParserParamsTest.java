@@ -10,14 +10,14 @@ import static org.dicio.numbers.test.TestUtils.YEAR;
 import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.t;
 
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.parser.param.NumberParserParamsTestBase;
 import org.junit.Test;
 
-public class NumberParserParamsTest extends NumberParserParamsTestBase {
+public class ParserParamsTest extends NumberParserParamsTestBase {
 
     @Override
-    protected NumberParser numberParser() {
+    protected Parser numberParser() {
         return new EnglishParser();
     }
 

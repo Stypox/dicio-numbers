@@ -1,6 +1,6 @@
 package org.dicio.numbers.parser.param;
 
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Number;
 
@@ -12,8 +12,8 @@ public class ExtractNumberParams extends NumberParserParams<Number> {
     private boolean shortScale = true;
     private boolean preferOrdinal = false;
 
-    public ExtractNumberParams(final NumberParser numberParser, final String utterance) {
-        super(numberParser, utterance);
+    public ExtractNumberParams(final Parser parser, final String utterance) {
+        super(parser, utterance);
     }
 
     public ExtractNumberParams shortScale(final boolean shortScale) {
@@ -28,6 +28,6 @@ public class ExtractNumberParams extends NumberParserParams<Number> {
 
     @Override
     protected Supplier<Number> getExtractorAtCurrentPosition(final TokenStream tokenStream) {
-        return numberParser.extractNumber(tokenStream, shortScale, preferOrdinal);
+        return parser.extractNumber(tokenStream, shortScale, preferOrdinal);
     }
 }

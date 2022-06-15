@@ -1,6 +1,6 @@
 package org.dicio.numbers;
 
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.Formatter;
 import org.dicio.numbers.formatter.param.NiceDateParameters;
 import org.dicio.numbers.formatter.param.NiceDateTimeParameters;
 import org.dicio.numbers.formatter.param.NiceDurationParameters;
@@ -8,7 +8,7 @@ import org.dicio.numbers.formatter.param.NiceNumberParameters;
 import org.dicio.numbers.formatter.param.NiceTimeParameters;
 import org.dicio.numbers.formatter.param.NiceYearParameters;
 import org.dicio.numbers.formatter.param.PronounceNumberParameters;
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.parser.param.ExtractDateTimeParams;
 import org.dicio.numbers.parser.param.ExtractDurationParams;
@@ -22,36 +22,36 @@ import java.time.LocalTime;
 import java.util.Locale;
 
 /**
- * A class that wraps a {@link NumberFormatter} and a {@link NumberParser} for a particular language
+ * A class that wraps a {@link Formatter} and a {@link Parser} for a particular language
  * and provides convenience methods to call the available functions without having to provide all of
  * the default parameters.
  */
-public final class NumberParserFormatter {
-    private final NumberFormatter formatter;
-    private final NumberParser parser;
+public final class ParserFormatter {
+    private final Formatter formatter;
+    private final Parser parser;
 
     /**
-     * Constructs a {@link NumberParserFormatter} that wraps the provided {@link NumberFormatter}
-     * and {@link NumberParser}. Note: do not use this manually, prefer
-     * {@link NumberParserFormatter}. This is mostly used for tests.
+     * Constructs a {@link ParserFormatter} that wraps the provided {@link Formatter}
+     * and {@link Parser}. Note: do not use this manually, prefer
+     * {@link ParserFormatter}. This is mostly used for tests.
      *
      * @param formatter the formatter to wrap
      * @param parser the parser to wrap
      */
-    public NumberParserFormatter(final NumberFormatter formatter, final NumberParser parser) {
+    public ParserFormatter(final Formatter formatter, final Parser parser) {
         this.formatter = formatter;
         this.parser = parser;
     }
 
     /**
-     * Constructs a {@link NumberParserFormatter} for the language of the provided locale.
+     * Constructs a {@link ParserFormatter} for the language of the provided locale.
      *
      * @param locale the locale containing the language to use
      * @throws IllegalArgumentException if the provided locale is not supported
      */
-    public NumberParserFormatter(final Locale locale) throws IllegalArgumentException {
-        final NumberParserFormatterBuilder.ParserFormatterPair parserFormatterPair
-                = NumberParserFormatterBuilder.parserFormatterPairForLocale(locale);
+    public ParserFormatter(final Locale locale) throws IllegalArgumentException {
+        final ParserFormatterBuilder.ParserFormatterPair parserFormatterPair
+                = ParserFormatterBuilder.parserFormatterPairForLocale(locale);
         this.formatter = parserFormatterPair.formatter;
         this.parser = parserFormatterPair.parser;
     }
@@ -64,7 +64,7 @@ public final class NumberParserFormatter {
      *
      * @param number the number to format
      * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberFormatter#niceNumber(MixedFraction, boolean)}. See
+     *         calling {@link Formatter#niceNumber(MixedFraction, boolean)}. See
      *         {@link NiceNumberParameters}.
      */
     public NiceNumberParameters niceNumber(final double number) {
@@ -77,7 +77,7 @@ public final class NumberParserFormatter {
      *
      * @param number the number to format
      * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberFormatter#pronounceNumber(double, int, boolean, boolean,
+     *         calling {@link Formatter#pronounceNumber(double, int, boolean, boolean,
      *         boolean)}. See {@link PronounceNumberParameters}.
      */
     public PronounceNumberParameters pronounceNumber(final double number) {
@@ -90,7 +90,7 @@ public final class NumberParserFormatter {
      *
      * @param date the date to format (assumes already in local timezone)
      * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberFormatter#niceDate(LocalDate, LocalDate)}. See {@link
+     *         calling {@link Formatter#niceDate(LocalDate, LocalDate)}. See {@link
      *         NiceDateParameters}.
      */
     public NiceDateParameters niceDate(final LocalDate date) {
@@ -103,7 +103,7 @@ public final class NumberParserFormatter {
      *
      * @param date the date containing the year to format (assumes already in local timezone)
      * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberFormatter#niceYear(LocalDate)}. See {@link NiceYearParameters}.
+     *         calling {@link Formatter#niceYear(LocalDate)}. See {@link NiceYearParameters}.
      */
     public NiceYearParameters niceYear(final LocalDate date) {
         // note: useless encapsulation, since niceYear has only the mandatory date parameter, but
@@ -117,7 +117,7 @@ public final class NumberParserFormatter {
      *
      * @param time the time to format (assumes already in local timezone)
      * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberFormatter#niceTime(LocalTime, boolean, boolean, boolean)}. See
+     *         calling {@link Formatter#niceTime(LocalTime, boolean, boolean, boolean)}. See
      *         {@link NiceTimeParameters}.
      */
     public NiceTimeParameters niceTime(final LocalTime time) {
@@ -131,7 +131,7 @@ public final class NumberParserFormatter {
      *
      * @param dateTime the date time to format (assumes already in local timezone)
      * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberFormatter#niceDateTime(LocalDate, LocalDate, LocalTime, boolean,
+     *         calling {@link Formatter#niceDateTime(LocalDate, LocalDate, LocalTime, boolean,
      *         boolean)}. See {@link NiceDateTimeParameters}.
      */
     public NiceDateTimeParameters niceDateTime(final LocalDateTime dateTime) {
@@ -144,7 +144,7 @@ public final class NumberParserFormatter {
      *
      * @param duration the duration to format
      * @return an instance of a utility class that enables customizing various parameters before
-     *         calling {@link NumberFormatter#niceDuration(Duration, boolean)}. See {@link
+     *         calling {@link Formatter#niceDuration(Duration, boolean)}. See {@link
      *         NiceDurationParameters}.
      */
     public NiceDurationParameters niceDuration(final Duration duration) {
@@ -157,7 +157,7 @@ public final class NumberParserFormatter {
      *
      * @param utterance the text to extract numbers from
      * @return an instance of a utility class that enables customizing various parameters and then
-     *         allows calling {@link NumberParser#extractNumber(TokenStream, boolean, boolean)} in
+     *         allows calling {@link Parser#extractNumber(TokenStream, boolean, boolean)} in
      *         multiple ways. See {@link ExtractNumberParams}.
      */
     public ExtractNumberParams extractNumber(final String utterance) {
@@ -170,7 +170,7 @@ public final class NumberParserFormatter {
      *
      * @param utterance the text to extract a duration from
      * @return an instance of a utility class that enables customizing various parameters and then
-     *         allows calling {@link NumberParser#extractDuration(TokenStream, boolean)} in multiple
+     *         allows calling {@link Parser#extractDuration(TokenStream, boolean)} in multiple
      *         ways. See {@link ExtractDurationParams}.
      */
     public ExtractDurationParams extractDuration(final String utterance) {
@@ -183,7 +183,7 @@ public final class NumberParserFormatter {
      *
      * @param utterance the text to extract a date&time from
      * @return an instance of a utility class that enables customizing various parameters and then
-     *         allows calling {@link NumberParser#extractDateTime(TokenStream, LocalDateTime)} in
+     *         allows calling {@link Parser#extractDateTime(TokenStream, LocalDateTime)} in
      *         multiple ways. See {@link ExtractDateTimeParams}.
      */
     public ExtractDateTimeParams extractDateTime(final String utterance) {

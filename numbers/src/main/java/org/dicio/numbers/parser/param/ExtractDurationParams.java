@@ -1,6 +1,6 @@
 package org.dicio.numbers.parser.param;
 
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Duration;
 
@@ -11,8 +11,8 @@ public class ExtractDurationParams extends NumberParserParams<Duration> {
     // default values
     private boolean shortScale = true;
 
-    public ExtractDurationParams(final NumberParser numberParser, final String utterance) {
-        super(numberParser, utterance);
+    public ExtractDurationParams(final Parser parser, final String utterance) {
+        super(parser, utterance);
     }
 
     /**
@@ -30,6 +30,6 @@ public class ExtractDurationParams extends NumberParserParams<Duration> {
 
     @Override
     protected Supplier<Duration> getExtractorAtCurrentPosition(final TokenStream tokenStream) {
-        return numberParser.extractDuration(tokenStream, shortScale);
+        return parser.extractDuration(tokenStream, shortScale);
     }
 }

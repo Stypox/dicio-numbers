@@ -13,11 +13,11 @@ import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class NumberFormatter {
+public abstract class Formatter {
 
     protected final DateTimeConfig config;
 
-    protected NumberFormatter(final String configFolder) {
+    protected Formatter(final String configFolder) {
         config = new DateTimeConfig(configFolder);
     }
 

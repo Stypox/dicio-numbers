@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class NumberParser {
+public abstract class Parser {
 
     protected final Tokenizer tokenizer;
 
-    protected NumberParser(final String configFolder) {
+    protected Parser(final String configFolder) {
         tokenizer = new Tokenizer(configFolder);
     }
 

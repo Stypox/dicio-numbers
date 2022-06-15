@@ -1,10 +1,9 @@
 package org.dicio.numbers.test;
 
 import com.grack.nanojson.JsonParserException;
-import org.dicio.numbers.NumberParserFormatter;
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.ParserFormatter;
+import org.dicio.numbers.formatter.Formatter;
 import org.dicio.numbers.unit.Duration;
-import org.dicio.numbers.unit.Number;
 import org.junit.Before;
 
 import java.io.FileNotFoundException;
@@ -15,13 +14,13 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class NiceDurationTestBase {
 
-    protected NumberParserFormatter pf;
+    protected ParserFormatter pf;
 
-    public abstract NumberFormatter buildNumberFormatter();
+    public abstract Formatter buildNumberFormatter();
 
     @Before
     public void setup() throws FileNotFoundException, JsonParserException {
-        pf = new NumberParserFormatter(buildNumberFormatter(), null);
+        pf = new ParserFormatter(buildNumberFormatter(), null);
     }
 
     protected void assertDuration(final String expected,

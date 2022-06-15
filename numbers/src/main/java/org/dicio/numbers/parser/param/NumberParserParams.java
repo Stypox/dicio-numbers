@@ -1,6 +1,6 @@
 package org.dicio.numbers.parser.param;
 
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 
 import java.util.ArrayList;
@@ -9,11 +9,11 @@ import java.util.function.Supplier;
 
 public abstract class NumberParserParams<T> {
     // TODO add documentation
-    protected final NumberParser numberParser;
+    protected final Parser parser;
     private final String utterance;
 
-    protected NumberParserParams(final NumberParser numberParser, final String utterance) {
-        this.numberParser = numberParser;
+    protected NumberParserParams(final Parser parser, final String utterance) {
+        this.parser = parser;
         this.utterance = utterance;
     }
 
@@ -22,7 +22,7 @@ public abstract class NumberParserParams<T> {
 
 
     public T getFirst() {
-        final TokenStream ts = numberParser.tokenize(utterance);
+        final TokenStream ts = parser.tokenize(utterance);
         final Supplier<T> extractorAtCurrentPosition = getExtractorAtCurrentPosition(ts);
 
         while (!ts.finished()) {
@@ -41,7 +41,7 @@ public abstract class NumberParserParams<T> {
     }
 
     public List<Object> getMixedWithText() {
-        final TokenStream ts = numberParser.tokenize(utterance);
+        final TokenStream ts = parser.tokenize(utterance);
         final Supplier<T> extractorAtCurrentPosition = getExtractorAtCurrentPosition(ts);
         final List<Object> textAndObjects = new ArrayList<>();
         final StringBuilder currentText = new StringBuilder();

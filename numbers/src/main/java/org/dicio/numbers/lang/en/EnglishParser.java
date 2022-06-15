@@ -1,6 +1,6 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
@@ -9,7 +9,7 @@ import org.dicio.numbers.util.DurationExtractorUtils;
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
-public class EnglishParser extends NumberParser {
+public class EnglishParser extends Parser {
 
     public EnglishParser() {
         super("config/en-us");
