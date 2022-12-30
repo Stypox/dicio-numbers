@@ -224,7 +224,7 @@ public class FrenchFormatter extends NumberFormatter {
             }
         }
 
-        return result.toString();        return null;
+        return result.toString();
     }
 
     @Override
