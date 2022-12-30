@@ -30,7 +30,7 @@ public class DateTimeTest extends DateTimeTestBase {
                 pf.niceDate(LocalDate.of(-84, 8, 13)).now(LocalDate.of(-84, 8, 23)).get());
     }
 
-    /*  Please note that there is two way of saying years and centuries before 2000. For exemple:
+    /*  Please note that there is two ways of saying years and centuries before 2000. For example:
         1. mille (thousand) neuf (nine) cent (hundred) quatre-vingt (90) quatre (4)
         2. dix-neuf (nineteen) cent (hundred) quatre-vingt (90) quatre (4). (Slightly old-fashioned but common for years before 1900)
     */
@@ -38,8 +38,6 @@ public class DateTimeTest extends DateTimeTestBase {
     @Test
     public void testNiceYear() {
         // just check that the NumberParserFormatter functions do their job
-
-
         assertEquals("mille neuf cent quatre-vingt quatre", pf.niceYear(LocalDate.of(1984, 4, 28)).get());
         assertEquals("mille huit cent dix av. J-C", pf.niceYear(LocalDate.of(-810, 8, 13)).get());
     }
