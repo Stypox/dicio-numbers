@@ -219,15 +219,17 @@ public class EnglishNumberExtractor {
         } else if (n != null && ts.get(0).hasCategory("fraction_separator")) {
             // parse fraction from e.g. "twenty divided by one hundred"
 
-            int separatorLength = 1;
-            if (ts.get(1).hasCategory("fraction_separator_secondary")) {
-                separatorLength = 2; // also remove "by" after "divided by"
+            int originalPosition = ts.getPosition();
+            ts.movePositionForwardBy(1);
+            if (ts.get(0).hasCategory("fraction_separator_secondary")) {
+                ts.movePositionForwardBy(1); // also remove "by" after "divided by"
             }
 
-            ts.movePositionForwardBy(separatorLength);
             final Number denominator = numberInteger(false);
-            if (denominator == null) {
-                ts.movePositionForwardBy(-separatorLength); // not a fraction, reset
+            if (denominator == null
+                    || (denominator.isInteger() && denominator.integerValue() == 0)
+                    || (denominator.isDecimal() && denominator.decimalValue() == 0.0)) {
+                ts.setPosition(originalPosition); // not a fraction or division by zero, reset
             } else {
                 return n.divide(denominator);
             }
