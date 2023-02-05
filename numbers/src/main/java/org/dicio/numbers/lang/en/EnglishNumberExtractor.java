@@ -233,7 +233,7 @@ public class EnglishNumberExtractor {
         }
         // n != null from here on
 
-        if (n.lessThan(21) && n.moreThan(9)) {
+        if (n.lessThan(21) && n.moreThan(9) && !ts.get(-1).hasCategory("raw")) {
             // parse years (1001 to 2099) in the particular forms (but xx-hundred is handled below)
             final Number secondGroup = numberYearSecondGroup(allowOrdinal);
             if (secondGroup != null) {

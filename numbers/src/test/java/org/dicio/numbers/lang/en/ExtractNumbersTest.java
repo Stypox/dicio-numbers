@@ -170,6 +170,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     public void testNumberIntegerThousandSeparator() {
         // independent of short/long scale and of ordinal mode
         assertNumberInteger("23,001",               T, F, 23001,      F, 3);
+        assertNumberInteger("19,123",               T, T, 19123,      F, 3);
         assertNumberInteger("a 167,42",             F, T, 167,        F, 2);
         assertNumberInteger("1,234,023,054, hello", F, F, 1234023054, F, 7);
         assertNumberInteger("23,001, a 500",        T, T, 23001,      F, 3);
@@ -182,6 +183,10 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         // independent of short/long scale and of ordinal mode
         assertNumberInteger("two twenty-one",                 T, T, 2,    F, 1);
         assertNumberInteger("nineteen 745",                   F, F, 19,   F, 1);
+        assertNumberInteger("nineteen 25",                    F, F, 1925, F, 2);
+        assertNumberInteger("19 twenty five",                 F, F, 19,   F, 1);
+        assertNumberInteger("19 25",                          F, F, 19,   F, 1);
+        assertNumberInteger("nineteenth twenty five",         F, T, 19,   T, 1);
         assertNumberInteger("ten 21",                         F, T, 1021, F, 2);
         assertNumberInteger("nineteen oh 6 and two",          T, F, 1906, F, 3);
         assertNumberInteger("twenty-nought-oh",               T, T, 2000, F, 5);
