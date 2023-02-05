@@ -17,8 +17,7 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
 
     @Test
     public void testNumberParserExtractDuration() {
-        final ParserFormatter npf
-                = new ParserFormatter(null, new EnglishParser());
+        final ParserFormatter npf = new ParserFormatter(null, new EnglishParser());
         assertNull(npf.extractDuration("hello how are you").getFirst());
         assertNull(npf.extractDuration("one billion euros").shortScale(true).getFirst());
         assertNull(npf.extractDuration("a million").shortScale(false).getFirst());

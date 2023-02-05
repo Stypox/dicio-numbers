@@ -6,6 +6,7 @@ import static org.dicio.numbers.test.TestUtils.niceDuration;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -14,6 +15,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.time.temporal.ChronoUnit.WEEKS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Duration;
@@ -504,5 +506,19 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDateTimeNull("hello how are you");
         assertDateTimeNull("test twenty first of jan after a dinner");
         assertDateTimeNull("minus one millisecond");
+    }
+
+    @Test
+    public void testNumberParserExtractDateTime() {
+        final ParserFormatter npf = new ParserFormatter(null, new EnglishParser());
+        assertNull(npf.extractDateTime("hello how are you").getFirst());
+        assertEquals(NOW.minusDays(30).withHour(14).withMinute(39).withSecond(0).withNano(0),
+                npf.extractDateTime("2:39 p.m., thirty days ago").now(NOW).getFirst());
+        assertEquals(NOW.plusMinutes(3).plusSeconds(46),
+                npf.extractDateTime("in three minutes forty six seconds").now(NOW).getFirst());
+        assertEquals(NOW.withYear(3).withMonth(2).withDayOfMonth(1),
+                npf.extractDateTime("1 2/3").preferMonthBeforeDay(false).now(NOW).getFirst());
+        assertEquals(NOW.withYear(3).withMonth(1).withDayOfMonth(2),
+                npf.extractDateTime("1.2,3").preferMonthBeforeDay(true).now(NOW).getFirst());
     }
 }

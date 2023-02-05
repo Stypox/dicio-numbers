@@ -4,6 +4,7 @@ import static org.dicio.numbers.test.TestUtils.niceDuration;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -12,6 +13,7 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.time.temporal.ChronoUnit.WEEKS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Duration;
@@ -437,5 +439,21 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDateTimeNull("ciao come va");
         assertDateTimeNull("il ventun gennaio dopo cena");
         assertDateTimeNull("meno centotre millisecondi");
+    }
+
+    @Test
+    public void testNumberParserExtractDateTime() {
+        final ParserFormatter npf = new ParserFormatter(null, new ItalianParser());
+        assertNull(npf.extractDateTime("ciao come va").getFirst());
+        assertEquals(NOW.minusDays(30).withHour(14).withMinute(39).withSecond(0).withNano(0),
+                npf.extractDateTime("2:39 p.m., trenta giorni fa").preferMonthBeforeDay(true).now(NOW).getFirst());
+        assertEquals(NOW.plusMinutes(3).plusSeconds(46),
+                npf.extractDateTime("fra tre minuti e quarantasei secondi").now(NOW).getFirst());
+
+        // preferMonthBeforeDay does nothing for italian (as if it was always false)
+        assertEquals(NOW.withYear(3).withMonth(2).withDayOfMonth(1),
+                npf.extractDateTime("1 2/3").preferMonthBeforeDay(false).now(NOW).getFirst());
+        assertEquals(NOW.withYear(3).withMonth(2).withDayOfMonth(1),
+                npf.extractDateTime("1.2,3").preferMonthBeforeDay(true).now(NOW).getFirst());
     }
 }
