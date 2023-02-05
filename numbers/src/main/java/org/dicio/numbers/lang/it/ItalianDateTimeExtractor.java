@@ -54,21 +54,27 @@ public class ItalianDateTimeExtractor {
         LocalTime time = null;
 
         if (!timeFirst) {
-            final Duration duration
-                    = firstNotNull(this::relativeDuration, this::relativeMonthDuration);
-            if (duration == null) {
-                // no normal relative duration found: start extracting a date normally
-                date = firstNotNull(this::relativeSpecialDay, this::date);
-            } else if (duration.getNanos() == 0 && duration.getDays() != 0) {
-                // duration contains a specified day and no specified time, so a time can follow
-                date = duration.applyAsOffsetToDateTime(now).toLocalDate();
-            } else if (duration.getNanos() != 0 && duration.getDays() == 0
-                    && duration.getMonths() == 0 && duration.getYears() == 0) {
-                // duration contains a specified time, so a date could follow
-                time = duration.applyAsOffsetToDateTime(now).toLocalTime();
-            } else {
-                // duration contains mixed date&time, or has units >=month, nothing can follow
-                return duration.applyAsOffsetToDateTime(now);
+            // first try with special days, since duration-related words might be used
+            date = relativeSpecialDay();
+
+            if (date == null) {
+                // then try with duration, since otherwise numbers would be interpreted as date days
+                final Duration duration = firstNotNull(
+                        this::relativeDuration, dateTimeExtractor::relativeMonthDuration);
+                if (duration == null) {
+                    // no normal relative duration found: finally try extracting a date normally
+                    date = date();
+                } else if (duration.getNanos() == 0 && duration.getDays() != 0) {
+                    // duration contains a specified day and no specified time, so a time can follow
+                    date = duration.applyAsOffsetToDateTime(now).toLocalDate();
+                } else if (duration.getNanos() != 0 && duration.getDays() == 0
+                        && duration.getMonths() == 0 && duration.getYears() == 0) {
+                    // duration contains a specified time, so a date could follow
+                    time = duration.applyAsOffsetToDateTime(now).toLocalTime();
+                } else {
+                    // duration contains mixed date&time, or has units >=month, nothing can follow
+                    return duration.applyAsOffsetToDateTime(now);
+                }
             }
         }
 
