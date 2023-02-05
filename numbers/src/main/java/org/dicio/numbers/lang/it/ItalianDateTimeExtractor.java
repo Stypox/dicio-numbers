@@ -173,14 +173,8 @@ public class ItalianDateTimeExtractor {
             result = result.withDayOfMonth(day);
         }
 
-        final Integer month = ts.tryOrSkipDateTimeIgnore(day != null, () -> {
-            final Integer number = monthName();
-            if (number != null) {
-                return number + 1;
-            }
-            return extractIntegerInRange(1, 12);
-        });
-
+        final Integer month = ts.tryOrSkipDateTimeIgnore(day != null, () ->
+                firstNotNull(dateTimeExtractor::monthName, () -> extractIntegerInRange(1, 12)));
         if (month == null) {
             if (day != null) {
                 return result;
