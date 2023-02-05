@@ -33,6 +33,26 @@ public class NumberExtractorUtils {
     }
 
 
+    public static Number signBeforeNumber(final TokenStream ts,
+                                          final Supplier<Number> numberSupplier) {
+        if (ts.get(0).hasCategory("sign")) {
+            // parse sign from e.g. "minus twelve"
+
+            boolean negative = ts.get(0).hasCategory("negative");
+            ts.movePositionForwardBy(1);
+
+            final Number n = numberSupplier.get();
+            if (n == null) {
+                ts.movePositionForwardBy(-1); // rewind
+                return null;
+            } else {
+                return n.multiply(negative ? -1 : 1).withOrdinal(n.isOrdinal());
+            }
+
+        }
+        return numberSupplier.get();
+    }
+
     public static Number numberBigRaw(final TokenStream ts, final boolean allowOrdinal) {
         // try to parse big raw numbers (bigger than 999), e.g. 1207, 57378th
         final int nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0);

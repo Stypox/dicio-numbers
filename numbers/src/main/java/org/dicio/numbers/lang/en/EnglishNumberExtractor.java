@@ -131,22 +131,7 @@ public class EnglishNumberExtractor {
     }
 
     Number numberSignPoint(final boolean allowOrdinal) {
-        if (ts.get(0).hasCategory("sign")) {
-            // parse sign from e.g. "minus twelve"
-
-            boolean negative = ts.get(0).hasCategory("negative");
-            ts.movePositionForwardBy(1);
-
-            final Number n = numberPoint(allowOrdinal);
-            if (n == null) {
-                ts.movePositionForwardBy(-1); // rewind
-                return null;
-            } else {
-                return n.multiply(negative ? -1 : 1).withOrdinal(n.isOrdinal());
-            }
-
-        }
-        return numberPoint(allowOrdinal);
+        return signBeforeNumber(ts, () -> numberPoint(allowOrdinal));
     }
 
     Number numberPoint(final boolean allowOrdinal) {

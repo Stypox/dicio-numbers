@@ -110,22 +110,7 @@ public class ItalianNumberExtractor {
     }
 
     Number numberSignPoint(final boolean allowOrdinal, final boolean allowFraction) {
-        if (ts.get(0).hasCategory("sign")) {
-            // parse sign from e.g. "minus twelve"
-
-            boolean negative = ts.get(0).hasCategory("negative");
-            ts.movePositionForwardBy(1);
-
-            final Number n = numberPoint(allowOrdinal, allowFraction);
-            if (n == null) {
-                ts.movePositionForwardBy(-1); // rewind
-                return null;
-            } else {
-                return n.multiply(negative ? -1 : 1).withOrdinal(n.isOrdinal());
-            }
-
-        }
-        return numberPoint(allowOrdinal, allowFraction);
+        return signBeforeNumber(ts, () -> numberPoint(allowOrdinal, allowFraction));
     }
 
     Number numberPoint(final boolean allowOrdinal, final boolean allowFraction) {
