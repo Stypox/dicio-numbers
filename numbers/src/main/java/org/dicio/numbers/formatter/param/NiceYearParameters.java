@@ -1,6 +1,6 @@
 package org.dicio.numbers.formatter.param;
 
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.Formatter;
 
 import java.time.LocalDate;
 
@@ -11,15 +11,15 @@ import java.time.LocalDate;
 public class NiceYearParameters {
     // TODO documentation
 
-    private final NumberFormatter numberFormatter;
+    private final Formatter formatter;
     private final LocalDate date;
 
-    public NiceYearParameters(final NumberFormatter numberFormatter, final LocalDate date) {
-        this.numberFormatter = numberFormatter;
+    public NiceYearParameters(final Formatter formatter, final LocalDate date) {
+        this.formatter = formatter;
         this.date = date;
     }
 
     public String get() {
-        return numberFormatter.niceYear(date);
+        return formatter.niceYear(date);
     }
 }

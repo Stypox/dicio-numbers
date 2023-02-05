@@ -1,7 +1,7 @@
 package org.dicio.numbers.test;
 
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 
 import static org.dicio.numbers.util.NumberExtractorUtils.numberGroupShortScale;
 import static org.dicio.numbers.util.NumberExtractorUtils.numberLessThan1000;
@@ -27,7 +27,7 @@ public abstract class NumberExtractorUtilsTestBase extends WithTokenizerTestBase
     }
 
     protected void assertNumberLessThan1000(final String s, final boolean allowOrdinal, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+        assertNumberFunction(s, new Number(value).withOrdinal(isOrdinal), finalTokenStreamPosition,
                 ts -> numberLessThan1000(ts, allowOrdinal));
     }
 
@@ -36,7 +36,7 @@ public abstract class NumberExtractorUtilsTestBase extends WithTokenizerTestBase
     }
 
     protected void assertNumberGroupShortScale(final String s, final boolean allowOrdinal, final long lastMultiplier, final long value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, new Number(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+        assertNumberFunction(s, new Number(value).withOrdinal(isOrdinal), finalTokenStreamPosition,
                 ts -> numberGroupShortScale(ts, allowOrdinal, lastMultiplier));
     }
 

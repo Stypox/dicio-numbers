@@ -1,27 +1,44 @@
-package org.dicio.numbers.util;
+package org.dicio.numbers.unit;
 
 import java.util.Objects;
 
+/**
+ * TODO add documentation
+ */
 public class Number {
 
     private final boolean isDecimal;
     private final long integerValue;
     private final double decimalValue;
-
-    private boolean isOrdinal = false;
+    private final boolean isOrdinal;
 
 
     public Number(final long integerValue) {
-        this.isDecimal = false;
-        this.integerValue = integerValue;
-        this.decimalValue = Double.NaN;
+        this(integerValue, false);
     }
 
     public Number(final double decimalValue) {
-        this.isDecimal = true;
-        this.integerValue = 0;
-        this.decimalValue = decimalValue;
+        this(decimalValue, false);
     }
+
+    public Number(final long integerValue, final boolean isOrdinal) {
+        this(false, integerValue, Double.NaN, isOrdinal);
+    }
+
+    public Number(final double decimalValue, final boolean isOrdinal) {
+        this(true, 0, decimalValue, isOrdinal);
+    }
+
+    private Number(final boolean isDecimal,
+                   final long integerValue,
+                   final double decimalValue,
+                   final boolean isOrdinal) {
+        this.isDecimal = isDecimal;
+        this.integerValue = integerValue;
+        this.decimalValue = decimalValue;
+        this.isOrdinal = isOrdinal;
+    }
+
 
     public static Number fromObject(final Object object) {
         if (object instanceof Short || object instanceof Integer || object instanceof Long) {
@@ -55,46 +72,45 @@ public class Number {
         return isOrdinal;
     }
 
-    public Number setOrdinal(final boolean ordinal) {
-        isOrdinal = ordinal;
-        return this;
+    public Number withOrdinal(final boolean isOrdinal) {
+        return new Number(this.isDecimal, this.integerValue, this.decimalValue, isOrdinal);
     }
 
 
     public Number multiply(final long integer) {
         if (isDecimal) {
-            return new Number(decimalValue * integer);
+            return new Number(decimalValue * integer, isOrdinal);
         } else {
             try {
-                return new Number(Math.multiplyExact(integerValue, integer));
+                return new Number(Math.multiplyExact(integerValue, integer), isOrdinal);
             } catch (final ArithmeticException e) {
-                return new Number((double) integerValue * integer);
+                return new Number((double) integerValue * integer, isOrdinal);
             }
         }
     }
 
     public Number multiply(final double decimal) {
-        return new Number((isDecimal ? decimalValue : integerValue) * decimal);
+        return new Number((isDecimal ? decimalValue : integerValue) * decimal, isOrdinal);
     }
 
     public Number multiply(final Number number) {
-        return number.isDecimal ? multiply(number.decimalValue) : multiply(number.integerValue);
+        return (number.isDecimal ? multiply(number.decimalValue) : multiply(number.integerValue));
     }
 
     public Number plus(final long integer) {
         if (isDecimal) {
-            return new Number(decimalValue + integer);
+            return new Number(decimalValue + integer, isOrdinal);
         } else {
             try {
-                return new Number(Math.addExact(integerValue, integer));
+                return new Number(Math.addExact(integerValue, integer), isOrdinal);
             } catch (final ArithmeticException e) {
-                return new Number((double) integerValue + integer);
+                return new Number((double) integerValue + integer, isOrdinal);
             }
         }
     }
 
     public Number plus(final double decimal) {
-        return new Number((isDecimal ? decimalValue : integerValue) + decimal);
+        return new Number((isDecimal ? decimalValue : integerValue) + decimal, isOrdinal);
     }
 
     public Number plus(final Number number) {
@@ -103,16 +119,16 @@ public class Number {
 
     public Number divide(final long integer) {
         if (isDecimal) {
-            return new Number(decimalValue / integer);
+            return new Number(decimalValue / integer, isOrdinal);
         } else if (integerValue % integer == 0) {
-            return new Number(integerValue / integer);
+            return new Number(integerValue / integer, isOrdinal);
         } else {
-            return new Number(((double) integerValue) / integer);
+            return new Number(((double) integerValue) / integer, isOrdinal);
         }
     }
 
     public Number divide(final double decimal) {
-        return new Number((isDecimal ? decimalValue : integerValue) / decimal);
+        return new Number((isDecimal ? decimalValue : integerValue) / decimal, isOrdinal);
     }
 
     public Number divide(final Number number) {

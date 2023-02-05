@@ -1,14 +1,14 @@
 package org.dicio.numbers.lang.it;
 
-import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.util.MixedFraction;
+import org.dicio.numbers.formatter.Formatter;
+import org.dicio.numbers.unit.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class ItalianFormatter extends NumberFormatter {
+public class ItalianFormatter extends Formatter {
 
     final Map<Long, String> NUMBER_NAMES = new HashMap<Long, String>() {{
         put(0L, "zero");

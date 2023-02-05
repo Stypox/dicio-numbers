@@ -1,6 +1,7 @@
 package org.dicio.numbers.test;
 
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.lang.en.EnglishFormatter;
+import org.dicio.numbers.unit.Number;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -30,11 +31,11 @@ public class TestUtils {
     }
 
     public static Number n(final long value, final boolean ordinal) {
-        return new Number(value).setOrdinal(ordinal);
+        return new Number(value, ordinal);
     }
 
     public static Number n(final double value, final boolean ordinal) {
-        return new Number(value).setOrdinal(ordinal);
+        return new Number(value, ordinal);
     }
 
     public static Number n(final long value) {
@@ -55,5 +56,22 @@ public class TestUtils {
 
     public static Duration t(final double seconds) {
         return Duration.ofSeconds((long) seconds, (int)((seconds % 1.0) * 1e9));
+    }
+
+    public static org.dicio.numbers.unit.Duration t(final double number, final ChronoUnit chronoUnit) {
+        return new org.dicio.numbers.unit.Duration().plus(number, chronoUnit);
+    }
+
+    public static String niceDuration(final org.dicio.numbers.unit.Duration duration) {
+        return niceDuration(duration.toJavaDuration());
+    }
+
+    public static String niceDuration(final Duration duration) {
+        if (duration.isNegative()) {
+            return "minus " + niceDuration(duration.negated());
+        } else {
+            return new EnglishFormatter().niceDuration(
+                    new org.dicio.numbers.unit.Duration(duration), true);
+        }
     }
 }

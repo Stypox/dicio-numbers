@@ -1,12 +1,12 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.NumberParserFormatter;
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.function.BiFunction;
 
 import static org.dicio.numbers.test.TestUtils.F;
 import static org.dicio.numbers.test.TestUtils.T;
@@ -21,30 +21,26 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         return "config/en-us";
     }
 
-    private interface NumberFunction {
-        Number call(final EnglishNumberExtractor enp, final TokenStream ts);
-    }
-
 
     private void assertNumberFunction(final String s,
                                       final boolean shortScale,
                                       final Number value,
                                       final int finalTokenStreamPosition,
-                                      final NumberFunction numberFunction) {
+                                      final BiFunction<EnglishNumberExtractor, TokenStream, Number> numberFunction) {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Number number = numberFunction.call(new EnglishNumberExtractor(ts, shortScale, false), ts);
+        final Number number = numberFunction.apply(new EnglishNumberExtractor(ts, shortScale), ts);
         assertEquals("wrong value for string " + s, value, number);
         assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
     }
 
     private void assertNumberFunctionNull(final String s,
                                           final boolean shortScale,
-                                          final NumberFunction numberFunction) {
+                                          final BiFunction<EnglishNumberExtractor, TokenStream, Number> numberFunction) {
         assertNumberFunction(s, shortScale, null, 0, numberFunction);
     }
 
     private void assertNumberGroupLongScale(final String s, final boolean allowOrdinal, final double lastMultiplier, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, true, numberDeduceType(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+        assertNumberFunction(s, true, numberDeduceType(value).withOrdinal(isOrdinal), finalTokenStreamPosition,
                 (enp, ts) -> EnglishNumberExtractor.numberGroupLongScale(ts, allowOrdinal, lastMultiplier));
     }
 
@@ -53,7 +49,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberInteger(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal), finalTokenStreamPosition,
+        assertNumberFunction(s, shortScale, numberDeduceType(value).withOrdinal(isOrdinal), finalTokenStreamPosition,
                 (enp, ts) -> enp.numberInteger(allowOrdinal));
     }
 
@@ -63,7 +59,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberPoint(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal),
+        assertNumberFunction(s, shortScale, numberDeduceType(value).withOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp, ts) -> enp.numberPoint(allowOrdinal));
     }
 
@@ -73,7 +69,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     }
 
     private void assertNumberSignPoint(final String s, final boolean shortScale, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
-        assertNumberFunction(s, shortScale, numberDeduceType(value).setOrdinal(isOrdinal),
+        assertNumberFunction(s, shortScale, numberDeduceType(value).withOrdinal(isOrdinal),
                 finalTokenStreamPosition, (enp, ts) -> enp.numberSignPoint(allowOrdinal));
     }
 
@@ -86,15 +82,6 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertNumberFunction(s, true, value, finalTokenStreamPosition,
                 (enp, ts) -> enp.divideByDenominatorIfPossible(startingNumber));
     }
-
-    private void assertExtractNumbers(final String s, final boolean shortScale, final boolean preferOrdinal, final Object... results) {
-        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final List<Object> objects = new EnglishNumberExtractor(ts, shortScale, preferOrdinal)
-                .extractNumbers();
-        assertArrayEquals("Invalid result array: " + objects.toString(), results, objects.toArray());
-        assertTrue(ts.finished());
-    }
-
 
 
     @Test
@@ -183,6 +170,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     public void testNumberIntegerThousandSeparator() {
         // independent of short/long scale and of ordinal mode
         assertNumberInteger("23,001",               T, F, 23001,      F, 3);
+        assertNumberInteger("19,123",               T, T, 19123,      F, 3);
         assertNumberInteger("a 167,42",             F, T, 167,        F, 2);
         assertNumberInteger("1,234,023,054, hello", F, F, 1234023054, F, 7);
         assertNumberInteger("23,001, a 500",        T, T, 23001,      F, 3);
@@ -195,6 +183,10 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         // independent of short/long scale and of ordinal mode
         assertNumberInteger("two twenty-one",                 T, T, 2,    F, 1);
         assertNumberInteger("nineteen 745",                   F, F, 19,   F, 1);
+        assertNumberInteger("nineteen 25",                    F, F, 1925, F, 2);
+        assertNumberInteger("19 twenty five",                 F, F, 19,   F, 1);
+        assertNumberInteger("19 25",                          F, F, 19,   F, 1);
+        assertNumberInteger("nineteenth twenty five",         F, T, 19,   T, 1);
         assertNumberInteger("ten 21",                         F, T, 1021, F, 2);
         assertNumberInteger("nineteen oh 6 and two",          T, F, 1906, F, 3);
         assertNumberInteger("twenty-nought-oh",               T, T, 2000, F, 5);
@@ -219,7 +211,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
 
     @Test
     public void testNumberIntegerWithFormatter() {
-        final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
+        final ParserFormatter npf = new ParserFormatter(new EnglishFormatter(), null);
         for (int i = 0; i < 1100000000;) {
             if (i < 2200) {
                 ++i; // test all numbers from 0 to 200 (also tests years!)
@@ -253,7 +245,7 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
 
     @Test(timeout = 4000) // 40000 formats + parses take <2s, use 4s timeout just for slower PCs
     public void testNumberIntegerPerformanceWithFormatter() {
-        final NumberParserFormatter npf = new NumberParserFormatter(new EnglishFormatter(), null);
+        final ParserFormatter npf = new ParserFormatter(new EnglishFormatter(), null);
         final long startingValue = 54378960497L;
         for (long i = startingValue; i < startingValue + 10000; ++i) {
             // short scale not ordinal
@@ -395,31 +387,5 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         assertDivideByDenominatorIfPossible("a ten",     null,       null,      0);
         assertDivideByDenominatorIfPossible("a people",  null,       null,      0);
         assertDivideByDenominatorIfPossible("a tenth",   n(2.8, F),  n(2.8, F), 0);
-    }
-
-    @Test
-    public void testExtractNumbers() {
-        assertExtractNumbers(" hello  ciao!, 3/5 or four sevenths?", T, F, " hello  ciao!, ", n(3.0 / 5.0, F), " or ", n(4.0 / 7.0, F), "?");
-        assertExtractNumbers(" hello  ciao!, four sevenths or 3/5?", T, T, " hello  ciao!, ", n(4.0 / 7.0, F), " or ", n(3.0 / 5.0, F), "?");
-        assertExtractNumbers("three billionth plus two",             T, T, n(3000000000L, T),           " ",       n(2, F));
-        assertExtractNumbers("one billionth and sixteen sixty four", T, F, n(1.0 / 1000000000.0, F),    " and ",   n(1664, F));
-        assertExtractNumbers("two billionths minus fifty eight",     F, T, n(2000000000000L, T),        " ",       n(-58, F));
-        assertExtractNumbers("nine billionths times eleven",         F, F, n(9.0 / 1000000000000.0, F), " times ", n(11, F));
-        assertExtractNumbers("three halves, not eleven quarters",    F, T, n(3.0 / 2.0, F), ", not ", n(11.0 / 4.0, F));
-        assertExtractNumbers("six pairs equals a dozen ",            F, T, n(12, F), " equals ", n(12, F), " ");
-        assertExtractNumbers("a dozen scores is not a gross",        F, T, n(240, F), " is not ", n(144, F));
-        assertExtractNumbers("6 quadrillionths of a cake",           F, T, n(6e24, T), " of a cake");
-        assertExtractNumbers("is nineteen sixty four quadrillionth", F, F, "is ", n(1964e-24, F));
-    }
-
-    @Test
-    public void testNumberParserExtractNumbers() {
-        final NumberParserFormatter npf
-                = new NumberParserFormatter(null, new EnglishParser());
-        assertArrayEquals(new Object[] {"I'm ", new Number(23), " years old."}, npf.extractNumbers("I'm twenty three years old.").get().toArray());
-        assertArrayEquals(new Object[] {"The ", new Number(1e30).setOrdinal(true)}, npf.extractNumbers("The quintillionth").shortScale(false).get().toArray());
-        assertArrayEquals(new Object[] {new Number(1e-18)}, npf.extractNumbers("One quintillionth").preferOrdinal(false).get().toArray());
-        assertArrayEquals(new Object[] {new Number(1000000000000000000L).setOrdinal(true)}, npf.extractNumbers("One quintillionth").preferOrdinal(true).get().toArray());
-        assertArrayEquals(new Object[] {new Number(1000000000000L)}, npf.extractNumbers("One billion").shortScale(false).preferOrdinal(true).get().toArray());
     }
 }

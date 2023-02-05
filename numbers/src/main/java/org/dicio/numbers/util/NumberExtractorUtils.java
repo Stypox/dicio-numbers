@@ -2,17 +2,13 @@ package org.dicio.numbers.util;
 
 import org.dicio.numbers.parser.lexer.Token;
 import org.dicio.numbers.parser.lexer.TokenStream;
+import org.dicio.numbers.unit.Number;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Supplier;
 
 public class NumberExtractorUtils {
 
     private NumberExtractorUtils() {
-    }
-
-    public interface ExtractNumbersMethod {
-        void extractNumbers(final List<Object> textAndNumbers, final StringBuilder currentText);
     }
 
     public interface NumberGroupGetter {
@@ -20,39 +16,42 @@ public class NumberExtractorUtils {
     }
 
 
-    public static List<Object> extractNumbersWith(final ExtractNumbersMethod extractNumbersMethod) {
-        List<Object> textAndNumbers = new ArrayList<>();
-        final StringBuilder currentText = new StringBuilder();
+    public static Integer extractOneIntegerInRange(final TokenStream ts,
+                                                   final int fromInclusive,
+                                                   final int toInclusive,
+                                                   final Supplier<Number> numberSupplier) {
+        final int originalPosition = ts.getPosition();
+        final Number number = numberSupplier.get();
 
-        // the called functions will add objects to textAndNumbers and reuse currentText for strings
-        extractNumbersMethod.extractNumbers(textAndNumbers, currentText);
-
-        if (currentText.length() != 0) {
-            // add leftover text (this can be done here since the functions above reuse currentText)
-            textAndNumbers.add(currentText.toString());
+        if (number == null || !number.isInteger()
+                || number.integerValue() < fromInclusive || number.integerValue() > toInclusive) {
+            ts.setPosition(originalPosition);
+            return null;
         }
 
-        return textAndNumbers;
+        return (int) number.integerValue();
     }
 
-    public static void addNumberOrText(final TokenStream ts,
-                                       final Number number,
-                                       final List<Object> textAndNumbers,
-                                       final StringBuilder currentText) {
-        if (number == null) {
-            // no number here, add the text of the current token to currentText instead
-            currentText.append(ts.get(0).getValue()).append(ts.get(0).getSpacesFollowing());
+
+    public static Number signBeforeNumber(final TokenStream ts,
+                                          final Supplier<Number> numberSupplier) {
+        if (ts.get(0).hasCategory("sign")) {
+            // parse sign from e.g. "minus twelve"
+
+            boolean negative = ts.get(0).hasCategory("negative");
             ts.movePositionForwardBy(1);
-        } else {
-            if (currentText.length() != 0) {
-                textAndNumbers.add(currentText.toString()); // add the text before the number
-                currentText.setLength(0); // clear the string builder efficiently
-            }
-            textAndNumbers.add(number);
-            currentText.append(ts.get(-1).getSpacesFollowing()); // spaces after the number
-        }
-    }
 
+            final Number n = numberSupplier.get();
+            if (n == null) {
+                ts.movePositionForwardBy(-1); // rewind
+                return null;
+            } else {
+                return n.multiply(negative ? -1 : 1).withOrdinal(n.isOrdinal());
+            }
+
+        }
+        return numberSupplier.get();
+    }
 
     public static Number numberBigRaw(final TokenStream ts, final boolean allowOrdinal) {
         // try to parse big raw numbers (bigger than 999), e.g. 1207, 57378th
@@ -64,7 +63,7 @@ public class NumberExtractorUtils {
             } else {
                 // a big number in raw form, e.g. 1250067, 5839th
                 ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
-                return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
+                return ts.get(ordinal ? -2 : -1).getNumber().withOrdinal(ordinal);
             }
 
         } else {
@@ -90,7 +89,7 @@ public class NumberExtractorUtils {
             }
 
             if (group.isOrdinal()) {
-                groups.setOrdinal(true);
+                groups = groups.withOrdinal(true);
                 break; // ordinal numbers terminate at the ordinal group
             }
             lastMultiplier = group.isDecimal() ? group.decimalValue() : group.integerValue();
@@ -121,10 +120,10 @@ public class NumberExtractorUtils {
                 ts.movePositionForwardBy(nextNotIgnore + 1);
                 if (groupValue == null) {
                     // the multiplier alone, e.g. a million
-                    return multiplier.setOrdinal(ordinal);
+                    return multiplier.withOrdinal(ordinal);
                 } else {
                     // number smaller than 1000 followed by a multiplier, e.g. thirteen billion
-                    return multiplier.multiply(groupValue).setOrdinal(ordinal);
+                    return multiplier.multiply(groupValue).withOrdinal(ordinal);
                 }
             }
         } else {
@@ -249,7 +248,7 @@ public class NumberExtractorUtils {
             return null;
         } else {
             return new Number((hundred < 0 ? 0 : hundred) + (ten < 0 ? 0 : ten)
-                    + (digit < 0 ? 0 : digit)).setOrdinal(ordinal); // e.g. one hundred and twelve
+                    + (digit < 0 ? 0 : digit), ordinal); // e.g. one hundred and twelve
         }
     }
 

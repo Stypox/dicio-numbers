@@ -1,6 +1,6 @@
 package org.dicio.numbers.formatter.param;
 
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.Formatter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 public class NiceDateTimeParameters {
     // TODO documentation
 
-    private final NumberFormatter numberFormatter;
+    private final Formatter formatter;
     private final LocalDate date;
     private final LocalTime time;
 
@@ -18,9 +18,9 @@ public class NiceDateTimeParameters {
     private boolean use24Hour = false;
     private boolean showAmPm = false;
 
-    public NiceDateTimeParameters(final NumberFormatter numberFormatter,
+    public NiceDateTimeParameters(final Formatter formatter,
                                   final LocalDateTime dateTime) {
-        this.numberFormatter = numberFormatter;
+        this.formatter = formatter;
         this.date = dateTime.toLocalDate();
         this.time = dateTime.toLocalTime();
     }
@@ -46,6 +46,6 @@ public class NiceDateTimeParameters {
     }
 
     public String get() {
-        return numberFormatter.niceDateTime(date, now, time, use24Hour, showAmPm);
+        return formatter.niceDateTime(date, now, time, use24Hour, showAmPm);
     }
 }

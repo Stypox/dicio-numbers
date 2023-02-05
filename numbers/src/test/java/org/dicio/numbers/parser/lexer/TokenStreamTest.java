@@ -1,6 +1,7 @@
 package org.dicio.numbers.parser.lexer;
 
 import static org.dicio.numbers.test.TestUtils.n;
+import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
@@ -8,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -18,7 +19,7 @@ public class TokenStreamTest {
     private static final List<Token> TOKENS = Arrays.asList(
             new Token("", " "),
             new MatchedToken("a", "\n ", Collections.singleton("ignore")),
-            new DurationToken("ms", "", Duration.ofMillis(1), false)
+            new DurationToken("ms", "", "", t(1, ChronoUnit.MILLIS), false)
     );
 
     private static final List<Token> TOKENS_IGNORES = Arrays.asList(
@@ -29,7 +30,7 @@ public class TokenStreamTest {
             new NumberToken("2022", " ", Collections.emptySet(), n(2022)),
             new MatchedToken("going", " ", Collections.singleton("test")),
             new MatchedToken("?", " ", Collections.singleton("ignore")),
-            new DurationToken("s", "", Duration.ofSeconds(1), true),
+            new DurationToken("s", "", "", t(1, ChronoUnit.SECONDS), true),
             new NumberToken("?", " ", Collections.singleton("ignore"), n(-1))
     );
 

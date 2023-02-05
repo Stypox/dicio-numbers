@@ -1,25 +1,26 @@
 package org.dicio.numbers.test;
 
 import com.grack.nanojson.JsonParserException;
-import org.dicio.numbers.NumberParserFormatter;
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.ParserFormatter;
+import org.dicio.numbers.formatter.Formatter;
+import org.dicio.numbers.unit.Duration;
 import org.junit.Before;
 
 import java.io.FileNotFoundException;
-import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public abstract class NiceDurationTestBase {
 
-    protected NumberParserFormatter pf;
+    protected ParserFormatter pf;
 
-    public abstract NumberFormatter buildNumberFormatter();
+    public abstract Formatter buildNumberFormatter();
 
     @Before
     public void setup() throws FileNotFoundException, JsonParserException {
-        pf = new NumberParserFormatter(buildNumberFormatter(), null);
+        pf = new ParserFormatter(buildNumberFormatter(), null);
     }
 
     protected void assertDuration(final String expected,
@@ -34,8 +35,8 @@ public abstract class NiceDurationTestBase {
         assertTrue(minutes >= 0 && minutes < 60);
         assertTrue(seconds >= 0 && seconds < 60);
 
-        assertEquals(expected, pf.niceDuration(
-                        Duration.ofSeconds(seconds + 60 * (minutes + 60 * (hours + 24 * days))))
+        assertEquals(expected, pf.niceDuration(new Duration()
+                        .plus(seconds + 60 * (minutes + 60 * (hours + 24 * days)), ChronoUnit.SECONDS))
                 .speech(speech).get());
     }
 }

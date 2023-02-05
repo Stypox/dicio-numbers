@@ -1,7 +1,6 @@
 package org.dicio.numbers.test;
 
 import org.dicio.numbers.parser.lexer.Tokenizer;
-import org.dicio.numbers.util.Number;
 import org.junit.Before;
 
 public abstract class WithTokenizerTestBase {

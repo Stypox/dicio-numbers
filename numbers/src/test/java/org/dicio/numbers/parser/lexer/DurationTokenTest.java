@@ -10,18 +10,16 @@ import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Duration;
+import org.dicio.numbers.unit.Number;
 import org.junit.Test;
-
-import java.time.Duration;
 
 public class DurationTokenTest {
 
-    private static void assertDurationMultipliedBy(final Duration tokenDuration,
+    private static void assertDurationMultipliedBy(final java.time.Duration tokenDuration,
                                                    final Number number,
-                                                   final Duration expectedDuration) {
-        assertEquals(expectedDuration,
-                new DurationToken("", "", tokenDuration, false).getDurationMultipliedBy(number));
+                                                   final java.time.Duration expectedDuration) {
+        assertEquals(expectedDuration, new Duration(tokenDuration).multiply(number).toJavaDuration());
     }
 
     @Test
@@ -58,11 +56,21 @@ public class DurationTokenTest {
         assertDurationMultipliedBy(t(10),                           n(1e-4),    t(0, MILLIS));
         assertDurationMultipliedBy(t(0, MILLIS),                    n(0.1),     t(0, 100 * MICROS));
         assertDurationMultipliedBy(t(0, 400 * MILLIS),              n(7.5),     t(3, 0));
-        assertDurationMultipliedBy(t(0, 1),                         n(0.6),     t(0)); // rounds down
+        assertDurationMultipliedBy(t(0, 1),                         n(0.6),     t(0, 1)); // rounds
         assertDurationMultipliedBy(t(12 * MINUTE, 800 * MILLIS),    n(1.25),    t(15 * MINUTE + 1, 0));
         assertDurationMultipliedBy(t(10, 100),                      n(0.01),    t(0, 100 * MILLIS + 1));
         assertDurationMultipliedBy(t(14 * MINUTE + 3, 81 * MILLIS), n(0.9),     t(12 * MINUTE + 38, 772 * MILLIS + 900 * MICROS));
-        assertDurationMultipliedBy(t(16 * DAY, 414 * MILLIS),       n(18.3),    t(292 * DAY + 19 * HOUR + 12 * MINUTE + 7, 576 * MILLIS + 200 * MICROS));
-        assertDurationMultipliedBy(t(389570574000L, 67017),         n(0.39274), t(152999947232L, 760026320));
+
+        // Floating point errors occur below here, hence the +1 at the end... Strangely enough
+        // 292.8-293 is not even close to -0.2, as there are 408 other doubles in between the two,
+        // as this Python 3 code proves (where 2.7755575615628914E-17 = Math.ulp(0.2)):
+        //
+        //     for i in range(409):
+        //         assert (292.8-293-2.7755575615628914E-17*i) != (292.8-293-2.7755575615628914E-17*(i+1))
+        //
+        assertDurationMultipliedBy(t(16 * DAY, 414 * MILLIS),       n(18.3),    t(292 * DAY + 19 * HOUR + 12 * MINUTE + 7, 576 * MILLIS + 200 * MICROS + 1));
+
+        // Floating point errors here, too: the correct result would be t(152999947232L, 760004608)
+        assertDurationMultipliedBy(t(389570574000L, 67017),         n(0.39274), t(152999947232L, 760022001));
     }
 }

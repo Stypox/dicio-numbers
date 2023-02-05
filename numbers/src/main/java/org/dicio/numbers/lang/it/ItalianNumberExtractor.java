@@ -1,71 +1,52 @@
 package org.dicio.numbers.lang.it;
 
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.NumberExtractorUtils;
-
-import java.util.List;
 
 import static org.dicio.numbers.util.NumberExtractorUtils.*;
 
 public class ItalianNumberExtractor {
 
     private final TokenStream ts;
-    private final boolean preferOrdinal;
 
-    ItalianNumberExtractor(final TokenStream tokenStream,
-                           final boolean preferOrdinal) {
+    ItalianNumberExtractor(final TokenStream tokenStream) {
         this.ts = tokenStream;
-        this.preferOrdinal = preferOrdinal;
     }
 
-    public List<Object> extractNumbers() {
-        if (preferOrdinal) {
-            return extractNumbersWith(this::extractNumbersPreferOrdinal);
+    Number numberPreferOrdinal() {
+        // first try with suffix multiplier, e.g. dozen
+        Number number = numberSuffixMultiplier();
+        if (number == null) {
+            number = numberSignPoint(true); // then try with normal number
+        }
+
+        if (number != null) {
+            // a number was found, maybe it has a valid denominator?
+            number = divideByDenominatorIfPossible(number);
+        }
+        return number;
+    }
+
+    Number numberPreferFraction() {
+        // first try with suffix multiplier, e.g. dozen
+        Number number = numberSuffixMultiplier();
+        if (number == null) {
+            number = numberSignPoint(false); // then try without ordinal
+        }
+
+        if (number == null) {
+            // maybe an ordinal number?
+            number = numberSignPoint(true);
         } else {
-            return extractNumbersWith(this::extractNumbersPreferFraction);
+            // a number was found, maybe it has a valid denominator?
+            // note that e.g. "a couple halves" ends up here, but that's valid
+            number = divideByDenominatorIfPossible(number);
         }
+        return number;
     }
 
-    void extractNumbersPreferOrdinal(final List<Object> textAndNumbers,
-                                     final StringBuilder currentText) {
-        while (!ts.finished()) {
-            // first try with suffix multiplier, e.g. dozen
-            Number number = numberSuffixMultiplier();
-            if (number == null) {
-                number = numberSignPoint(true); // then try with normal number
-            }
-
-            if (number != null) {
-                // a number was found, maybe it has a valid denominator?
-                number = divideByDenominatorIfPossible(number);
-            }
-            addNumberOrText(ts, number, textAndNumbers, currentText);
-        }
-    }
-
-    void extractNumbersPreferFraction(final List<Object> textAndNumbers,
-                                      final StringBuilder currentText) {
-        while (!ts.finished()) {
-            // first try with suffix multiplier, e.g. dozen
-            Number number = numberSuffixMultiplier();
-            if (number == null) {
-                number = numberSignPoint(false); // then try without ordinal
-            }
-
-            if (number == null) {
-                // maybe an ordinal number?
-                number = numberSignPoint(true);
-            } else {
-                // a number was found, maybe it has a valid denominator?
-                // note that e.g. "a couple halves" ends up here, but that's valid
-                number = divideByDenominatorIfPossible(number);
-            }
-            addNumberOrText(ts, number, textAndNumbers, currentText);
-        }
-    }
-
-    Number extractOneNumberNoOrdinal() {
+    Number numberNoOrdinal() {
         // for now this function is used internally just for duration parsing, but maybe it could
         // be exposed to library users, giving more control over how ordinals are handled.
 
@@ -129,22 +110,7 @@ public class ItalianNumberExtractor {
     }
 
     Number numberSignPoint(final boolean allowOrdinal) {
-        if (ts.get(0).hasCategory("sign")) {
-            // parse sign from e.g. "minus twelve"
-
-            boolean negative = ts.get(0).hasCategory("negative");
-            ts.movePositionForwardBy(1);
-
-            final Number n = numberPoint(allowOrdinal);
-            if (n == null) {
-                ts.movePositionForwardBy(-1); // rewind
-                return null;
-            } else {
-                return n.multiply(negative ? -1 : 1).setOrdinal(n.isOrdinal());
-            }
-
-        }
-        return numberPoint(allowOrdinal);
+        return signBeforeNumber(ts, () -> numberPoint(allowOrdinal));
     }
 
     Number numberPoint(final boolean allowOrdinal) {
@@ -241,7 +207,7 @@ public class ItalianNumberExtractor {
                 if (ts.get(0).hasCategory("ordinal_suffix")) {
                     if (allowOrdinal) {
                         ts.movePositionForwardBy(1);
-                        return n.setOrdinal(true); // ordinal number, e.g. 20,056,789th
+                        return n.withOrdinal(true); // ordinal number, e.g. 20,056,789th
                     } else {
                         ts.setPosition(originalPosition);
                         return null; // found ordinal number, revert since allowOrdinal is false

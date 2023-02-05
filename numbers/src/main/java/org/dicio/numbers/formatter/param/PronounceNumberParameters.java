@@ -1,10 +1,10 @@
 package org.dicio.numbers.formatter.param;
 
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.Formatter;
 
 public class PronounceNumberParameters {
 
-    private final NumberFormatter numberFormatter;
+    private final Formatter formatter;
     private final double number;
 
     // default values
@@ -13,8 +13,8 @@ public class PronounceNumberParameters {
     private boolean scientific = false;
     private boolean ordinal = false;
 
-    public PronounceNumberParameters(final NumberFormatter numberFormatter, final double number) {
-        this.numberFormatter = numberFormatter;
+    public PronounceNumberParameters(final Formatter formatter, final double number) {
+        this.formatter = formatter;
         this.number = number;
     }
 
@@ -59,12 +59,12 @@ public class PronounceNumberParameters {
     }
 
     /**
-     * Calls {@link NumberFormatter#pronounceNumber(double, int, boolean, boolean, boolean)} with
+     * Calls {@link Formatter#pronounceNumber(double, int, boolean, boolean, boolean)} with
      * the stored parameters.
      *
      * @return the formatted number as a string
      */
     public String get() {
-        return numberFormatter.pronounceNumber(number, places, shortScale, scientific, ordinal);
+        return formatter.pronounceNumber(number, places, shortScale, scientific, ordinal);
     }
 }

@@ -1,20 +1,20 @@
 package org.dicio.numbers.formatter.param;
 
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.Formatter;
 
 import java.time.LocalDate;
 
 public class NiceDateParameters {
     // TODO documentation
 
-    private final NumberFormatter numberFormatter;
+    private final Formatter formatter;
     private final LocalDate date;
 
     // default values
     private LocalDate now = null;
 
-    public NiceDateParameters(final NumberFormatter numberFormatter, final LocalDate date) {
-        this.numberFormatter = numberFormatter;
+    public NiceDateParameters(final Formatter formatter, final LocalDate date) {
+        this.formatter = formatter;
         this.date = date;
     }
 
@@ -29,6 +29,6 @@ public class NiceDateParameters {
     }
 
     public String get() {
-        return numberFormatter.niceDate(date, now);
+        return formatter.niceDate(date, now);
     }
 }

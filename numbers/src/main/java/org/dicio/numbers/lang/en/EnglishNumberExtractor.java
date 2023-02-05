@@ -2,10 +2,8 @@ package org.dicio.numbers.lang.en;
 
 import org.dicio.numbers.parser.lexer.NumberToken;
 import org.dicio.numbers.parser.lexer.TokenStream;
-import org.dicio.numbers.util.Number;
+import org.dicio.numbers.unit.Number;
 import org.dicio.numbers.util.NumberExtractorUtils;
-
-import java.util.List;
 
 import static org.dicio.numbers.util.NumberExtractorUtils.*;
 
@@ -13,61 +11,43 @@ public class EnglishNumberExtractor {
 
     private final TokenStream ts;
     private final boolean shortScale;
-    private final boolean preferOrdinal;
 
     EnglishNumberExtractor(final TokenStream tokenStream,
-                           final boolean shortScale,
-                           final boolean preferOrdinal) {
+                           final boolean shortScale) {
         this.ts = tokenStream;
         this.shortScale = shortScale;
-        this.preferOrdinal = preferOrdinal;
     }
 
-    public List<Object> extractNumbers() {
-        if (preferOrdinal) {
-            return extractNumbersWith(this::extractNumbersPreferOrdinal);
-        } else {
-            return extractNumbersWith(this::extractNumbersPreferFraction);
+    Number numberPreferOrdinal() {
+        // first try with suffix multiplier, e.g. dozen
+        Number number = numberSuffixMultiplier();
+        if (number == null) {
+            number = numberSignPoint(true); // then try with normal number
         }
+
+        // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
+        return divideByDenominatorIfPossible(number);
     }
 
-    void extractNumbersPreferOrdinal(final List<Object> textAndNumbers,
-                                     final StringBuilder currentText) {
-        while (!ts.finished()) {
-            // first try with suffix multiplier, e.g. dozen
-            Number number = numberSuffixMultiplier();
-            if (number == null) {
-                number = numberSignPoint(true); // then try with normal number
-            }
-
-            // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
-            number = divideByDenominatorIfPossible(number);
-            addNumberOrText(ts, number, textAndNumbers, currentText);
+    Number numberPreferFraction() {
+        // first try with suffix multiplier, e.g. dozen
+        Number number = numberSuffixMultiplier();
+        if (number == null) {
+            number = numberSignPoint(false); // then try without ordinal
         }
-    }
 
-    void extractNumbersPreferFraction(final List<Object> textAndNumbers,
-                                      final StringBuilder currentText) {
-        while (!ts.finished()) {
-            // first try with suffix multiplier, e.g. dozen
-            Number number = numberSuffixMultiplier();
-            if (number == null) {
-                number = numberSignPoint(false); // then try without ordinal
-            }
+        // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
+        // note that e.g. "a couple halves" ends up here, but that's valid
+        number = divideByDenominatorIfPossible(number);
 
-            // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
-            // note that e.g. "a couple halves" ends up here, but that's valid
-            number = divideByDenominatorIfPossible(number);
-
-            if (number == null) {
-                // maybe an ordinal number?
-                number = numberSignPoint(true);
-            }
-            addNumberOrText(ts, number, textAndNumbers, currentText);
+        if (number == null) {
+            // maybe an ordinal number?
+            number = numberSignPoint(true);
         }
+        return number;
     }
 
-    Number extractOneNumberNoOrdinal() {
+    Number numberNoOrdinal() {
         // for now this function is used internally just for duration parsing, but maybe it could
         // be exposed to library users, giving more control over how ordinals are handled.
 
@@ -151,22 +131,7 @@ public class EnglishNumberExtractor {
     }
 
     Number numberSignPoint(final boolean allowOrdinal) {
-        if (ts.get(0).hasCategory("sign")) {
-            // parse sign from e.g. "minus twelve"
-
-            boolean negative = ts.get(0).hasCategory("negative");
-            ts.movePositionForwardBy(1);
-
-            final Number n = numberPoint(allowOrdinal);
-            if (n == null) {
-                ts.movePositionForwardBy(-1); // rewind
-                return null;
-            } else {
-                return n.multiply(negative ? -1 : 1).setOrdinal(n.isOrdinal());
-            }
-
-        }
-        return numberPoint(allowOrdinal);
+        return signBeforeNumber(ts, () -> numberPoint(allowOrdinal));
     }
 
     Number numberPoint(final boolean allowOrdinal) {
@@ -253,11 +218,11 @@ public class EnglishNumberExtractor {
         }
         // n != null from here on
 
-        if (n.lessThan(21) && n.moreThan(9)) {
+        if (n.lessThan(21) && n.moreThan(9) && !ts.get(-1).hasCategory("raw")) {
             // parse years (1001 to 2099) in the particular forms (but xx-hundred is handled below)
             final Number secondGroup = numberYearSecondGroup(allowOrdinal);
             if (secondGroup != null) {
-                return n.multiply(100).plus(secondGroup).setOrdinal(secondGroup.isOrdinal());
+                return n.multiply(100).plus(secondGroup).withOrdinal(secondGroup.isOrdinal());
             }
         }
 
@@ -269,7 +234,7 @@ public class EnglishNumberExtractor {
                 if (allowOrdinal || !ordinal) {
                     // prevent ordinal numbers if allowOrdinal is false
                     ts.movePositionForwardBy(nextNotIgnore + 1);
-                    return n.multiply(100).setOrdinal(ordinal);
+                    return n.multiply(100).withOrdinal(ordinal);
                 }
             }
         }
@@ -290,7 +255,7 @@ public class EnglishNumberExtractor {
                 if (ts.get(0).hasCategory("ordinal_suffix")) {
                     if (allowOrdinal) {
                         ts.movePositionForwardBy(1);
-                        return n.setOrdinal(true); // ordinal number, e.g. 20,056,789th
+                        return n.withOrdinal(true); // ordinal number, e.g. 20,056,789th
                     } else {
                         ts.setPosition(originalPosition);
                         return null; // found ordinal number, revert since allowOrdinal is false
@@ -317,7 +282,7 @@ public class EnglishNumberExtractor {
                 // o/oh/nought/zero/0 + digit, e.g. (sixteen) oh one -> (16)01
                 // prevent ordinal number if allowOrdinal is false, e.g. (eighteen) oh second
                 ts.movePositionForwardBy(digitIndex + 1);
-                return ts.get(-1).getNumber().setOrdinal(ordinal);
+                return ts.get(-1).getNumber().withOrdinal(ordinal);
             }
 
         } else if (ts.get(nextNotIgnore).hasCategory("teen")) {
@@ -327,7 +292,7 @@ public class EnglishNumberExtractor {
                 return null; // do not allow ordinal number if allowOrdinal is false
             } else {
                 ts.movePositionForwardBy(nextNotIgnore + 1);
-                return ts.get(-1).getNumber().setOrdinal(ordinal);
+                return ts.get(-1).getNumber().withOrdinal(ordinal);
             }
 
         } else if (ts.get(nextNotIgnore).getValue().length() == 2
@@ -338,7 +303,7 @@ public class EnglishNumberExtractor {
                 return null; // do not allow raw number + st/nd/rd/th if allowOrdinal is false
             } else {
                 ts.movePositionForwardBy(nextNotIgnore + (ordinal ? 2 : 1));
-                return ts.get(ordinal ? -2 : -1).getNumber().setOrdinal(ordinal);
+                return ts.get(ordinal ? -2 : -1).getNumber().withOrdinal(ordinal);
             }
 
         } else if (ts.get(nextNotIgnore).hasCategory("tens")) {
@@ -348,7 +313,7 @@ public class EnglishNumberExtractor {
                 if (allowOrdinal) {
                     // nothing follows an ordinal number, e.g. (twenty) twentieth -> 2020th
                     ts.movePositionForwardBy(nextNotIgnore + 1);
-                    return tens.setOrdinal(true);
+                    return tens.withOrdinal(true);
                 } else {
                     return null; // prevent ordinal numbers if allowOrdinal is false
                 }
@@ -360,7 +325,7 @@ public class EnglishNumberExtractor {
             if (ts.get(digitIndex).hasCategory("digit") && (allowOrdinal || !ordinal)) {
                 // do not consider ordinal digit if allowOrdinal is false
                 ts.movePositionForwardBy(digitIndex + 1);
-                return tens.plus(ts.get(-1).getNumber()).setOrdinal(ordinal);
+                return tens.plus(ts.get(-1).getNumber()).withOrdinal(ordinal);
             } else {
                 return tens; // digit is optional, e.g. (seventeen) fifty -> (17)50
             }
@@ -395,7 +360,7 @@ public class EnglishNumberExtractor {
                             return null;
                         }
                         ts.movePositionForwardBy(nextNotIgnore + 2);
-                        return ts.get(-2).getNumber().setOrdinal(true);
+                        return ts.get(-2).getNumber().withOrdinal(true);
                     }
                     ts.movePositionForwardBy(nextNotIgnore + 1);
                     first = ts.get(-1).getNumber(); // raw number group, e.g. 123042 million
@@ -412,7 +377,7 @@ public class EnglishNumberExtractor {
             if (second != null) {
                 first = first.plus(second);
                 if (second.isOrdinal()) {
-                    return first.setOrdinal(true); // nothing else follows an ordinal number
+                    return first.withOrdinal(true); // nothing else follows an ordinal number
                 }
             }
         }
@@ -427,11 +392,11 @@ public class EnglishNumberExtractor {
                 ts.movePositionForwardBy(nextNotIgnore + 1);
                 if (first == null) {
                     // the multiplier alone, e.g. a million
-                    return multiplier.setOrdinal(ordinal);
+                    return multiplier.withOrdinal(ordinal);
                 } else {
                     // number smaller than 1000000 followed by a multiplier,
                     // e.g. thirteen thousand billion
-                    return multiplier.multiply(first).setOrdinal(ordinal);
+                    return multiplier.multiply(first).withOrdinal(ordinal);
                 }
             }
         } else {

@@ -1,7 +1,7 @@
 package org.dicio.numbers.parser.lexer;
 
-import org.dicio.numbers.util.Number;
-import org.junit.BeforeClass;
+import org.dicio.numbers.test.WithTokenizerTestBase;
+import org.dicio.numbers.unit.Number;
 import org.junit.Test;
 
 import java.util.List;
@@ -10,13 +10,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class TokenizerTest {
+public class TokenizerTest extends WithTokenizerTestBase {
 
-    private static Tokenizer tokenizer;
-
-    @BeforeClass
-    public static void setup() {
-        tokenizer = new Tokenizer("config/en-us");
+    @Override
+    public String configFolder() {
+        return "config/en-us";
     }
 
 

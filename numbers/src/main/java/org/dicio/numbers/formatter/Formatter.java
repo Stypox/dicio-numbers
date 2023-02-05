@@ -3,21 +3,21 @@ package org.dicio.numbers.formatter;
 import org.dicio.numbers.formatter.datetime.DateTimeConfig;
 import org.dicio.numbers.formatter.datetime.FormatString;
 import org.dicio.numbers.formatter.datetime.NiceYearSubstitutionTableBuilder;
-import org.dicio.numbers.util.MixedFraction;
+import org.dicio.numbers.unit.Duration;
+import org.dicio.numbers.unit.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class NumberFormatter {
+public abstract class Formatter {
 
     protected final DateTimeConfig config;
 
-    protected NumberFormatter(final String configFolder) {
+    protected Formatter(final String configFolder) {
         config = new DateTimeConfig(configFolder);
     }
 
@@ -185,10 +185,11 @@ public abstract class NumberFormatter {
      * @return the formatted time span string
      */
     public String niceDuration(final Duration duration, final boolean speech) {
-        final long days = duration.toDays();
-        final long hours = duration.toHours() % 24;
-        final long minutes = duration.toMinutes() % 60;
-        final long seconds = duration.getSeconds() % 60;
+        final java.time.Duration javaDuration = duration.toJavaDuration();
+        final long days = javaDuration.toDays();
+        final long hours = javaDuration.toHours() % 24;
+        final long minutes = javaDuration.toMinutes() % 60;
+        final long seconds = javaDuration.getSeconds() % 60;
 
         final StringBuilder result = new StringBuilder();
         if (speech) {
@@ -217,7 +218,7 @@ public abstract class NumberFormatter {
             }
 
             // if the duration is zero also write "zero seconds"
-            if (seconds > 0 || duration.getSeconds() == 0) {
+            if (seconds > 0 || javaDuration.getSeconds() == 0) {
                 if (result.length() != 0) {
                     result.append(" ");
                 }

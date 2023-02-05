@@ -1,7 +1,7 @@
 package org.dicio.numbers.lang.en;
 
-import org.dicio.numbers.formatter.NumberFormatter;
-import org.dicio.numbers.util.MixedFraction;
+import org.dicio.numbers.formatter.Formatter;
+import org.dicio.numbers.unit.MixedFraction;
 import org.dicio.numbers.util.Utils;
 
 import java.time.LocalTime;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class EnglishFormatter extends NumberFormatter {
+public class EnglishFormatter extends Formatter {
 
     final Map<Long, String> NUMBER_NAMES = new HashMap<Long, String>() {{
         put(0L, "zero");

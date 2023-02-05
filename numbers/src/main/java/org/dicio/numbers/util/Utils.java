@@ -1,13 +1,16 @@
 package org.dicio.numbers.util;
 
+import org.dicio.numbers.unit.Number;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public final class Utils {
 
-    public static final double WHOLE_NUMBER_ACCURACY = 0.0001f;
-    public static final double WHOLE_FRACTION_ACCURACY = 0.01f;
+    public static final double WHOLE_NUMBER_ACCURACY = 0.0001;
+    public static final double WHOLE_FRACTION_ACCURACY = 0.01;
 
     public static final Pattern DUPLICATE_SPACES_PATTERN = Pattern.compile("  +");
 
@@ -70,6 +73,26 @@ public final class Utils {
     }
 
     /**
+     * @param number the number on which to operate
+     * @return the difference between the number and the number rounded to long
+     */
+    public static double remainderFromRoundingToLong(final double number) {
+        return number - roundToLong(number);
+    }
+
+    /**
+     * @param number the number to round
+     * @return the nearest int to the number
+     */
+    public static int roundToInt(final double number) {
+        if (number < 0) {
+            return (int) number + (number % 1 <= -0.5 ? -1 : 0);
+        } else {
+            return (int) number + (number % 1 >= 0.5 ? 1 : 0);
+        }
+    }
+
+    /**
      * @param n the number to split
      * @param splitModulus the modulus to apply to split the number
      * @return the splits (which could be 0), in opposite order,
@@ -104,5 +127,24 @@ public final class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * Calls the provided suppliers in order until one returns a non-null value, in which case
+     * returns such value. If all suppliers return null, this function in turn returns null.
+     *
+     * @param suppliers the suppliers to try to call, in order
+     * @param <T> the return type of the suppliers and of this function
+     * @return the result of the first supplier with a non-null value, or null
+     */
+    @SafeVarargs
+    public static <T> T firstNotNull(final Supplier<T>... suppliers) {
+        for (final Supplier<T> supplier : suppliers) {
+            final T result = supplier.get();
+            if (result != null) {
+                return result;
+            }
+        }
+        return null;
     }
 }

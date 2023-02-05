@@ -1,20 +1,19 @@
 package org.dicio.numbers.formatter.param;
 
-import org.dicio.numbers.formatter.NumberFormatter;
-
-import java.time.Duration;
+import org.dicio.numbers.formatter.Formatter;
+import org.dicio.numbers.unit.Duration;
 
 public class NiceDurationParameters {
     // TODO documentation
 
-    private final NumberFormatter numberFormatter;
+    private final Formatter formatter;
     private final Duration duration;
 
     // default values
     private boolean speech = true;
 
-    public NiceDurationParameters(final NumberFormatter numberFormatter, final Duration duration) {
-        this.numberFormatter = numberFormatter;
+    public NiceDurationParameters(final Formatter formatter, final Duration duration) {
+        this.formatter = formatter;
         this.duration = duration;
     }
 
@@ -24,6 +23,6 @@ public class NiceDurationParameters {
     }
 
     public String get() {
-        return numberFormatter.niceDuration(duration, speech);
+        return formatter.niceDuration(duration, speech);
     }
 }

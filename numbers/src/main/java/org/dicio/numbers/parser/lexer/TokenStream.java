@@ -1,6 +1,8 @@
 package org.dicio.numbers.parser.lexer;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class TokenStream {
     private final List<Token> tokens;
@@ -17,22 +19,6 @@ public class TokenStream {
         }
 
         return tokens.get(index);
-    }
-
-    /**
-     * Finds the first token without the provided category and returns the aheadBy offset
-     * @param category the category that tokens have to match to end the search
-     * @param startFromAheadBy start the search from the current position plus this value
-     * @return the aheadBy offset of the found token, or the aheadBy offset of one past the last
-     *         token in the token stream if no token was found without the provided category
-     */
-    public int indexOfWithoutCategory(final String category, final int startFromAheadBy) {
-        for (int i = Math.max(position + startFromAheadBy, 0); i < tokens.size(); ++i) {
-            if (!tokens.get(i).hasCategory(category)) {
-                return i-position;
-            }
-        }
-        return tokens.size()-position;
     }
 
     public int getPosition() {
@@ -54,5 +40,66 @@ public class TokenStream {
 
     public boolean finished() {
         return position >= tokens.size();
+    }
+
+
+    /**
+     * Finds the first token without the provided category and returns the aheadBy offset
+     * @param category the category that tokens have to match to end the search
+     * @param startFromAheadBy start the search from the current position plus this value
+     * @return the aheadBy offset of the found token, or the aheadBy offset of one past the last
+     *         token in the token stream if no token was found without the provided category
+     */
+    public int indexOfWithoutCategory(final String category, final int startFromAheadBy) {
+        for (int i = Math.max(position + startFromAheadBy, 0); i < tokens.size(); ++i) {
+            if (!tokens.get(i).hasCategory(category)) {
+                return i-position;
+            }
+        }
+        return tokens.size()-position;
+    }
+
+    public <T> T tryOrSkipCategory(final String category,
+                                   final boolean doTrySkipping,
+                                   final Supplier<T> function) {
+        if (!doTrySkipping) {
+            return function.get();
+        }
+
+        final int originalPosition = getPosition();
+        do {
+            final T result = function.get();
+            if (result != null) {
+                return result;
+            }
+            movePositionForwardBy(1);
+        } while (get(-1).hasCategory(category) && !finished());
+
+        // found nothing, restore position
+        setPosition(originalPosition);
+        return null;
+    }
+
+    public <T> T tryOrSkipDateTimeIgnore(final boolean doTrySkipping, final Supplier<T> function) {
+        return tryOrSkipCategory("date_time_ignore", doTrySkipping, function);
+    }
+
+    @SafeVarargs
+    public final <T> T firstWhichUsesMostTokens(final Supplier<T>... suppliers) {
+        final int originalPosition = getPosition();
+        T bestResult = null;
+        int bestPosition = originalPosition;
+
+        for (final Supplier<T> supplier : suppliers) {
+            setPosition(originalPosition);
+            final T result = supplier.get();
+            if (result != null && getPosition() > bestPosition) {
+                bestResult = result;
+                bestPosition = getPosition();
+            }
+        }
+
+        setPosition(bestPosition);
+        return bestResult;
     }
 }

@@ -1,35 +1,35 @@
 package org.dicio.numbers;
 
-import org.dicio.numbers.formatter.NumberFormatter;
+import org.dicio.numbers.formatter.Formatter;
 import org.dicio.numbers.lang.en.EnglishFormatter;
 import org.dicio.numbers.lang.en.EnglishParser;
 import org.dicio.numbers.lang.it.ItalianFormatter;
 import org.dicio.numbers.lang.it.ItalianParser;
-import org.dicio.numbers.parser.NumberParser;
+import org.dicio.numbers.parser.Parser;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-class NumberParserFormatterBuilder {
+class ParserFormatterBuilder {
 
     private static class ParserFormatterClasses {
-        final Class<? extends NumberFormatter> formatter;
-        final Class<? extends NumberParser> parser;
+        final Class<? extends Formatter> formatter;
+        final Class<? extends Parser> parser;
 
-        private ParserFormatterClasses(final Class<? extends NumberFormatter> formatter,
-                                       final Class<? extends NumberParser> parser) {
+        private ParserFormatterClasses(final Class<? extends Formatter> formatter,
+                                       final Class<? extends Parser> parser) {
             this.parser = parser;
             this.formatter = formatter;
         }
     }
 
     static class ParserFormatterPair {
-        final NumberFormatter formatter;
-        final NumberParser parser;
+        final Formatter formatter;
+        final Parser parser;
 
-        ParserFormatterPair(final NumberFormatter formatter, final NumberParser parser) {
+        ParserFormatterPair(final Formatter formatter, final Parser parser) {
             this.parser = parser;
             this.formatter = formatter;
         }
@@ -42,7 +42,7 @@ class NumberParserFormatterBuilder {
     }};
 
 
-    private NumberParserFormatterBuilder() {
+    private ParserFormatterBuilder() {
     }
 
 

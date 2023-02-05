@@ -1,6 +1,6 @@
 {
   "spaces": " \t\n\f\r:;_!?<>|=()[]{}»«*~^`'\"",
-  "characters_as_word": "%‰#-+.,/°ª",
+  "characters_as_word": "%‰#-+.,\\/°ª",
   "compound_word_piece_category": "compound_word_piece",
   "raw_number_categories": [
     "number",
@@ -11,7 +11,8 @@
   "word_matches": [
     {
       "categories": [
-        "ignore"
+        "ignore",
+        "date_time_ignore"
       ],
       "values": [
         "e"
@@ -19,8 +20,9 @@
     },
     {
       "categories": [
+        "thousand_separator",
         "ignore",
-        "thousand_separator"
+        "date_time_ignore"
       ],
       "values": [
         "."
@@ -45,14 +47,14 @@
       ],
       "values": [
         "punto",
-        "virgola",
-        ","
+        "virgola"
       ]
     },
     {
       "categories": [
         "point",
-        "ignore"
+        "ignore",
+        "date_time_ignore"
       ],
       "values": [
         ","
@@ -64,8 +66,17 @@
       ],
       "values": [
         "fratto",
-        "diviso",
-        "/"
+        "diviso"
+      ]
+    },
+    {
+      "categories": [
+        "fraction_separator",
+        "date_time_ignore"
+      ],
+      "values": [
+        "/",
+        "\\"
       ]
     },
     {
@@ -84,17 +95,297 @@
         "negative"
       ],
       "values": [
-        "meno",
+        "meno"
+      ]
+    },
+    {
+      "categories": [
+        "sign",
+        "negative",
+        "date_time_ignore"
+      ],
+      "values": [
         "-"
       ]
     },
     {
       "categories": [
-        "duration_separator"
+        "duration_separator",
+        "date_time_ignore"
       ],
       "values": [
-        "di",
+        "di"
+      ]
+    },
+    {
+      "categories": [
+        "duration_separator",
+        "bcad_after",
+        "date_time_ignore"
+      ],
+      "values": [
         "d"
+      ]
+    },
+    {
+      "categories": [
+        "date_time_ignore"
+      ],
+      "values": [
+        "il",
+        "lo",
+        "la",
+        "i",
+        "gli",
+        "che",
+        "del",
+        "dello",
+        "della",
+        "dell",
+        "dei",
+        "degli",
+        "degl",
+        "delle",
+        "de"
+      ]
+    },
+    {
+      "categories": [
+        "date_time_ignore",
+        "pre_hour",
+        "pre_special_hour"
+      ],
+      "values": [
+        "le",
+        "l"
+      ]
+    },
+    {
+      "categories": [
+        "pre_hour",
+        "pre_special_hour"
+      ],
+      "values": [
+        "alle",
+        "all"
+      ]
+    },
+    {
+      "categories": [
+        "pre_hour"
+      ],
+      "values": [
+        "ora",
+        "ore"
+      ]
+    },
+    {
+      "categories": [
+        "date_time_ignore",
+        "pre_special_hour"
+      ],
+      "values": [
+        "questo",
+        "questa",
+        "questi",
+        "queste"
+      ]
+    },
+    {
+      "categories": [
+        "date_time_ignore",
+        "pre_special_hour",
+        "bcad_before",
+        "ampm_before"
+      ],
+      "values": [
+        "a"
+      ]
+    },
+    {
+      "categories": [
+        "pre_relative_indicator",
+        "post_relative_indicator",
+        "positive"
+      ],
+      "values": [
+        "prossimo",
+        "prossima",
+        "prossimi",
+        "prossime",
+        "successivo",
+        "successiva",
+        "successivi",
+        "successive",
+        "viene",
+        "verra"
+      ]
+    },
+    {
+      "categories": [
+        "pre_relative_indicator",
+        "post_relative_indicator",
+        "positive",
+        "tomorrow_adder",
+        "bcad_after",
+        "compound_word_piece",
+        "pre_special_hour"
+      ],
+      "values": [
+        "dopo"
+      ]
+    },
+    {
+      "categories": [
+        "pre_relative_indicator",
+        "positive"
+      ],
+      "values": [
+        "tra",
+        "fra",
+        "in"
+      ]
+    },
+    {
+      "categories": [
+        "pre_relative_indicator",
+        "post_relative_indicator",
+        "negative"
+      ],
+      "values": [
+        "scorso",
+        "scorsa",
+        "scorsi",
+        "scorse"
+      ]
+    },
+    {
+      "categories": [
+        "post_relative_indicator",
+        "negative"
+      ],
+      "values": [
+        "fa",
+        "passato",
+        "passata",
+        "passati",
+        "passate",
+        "parte"
+      ]
+    },
+    {
+      "categories": [
+        "yesterday",
+        "compound_word_piece"
+      ],
+      "values": [
+        "ieri"
+      ]
+    },
+    {
+      "categories": [
+        "today"
+      ],
+      "values": [
+        "oggi"
+      ]
+    },
+    {
+      "categories": [
+        "tomorrow",
+        "compound_word_piece"
+      ],
+      "values": [
+        "domani"
+      ]
+    },
+    {
+      "categories": [
+        "yesterday_adder",
+        "compound_word_piece"
+      ],
+      "values": [
+        "altro"
+      ]
+    },
+    {
+      "categories": [
+        "bcad_before"
+      ],
+      "values": [
+        "avanti"
+      ]
+    },
+    {
+      "categories": [
+        "bcad_identifier"
+      ],
+      "values": [
+        "cristo",
+        "c"
+      ]
+    },
+    {
+      "categories": [
+        "bcad_before_combined"
+      ],
+      "values": [
+        "ac"
+      ]
+    },
+    {
+      "categories": [
+        "bcad_after_combined"
+      ],
+      "values": [
+        "dc"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_before"
+      ],
+      "values": [
+        "ante"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_after"
+      ],
+      "values": [
+        "p",
+        "post"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_identifier"
+      ],
+      "values": [
+        "m",
+        "meridiem",
+        "meridian",
+        "meridiana",
+        "meridiano",
+        "meridiane",
+        "meridiani"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_before_combined"
+      ],
+      "values": [
+        "am"
+      ]
+    },
+    {
+      "categories": [
+        "ampm_after_combined"
+      ],
+      "values": [
+        "pm"
       ]
     }
   ],
@@ -217,7 +508,6 @@
       ],
       "values": {
         "primo": 1,
-        "prima": 1,
         "primi": 1,
         "prime": 1,
         "unesimo": 1,
@@ -288,6 +578,21 @@
         "novesima": 9,
         "novesimi": 9,
         "novesime": 9
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "ordinal",
+        "digit",
+        "compound_word_piece",
+        "pre_relative_indicator",
+        "post_relative_indicator",
+        "negative",
+        "pre_special_hour"
+      ],
+      "values": {
+        "prima": 1
       }
     },
     {
@@ -454,6 +759,102 @@
         "‰": 0.001,
         "TODO dovrei anche aggiungere per cento e per mille???": 0
       }
+    },
+    {
+      "categories": [
+        "month_name"
+      ],
+      "values": {
+        "gennaio": 1,
+        "gen": 1,
+        "febbraio": 2,
+        "feb": 2,
+        "marzo": 3,
+        "mar": 3,
+        "aprile": 4,
+        "apr": 4,
+        "maggio": 5,
+        "mag": 5,
+        "giugno": 6,
+        "giu": 6,
+        "luglio": 7,
+        "lug": 7,
+        "agosto": 8,
+        "ago": 8,
+        "settembre": 9,
+        "set": 9,
+        "sett": 9,
+        "ottobre": 10,
+        "ott": 10,
+        "novembre": 11,
+        "nov": 11,
+        "dicembre": 12,
+        "dic": 12
+      }
+    },
+    {
+      "categories": [
+        "day_of_week"
+      ],
+      "values": {
+        "lunedi": 0,
+        "lun": 0,
+        "martedi": 1,
+        "mercoledi": 2,
+        "mer": 2,
+        "giovedi": 3,
+        "gio": 3,
+        "venerdi": 4,
+        "ven": 4,
+        "sabato": 5,
+        "sabati": 5,
+        "sab": 5,
+        "domenica": 6,
+        "domeniche": 6,
+        "dom": 6
+      }
+    },
+    {
+      "categories": [
+        "noon_midnight_like",
+        "moment_of_day"
+      ],
+      "values": {
+        "mezzogiorno": 12,
+        "mezzanotte": 0
+      }
+    },
+    {
+      "categories": [
+        "moment_of_day"
+      ],
+      "values": {
+        "notte": 3,
+        "notti": 3,
+        "stanotte": 3,
+        "alba": 6,
+        "albe": 6,
+        "aurora": 6,
+        "aurore": 6,
+        "crepuscolo": 6,
+        "crepuscoli": 6,
+        "mattina": 9,
+        "mattino": 9,
+        "mattine": 9,
+        "mattini": 9,
+        "stamattina": 9,
+        "stamani": 9,
+        "stamane": 9,
+        "pranzo": 12,
+        "pomeriggio": 15,
+        "pomeriggi": 15,
+        "tramonto": 18,
+        "tramonti": 18,
+        "cena": 20,
+        "sera": 21,
+        "sere": 21,
+        "stasera": 21
+      }
     }
   ],
   "duration_words": {
@@ -493,7 +894,8 @@
       "giorno",
       "giorni",
       "giornata",
-      "giornate"
+      "giornate",
+      "gg"
     ],
     "1 WEEKS": [
       "settimana",
@@ -501,7 +903,8 @@
     ],
     "1 MONTHS": [
       "mese",
-      "mesi"
+      "mesi",
+      "mensilita"
     ],
     "1 YEARS": [
       "anno",
@@ -526,6 +929,7 @@
     "ms",
     "s",
     "m",
-    "h"
+    "h",
+    "gg"
   ]
 }
