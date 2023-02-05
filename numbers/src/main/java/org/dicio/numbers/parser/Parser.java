@@ -25,6 +25,8 @@ public abstract class Parser {
     public abstract Supplier<Duration> extractDuration(TokenStream tokenStream, boolean shortScale);
 
     public abstract Supplier<LocalDateTime> extractDateTime(TokenStream tokenStream,
+                                                            boolean shortScale,
+                                                            boolean preferMonthBeforeDay,
                                                             LocalDateTime now);
 
 

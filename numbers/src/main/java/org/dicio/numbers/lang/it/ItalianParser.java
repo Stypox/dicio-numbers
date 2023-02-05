@@ -37,6 +37,8 @@ public class ItalianParser extends Parser {
 
     @Override
     public Supplier<LocalDateTime> extractDateTime(final TokenStream tokenStream,
+                                                   final boolean shortScale,
+                                                   final boolean preferMonthBeforeDay,
                                                    final LocalDateTime now) {
         return new ItalianDateTimeExtractor(tokenStream, now)::dateTime;
     }
