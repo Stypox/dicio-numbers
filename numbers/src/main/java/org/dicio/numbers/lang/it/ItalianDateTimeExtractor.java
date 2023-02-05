@@ -1,5 +1,6 @@
 package org.dicio.numbers.lang.it;
 
+import static org.dicio.numbers.util.NumberExtractorUtils.signBeforeNumber;
 import static org.dicio.numbers.util.Utils.firstNotNull;
 import static org.dicio.numbers.util.Utils.roundToInt;
 
@@ -39,7 +40,7 @@ public class ItalianDateTimeExtractor {
     private Integer extractIntegerInRange(final int fromInclusive, final int toInclusive) {
         // disallow fraction as / should be treated as a day/month/year separator
         return NumberExtractorUtils.extractOneIntegerInRange(ts, fromInclusive, toInclusive,
-                () -> numberExtractor.numberSignPoint(false, false));
+                () -> signBeforeNumber(ts, () -> numberExtractor.numberInteger(false)));
     }
 
 

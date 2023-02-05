@@ -48,20 +48,20 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
 
     private void assertNumberPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, numberDeduceType(value).withOrdinal(isOrdinal),
-                finalTokenStreamPosition, (enp) -> enp.numberPoint(allowOrdinal, true));
+                finalTokenStreamPosition, (enp) -> enp.numberPoint(allowOrdinal));
     }
 
     private void assertNumberPointNull(final String s, final boolean allowOrdinal) {
-        assertNumberFunctionNull(s, (enp) -> enp.numberPoint(allowOrdinal, true));
+        assertNumberFunctionNull(s, (enp) -> enp.numberPoint(allowOrdinal));
     }
 
     private void assertNumberSignPoint(final String s, final boolean allowOrdinal, final double value, final boolean isOrdinal, final int finalTokenStreamPosition) {
         assertNumberFunction(s, numberDeduceType(value).withOrdinal(isOrdinal),
-                finalTokenStreamPosition, (enp) -> enp.numberSignPoint(allowOrdinal, true));
+                finalTokenStreamPosition, (enp) -> enp.numberSignPoint(allowOrdinal));
     }
 
     private void assertNumberSignPointNull(final String s, final boolean allowOrdinal) {
-        assertNumberFunctionNull(s, (enp) -> enp.numberSignPoint(allowOrdinal, true));
+        assertNumberFunctionNull(s, (enp) -> enp.numberSignPoint(allowOrdinal));
     }
 
     private void assertDivideByDenominatorIfPossible(final String s, final Number startingNumber, final Number value, final int finalTokenStreamPosition) {
