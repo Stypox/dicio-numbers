@@ -66,8 +66,8 @@ public class ItalianDateTimeExtractor {
                     && duration.getMonths() == 0 && duration.getYears() == 0) {
                 // duration contains a specified time, so a date could follow
                 time = duration.applyAsOffsetToDateTime(now).toLocalTime();
-            } else if (duration.getNanos() == 0) {
-                // duration contains mixed date&time, or specifies units >=month, nothing can follow
+            } else {
+                // duration contains mixed date&time, or has units >=month, nothing can follow
                 return duration.applyAsOffsetToDateTime(now);
             }
         }

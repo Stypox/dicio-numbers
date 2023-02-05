@@ -657,6 +657,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDateTime("fra tre mesi",              NOW.plusMonths(3),       3);
         assertDateTime("in quindici gg",            NOW.plusDays(15),        3);
         assertDateTime("trenta due nanosecondi fa", NOW.minusNanos(32),      4);
+        assertDateTime("due giorni e sette millisecondi fa", NOW.minusNanos(7000000).minusDays(2), 6);
         assertDateTime("sette novembre del 193 a.C.", NOW.withYear(-193).withMonth(11).withDayOfMonth(7), 7);
     }
 
