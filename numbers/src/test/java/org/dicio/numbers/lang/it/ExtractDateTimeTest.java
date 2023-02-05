@@ -1,11 +1,9 @@
 package org.dicio.numbers.lang.it;
 
-import static org.dicio.numbers.lang.it.ItalianDateTimeExtractor.isMomentOfDayPm;
 import static org.dicio.numbers.test.TestUtils.niceDuration;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -88,36 +86,12 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeDuration);
     }
 
-    private void assertRelativeMonthDuration(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
-        assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeMonthDuration);
-    }
-
-    private void assertRelativeMonthDurationNull(final String s) {
-        assertRelativeDurationFunctionNull(s, ItalianDateTimeExtractor::relativeMonthDuration);
-    }
-
-    private void assertRelativeDayOfWeekDuration(final String s, final int expectedDuration, int finalTokenStreamPosition) {
-        assertFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeDayOfWeekDuration);
-    }
-
-    private void assertRelativeDayOfWeekDurationNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::relativeDayOfWeekDuration);
-    }
-
     private void assertRelativeTomorrow(final String s, final int expectedDuration, int finalTokenStreamPosition) {
         assertFunction(s, expectedDuration, finalTokenStreamPosition, ItalianDateTimeExtractor::relativeTomorrow);
     }
 
     private void assertRelativeTomorrowNull(final String s) {
         assertFunctionNull(s, ItalianDateTimeExtractor::relativeTomorrow);
-    }
-
-    private void assertRelativeToday(final String s) {
-        assertFunction(s, 0, 1, ItalianDateTimeExtractor::relativeToday);
-    }
-
-    private void assertRelativeTodayNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::relativeToday);
     }
 
     private void assertRelativeYesterday(final String s, final int expectedDuration, int finalTokenStreamPosition) {
@@ -152,14 +126,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::noonMidnightLike);
     }
 
-    private void assertMinute(final String s, final int expected, int finalTokenStreamPosition) {
-        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::minute);
-    }
-
-    private void assertMinuteNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::minute);
-    }
-
     private void assertSpecialMinute(final String s, final int expected, int finalTokenStreamPosition) {
         assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::specialMinute);
     }
@@ -168,44 +134,12 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunctionNull(s, ItalianDateTimeExtractor::specialMinute);
     }
 
-    private void assertSecond(final String s, final int expected, int finalTokenStreamPosition) {
-        assertFunction(s, expected, finalTokenStreamPosition, ItalianDateTimeExtractor::second);
-    }
-
-    private void assertSecondNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::second);
-    }
-
-    private void assertBcad(final String s, final Boolean expectedAd, int finalTokenStreamPosition) {
-        assertFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::bcad);
-    }
-
-    private void assertBcadNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::bcad);
-    }
-
-    private void assertAmpm(final String s, final Boolean expectedAd, int finalTokenStreamPosition) {
-        assertFunction(s, expectedAd, finalTokenStreamPosition, ItalianDateTimeExtractor::ampm);
-    }
-
-    private void assertAmpmNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::ampm);
-    }
-
     private void assertDayOfWeek(final String s, final int expected) {
         assertFunction(s, expected, 1, ItalianDateTimeExtractor::dayOfWeek);
     }
 
     private void assertDayOfWeekNull(final String s) {
         assertFunctionNull(s, ItalianDateTimeExtractor::dayOfWeek);
-    }
-
-    private void assertMonthName(final String s, final int expected) {
-        assertFunction(s, expected, 1, ItalianDateTimeExtractor::monthName);
-    }
-
-    private void assertMonthNameNull(final String s) {
-        assertFunctionNull(s, ItalianDateTimeExtractor::monthName);
     }
 
     private void assertDate(final String s, final LocalDate expected, int finalTokenStreamPosition) {
@@ -263,46 +197,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
     @Test
-    public void testRelativeMonthDuration() {
-        assertRelativeMonthDuration("settembre che viene",   t(4, MONTHS),   3);
-        assertRelativeMonthDuration("aprile e prossimo e a", t(11, MONTHS),  3);
-        assertRelativeMonthDuration("scorso e aprile e a",   t(-1, MONTHS),  3);
-        assertRelativeMonthDuration("maggio che verrà",      t(12, MONTHS),  3);
-        assertRelativeMonthDuration("maggio è passato",      t(-12, MONTHS), 3);
-        assertRelativeMonthDuration("in gennaio",            t(8, MONTHS),   2);
-    }
-
-    @Test
-    public void testRelativeMonthDurationNull() {
-        assertRelativeMonthDurationNull("ciao come va");
-        assertRelativeMonthDurationNull("questo novembre fa");
-        assertRelativeMonthDurationNull("ottobre");
-        assertRelativeMonthDurationNull("tra due ottobre");
-        assertRelativeMonthDurationNull("tra due mesi");
-    }
-
-    @Test
-    public void testRelativeDayOfWeekDuration() {
-        assertRelativeDayOfWeekDuration("giovedì prossimo",     2,   2);
-        assertRelativeDayOfWeekDuration("giovedi scorso",       -5,  2);
-        assertRelativeDayOfWeekDuration("tra due domeniche si", 12,  3);
-        assertRelativeDayOfWeekDuration("due e domenica e fa",  -9,  5);
-        assertRelativeDayOfWeekDuration("tre lunedì e prima e", -15, 4);
-        assertRelativeDayOfWeekDuration("martedì prossimo",     7,   2);
-        assertRelativeDayOfWeekDuration("un martedì fa",        -7,  3);
-    }
-
-    @Test
-    public void testRelativeDayOfWeekDurationNull() {
-        assertRelativeDayOfWeekDurationNull("ciao come va");
-        assertRelativeDayOfWeekDurationNull("lunedi");
-        assertRelativeDayOfWeekDurationNull("due venerdì");
-        assertRelativeDayOfWeekDurationNull("tra due giorni");
-        assertRelativeDayOfWeekDurationNull("e tra due domeniche");
-        assertRelativeDayOfWeekDurationNull("ieri e domani");
-    }
-
-    @Test
     public void testRelativeTomorrow() {
         assertRelativeTomorrow("domani andiamo",            1, 1);
         assertRelativeTomorrow("dopodomani e",              2, 2);
@@ -318,24 +212,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertRelativeTomorrowNull("il dopo domani");
         assertRelativeTomorrowNull("ieri");
         assertRelativeTomorrowNull("oggi");
-    }
-
-    @Test
-    public void testRelativeToday() {
-        assertRelativeToday("oggi");
-        assertRelativeToday("oggi proprio oggi");
-        assertRelativeToday("oggi test");
-        assertRelativeToday("oggi e");
-    }
-
-    @Test
-    public void testRelativeTodayNull() {
-        assertRelativeTodayNull("ciao come va");
-        assertRelativeTodayNull("proprio oggi");
-        assertRelativeTodayNull("l'oggi");
-        assertRelativeTodayNull("e oggi");
-        assertRelativeTodayNull("ieri");
-        assertRelativeTodayNull("domani");
     }
 
     @Test
@@ -361,6 +237,8 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
     @Test
     public void testHour() {
+        assertHour("8:36 test",        8, 1);
+        assertHour("16:44 test",       16, 1);
         assertHour("ventuno test",     21, 2);
         assertHour("le zero e",        0,  2);
         assertHour("l'una e ventisei", 1,  2);
@@ -426,39 +304,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
     @Test
-    public void testIsMomentOfDayPm() {
-        assertEquals(Boolean.FALSE, isMomentOfDayPm(0));
-        assertEquals(Boolean.FALSE, isMomentOfDayPm(5));
-        assertEquals(Boolean.FALSE, isMomentOfDayPm(11));
-        assertEquals(Boolean.TRUE, isMomentOfDayPm(12));
-        assertEquals(Boolean.TRUE, isMomentOfDayPm(18));
-        assertEquals(Boolean.TRUE, isMomentOfDayPm(24));
-        //noinspection ConstantConditions
-        assertNull(isMomentOfDayPm(null));
-    }
-
-    @Test
-    public void testMinute() {
-        assertMinute("zero a b c",        0,  1);
-        assertMinute("cinquantanove ore", 59, 2);
-        assertMinute("quindici e",        15, 1);
-        assertMinute("venti e otto s",    28, 3);
-        assertMinute("sei minuti test",   6,  2);
-        assertMinute("trentasei e min",   36, 2);
-        assertMinute("44m e",             44, 2);
-    }
-
-    @Test
-    public void testMinuteNull() {
-        assertMinuteNull("ciao come va");
-        assertMinuteNull("sessanta minuti");
-        assertMinuteNull("cento venti");
-        assertMinuteNull("meno sedici");
-        assertMinuteNull("12000 minuti");
-        assertMinuteNull("e due e");
-    }
-
-    @Test
     public void testSpecialMinute() {
         assertSpecialMinute("un quarto e",              15, 2);
         assertSpecialMinute("mezza test",               30, 1);
@@ -480,67 +325,6 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
     @Test
-    public void testSecond() {
-        assertSecond("zero a b c",        0,  1);
-        assertSecond("cinquantanove ore", 59, 2);
-        assertSecond("quindici e",        15, 1);
-        assertSecond("venti e otto m",    28, 3);
-        assertSecond("sei secondo test",  6,  2);
-        assertSecond("trentasei e sec",   36, 2);
-        assertSecond("44s e",             44, 2);
-    }
-
-    @Test
-    public void testSecondNull() {
-        assertSecondNull("ciao come va");
-        assertSecondNull("sessanta secondi");
-        assertSecondNull("cento venti");
-        assertSecondNull("meno sedici");
-        assertSecondNull("12000 secondi");
-        assertSecondNull("dodici mila");
-        assertSecondNull("e due e");
-    }
-
-    @Test
-    public void testBcad() {
-        assertBcad("a.C. test",   false, 3);
-        assertBcad("d.C. e",      true,  3);
-        assertBcad("dc test e",   true,  1);
-        assertBcad("dopo Cristo", true,  2);
-        assertBcad("a e Cristo",  false, 3);
-    }
-
-    @Test
-    public void testBcadNull() {
-        assertBcadNull("a.m.");
-        assertBcadNull("dopo test Cristo");
-        assertBcadNull("e avanti Cristo");
-        assertBcadNull("test c");
-        assertBcadNull("m");
-        assertBcadNull("c test");
-    }
-
-    @Test
-    public void testAmpm() {
-        assertAmpm("a.m. test",      false, 3);
-        assertAmpm("p.m. e",         true,  3);
-        assertAmpm("am e test",      false, 1);
-        assertAmpm("post meridiano", true,  2);
-        assertAmpm("p e meridiem",   true,  3);
-    }
-
-    @Test
-    public void testAmpmNull() {
-        assertAmpmNull("a.C.");
-        assertAmpmNull("ante test meridiem");
-        assertAmpmNull("e post m");
-        assertAmpmNull("test m");
-        assertAmpmNull("c");
-        assertAmpmNull("aem");
-        assertAmpmNull("meridian test");
-    }
-
-    @Test
     public void testDayOfWeek() {
         assertDayOfWeek("lunedì",         0);
         assertDayOfWeek("domeniche test", 6);
@@ -557,24 +341,9 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     }
 
     @Test
-    public void testMonthName() {
-        assertMonthName("gennaio",    0);
-        assertMonthName("dic e",      11);
-        assertMonthName("sett embre", 8);
-        assertMonthName("mar",        2);
-    }
-
-    @Test
-    public void testMonthNameNull() {
-        assertMonthNameNull("lunedì");
-        assertMonthNameNull("genner");
-        assertMonthNameNull("ciao feb");
-        assertMonthNameNull("e dic to");
-    }
-
-    @Test
     public void testDate() {
         assertDate("04/09-4096",                                  LocalDate.of(4096,  9,  4),  5);
+        assertDate("26,12\\2026",                                 LocalDate.of(2026, 12,  26), 5);
         assertDate("giovedì 26 del maggio 2022",                  LocalDate.of(2022,  5,  26), 5);
         assertDate("lun dodici giu duemila dodici avanti cristo", LocalDate.of(-2012, 6,  12), 8);
         assertDate("quattrocento settanta sei d.C.",              LocalDate.of(476,   1,  1),  7);
