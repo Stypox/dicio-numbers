@@ -404,6 +404,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDate("wednesday test eight",                           LocalDate.of(2023,  2,  1),  1);
         assertDate("monday november",                                LocalDate.of(2023,  1,  30), 1);
         assertDate("october two thousand and twelve",                LocalDate.of(2012,  10, 1),  5);
+        assertDate("999999999",                                      LocalDate.of(999999999,1,1), 1);
         // the following work thanks to special case in number extractor!
         assertDate("twenty twelve",                                  LocalDate.of(2012,  1,  1),  2);
         assertDate("sunday twenty thirteen",                         LocalDate.of(2023,  2,  5),  1);
@@ -416,6 +417,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDateNull("and two thousand and fifteen");
         assertDateNull("of may two");
         assertDateNull("tomorrow");
+        assertDateNull("1000000000");
     }
 
     @Test

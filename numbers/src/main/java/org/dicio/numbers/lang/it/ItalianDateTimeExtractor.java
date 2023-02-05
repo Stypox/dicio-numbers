@@ -183,7 +183,7 @@ public class ItalianDateTimeExtractor {
 
         // if month is null then day is also null, otherwise we would have returned above
         final Integer year = ts.tryOrSkipDateTimeIgnore(month != null,
-                () -> extractIntegerInRange(0, Integer.MAX_VALUE));
+                () -> extractIntegerInRange(0, 999999999));
         if (year == null) {
             if (month != null) {
                 return result;

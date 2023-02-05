@@ -355,6 +355,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDate("martedì test",                                LocalDate.of(2022,  5,  10), 1);
         assertDate("domenica duemilatredici",                     LocalDate.of(2022,  5,  15), 1);
         assertDate("lunedì novembre",                             LocalDate.of(2022,  5,  9),  1);
+        assertDate("999999999",                                   LocalDate.of(999999999,1,1), 1);
     }
 
     @Test
@@ -364,6 +365,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDateNull("e duemilaquindici");
         assertDateNull("del due maggio");
         assertDateNull("domani");
+        assertDateNull("1000000000");
     }
 
     @Test
