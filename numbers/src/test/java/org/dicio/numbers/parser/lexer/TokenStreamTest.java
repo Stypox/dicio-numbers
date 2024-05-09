@@ -38,23 +38,23 @@ public class TokenStreamTest {
     public void testPositionHandling() {
         final TokenStream ts = new TokenStream(TOKENS);
 
-        assertEquals(0, ts.getPosition());
+        assertEquals(0, ts.position);
         assertFalse(ts.finished());
 
         ts.movePositionForwardBy(2);
-        assertEquals(2, ts.getPosition());
+        assertEquals(2, ts.position);
         assertFalse(ts.finished());
 
         ts.movePositionForwardBy(-1);
-        assertEquals(1, ts.getPosition());
+        assertEquals(1, ts.position);
         assertFalse(ts.finished());
 
         ts.movePositionForwardBy(2);
-        assertEquals(3, ts.getPosition());
+        assertEquals(3, ts.position);
         assertTrue(ts.finished());
 
-        ts.setPosition(-5);
-        assertEquals(-5, ts.getPosition());
+        ts.position = -5;
+        assertEquals(-5, ts.position);
         assertFalse(ts.finished());
     }
 
@@ -68,7 +68,7 @@ public class TokenStreamTest {
         assertSame(TOKENS.get(0), ts.get(-1));
         assertSame(TOKENS.get(1), ts.get(0));
 
-        ts.setPosition(TOKENS.size());
+        ts.position = TOKENS.size();
         assertSame(TOKENS.get(2), ts.get(-1));
         assertSame(Token.emptyToken(), ts.get(0));
     }
@@ -81,7 +81,7 @@ public class TokenStreamTest {
 
         // make sure that `results` contains the index delta from each index to the next not ignore
         for (int j = 0; j < results.length; ++j) {
-            ts.setPosition(j - 1);
+            ts.position = j - 1;
             assertEquals(
                     "Wrong value when j=" + j,
                     results[j],
@@ -90,9 +90,9 @@ public class TokenStreamTest {
 
         // test all token stream positions and aheadBy offsets from -1 to tokens.size()
         for (int i = 0; i < results.length; ++i) {
-            ts.setPosition(i - 1);
+            ts.position = i - 1;
             for (int j = 0; j < results.length; ++j) {
-                assertEquals(j, ts.getPosition() + j - i + 1);
+                assertEquals(j, ts.position + j - i + 1);
                 assertEquals(
                         "Wrong value when i=" + i + " and j=" + j,
                         results[j] + j - i,

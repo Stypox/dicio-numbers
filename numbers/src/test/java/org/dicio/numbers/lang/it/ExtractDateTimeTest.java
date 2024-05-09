@@ -43,14 +43,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         final Duration actualDuration = durationFunction.apply(new ItalianDateTimeExtractor(ts, NOW));
         assertNotNull("null relative duration for string \"" + s + "\"", actualDuration);
         assertEquals("wrong final token position for string \"" + s + "\"",
-                finalTokenStreamPosition, ts.getPosition());
+                finalTokenStreamPosition, ts.position);
         assertTrue("wrong relative duration for string \"" + s + "\": expected \""
                         + niceDuration(expectedDuration) + "\" but got \""
                         + niceDuration(actualDuration) + "\"",
-                expectedDuration.getNanos() == actualDuration.getNanos()
-                        && expectedDuration.getDays() == actualDuration.getDays()
-                        && expectedDuration.getMonths() == actualDuration.getMonths()
-                        && expectedDuration.getYears() == actualDuration.getYears());
+                expectedDuration.nanos == actualDuration.nanos
+                        && expectedDuration.days == actualDuration.days
+                        && expectedDuration.months == actualDuration.months
+                        && expectedDuration.years == actualDuration.years);
     }
 
     private void assertRelativeDurationFunctionNull(final String s,
@@ -72,7 +72,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertEquals("wrong result for string \"" + s + "\"",
                 expectedResult, function.apply(new ItalianDateTimeExtractor(ts, NOW)));
         assertEquals("wrong final token position for string \"" + s + "\"",
-                finalTokenStreamPosition, ts.getPosition());
+                finalTokenStreamPosition, ts.position);
     }
 
     private <T> void assertFunctionNull(final String s,

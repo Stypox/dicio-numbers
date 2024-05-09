@@ -29,7 +29,8 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
         final Number number = numberFunction.apply(new ItalianNumberExtractor(ts));
         assertEquals("wrong value for string " + s, value, number);
-        assertEquals("wrong final token position for number " + value, finalTokenStreamPosition, ts.getPosition());
+        assertEquals("wrong final token position for number " + value, finalTokenStreamPosition,
+                ts.position);
     }
 
     private void assertNumberFunctionNull(final String s,

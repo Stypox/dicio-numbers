@@ -11,10 +11,10 @@ import static org.junit.Assert.assertTrue;
 public class NumberTest {
     @Test
     public void internalType() {
-        assertTrue(new Number(0.1).isDecimal());
+        assertTrue(new Number(0.1).isDecimal);
         assertTrue(new Number(-1).isInteger());
         assertFalse(new Number(-1.0).isInteger());
-        assertFalse(new Number(423789).isDecimal());
+        assertFalse(new Number(423789).isDecimal);
         assertEquals(-1.72, new Number(-1.72).decimalValue(), 0.0);
         assertEquals(654, new Number(654).integerValue());
         assertEquals(Double.NaN, new Number(5).decimalValue(), 0.0);

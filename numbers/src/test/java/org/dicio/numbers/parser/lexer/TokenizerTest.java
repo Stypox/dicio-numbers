@@ -21,8 +21,8 @@ public class TokenizerTest extends WithTokenizerTestBase {
     private static void assertBaseToken(final Token token,
                                         final String value,
                                         final String spacesFollowing) {
-        assertEquals(value, token.getValue());
-        assertEquals(spacesFollowing, token.getSpacesFollowing());
+        assertEquals(value, token.value);
+        assertEquals(spacesFollowing, token.spacesFollowing);
         assertTrue(token.isValue(value));
         assertFalse(token.isValue(spacesFollowing));
     }

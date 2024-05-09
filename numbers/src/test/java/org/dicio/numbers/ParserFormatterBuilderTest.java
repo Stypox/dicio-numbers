@@ -26,7 +26,7 @@ public class ParserFormatterBuilderTest {
 
         assertEquals(pfp.formatter.pronounceNumber(42534, 0, true, false, false),
                 npf.pronounceNumber(42534).places(0).shortScale(true).scientific(false).ordinal(false).get());
-        assertEquals(pfp.parser.extractNumber(pfp.parser.tokenize("first twenty four three point two"), true, false).get(),
+        assertEquals(pfp.parser.extractNumber(pfp.parser.tokenize("first twenty four three point two"), true, false).invoke(),
                 npf.extractNumber("hello first twenty four three point two").shortScale(true).preferOrdinal(false).getFirst());
     }
 

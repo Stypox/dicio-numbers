@@ -1,6 +1,5 @@
 package org.dicio.numbers.unit;
 
-import org.dicio.numbers.unit.MixedFraction;
 import org.dicio.numbers.util.Utils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,7 +18,7 @@ public class MixedFractionTest {
                                      final int numerator,
                                      final int denominator) {
         final MixedFraction mixedFraction
-                = MixedFraction.of(number, MixedFraction.DEFAULT_DENOMINATORS);
+                = MixedFraction.Companion.of(number, MixedFraction.DEFAULT_DENOMINATORS);
         assertNotNull(mixedFraction);
 
         assertTrue(mixedFraction.whole >= 0);
@@ -85,15 +84,15 @@ public class MixedFractionTest {
 
     @Test
     public void testOtherValidNumbers() {
-        assertNotNull(MixedFraction.of(1e18d, MixedFraction.DEFAULT_DENOMINATORS));
-        assertNotNull(MixedFraction.of(-1e18d, MixedFraction.DEFAULT_DENOMINATORS));
+        assertNotNull(MixedFraction.Companion.of(1e18d, MixedFraction.DEFAULT_DENOMINATORS));
+        assertNotNull(MixedFraction.Companion.of(-1e18d, MixedFraction.DEFAULT_DENOMINATORS));
     }
 
     @Test
     public void testInvalidNumbers() {
-        assertNull(MixedFraction.of(1e20, MixedFraction.DEFAULT_DENOMINATORS));
-        assertNull(MixedFraction.of(1.0 / 25, MixedFraction.DEFAULT_DENOMINATORS));
-        assertNull(MixedFraction.of(1.5, Arrays.asList(3, 9, 27)));
+        assertNull(MixedFraction.Companion.of(1e20, MixedFraction.DEFAULT_DENOMINATORS));
+        assertNull(MixedFraction.Companion.of(1.0 / 25, MixedFraction.DEFAULT_DENOMINATORS));
+        assertNull(MixedFraction.Companion.of(1.5, Arrays.asList(3, 9, 27)));
     }
 
     @Test
