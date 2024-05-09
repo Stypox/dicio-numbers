@@ -40,7 +40,7 @@ class NiceDateTimeParameters(
         return this
     }
 
-    fun get(): String? {
+    fun get(): String {
         return formatter.niceDateTime(date, now, time, use24Hour, showAmPm)
     }
 }

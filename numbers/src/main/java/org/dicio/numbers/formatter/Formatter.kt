@@ -22,7 +22,7 @@ abstract class Formatter protected constructor(configFolder: String) {
      * @param speech format for speech (true) or display (false)
      * @return the formatted mixed fraction as a string
      */
-    abstract fun niceNumber(mixedFraction: MixedFraction, speech: Boolean): String?
+    abstract fun niceNumber(mixedFraction: MixedFraction, speech: Boolean): String
 
     protected fun niceNumberNotSpeech(mixedFraction: MixedFraction): String {
         val sign = if (mixedFraction.negative) "-" else ""
@@ -250,7 +250,7 @@ abstract class Formatter protected constructor(configFolder: String) {
         return result.toString()
     }
 
-    protected open fun pronounceNumberDuration(number: Long): String? {
+    protected open fun pronounceNumberDuration(number: Long): String {
         return pronounceNumber(number.toDouble(), 0, true, false, false)
     }
 }

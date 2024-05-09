@@ -132,7 +132,7 @@ class EnglishFormatter : Formatter("config/en-us") {
         } else if (shortScale) {
             var ordi = ordinal && numberIsWhole // not ordinal if not whole
             val groups = Utils.splitByModulus(numberLong, 1000)
-            val groupNames: MutableList<String?> = ArrayList()
+            val groupNames = ArrayList<String>()
             for (i in groups.indices) {
                 val z = groups[i]
                 if (z == 0L) {
@@ -146,7 +146,7 @@ class EnglishFormatter : Formatter("config/en-us") {
                         // ordi can be true only for the first group (i.e. at the end of the number)
                         if (z == 1L) {
                             // remove "one" from first group (e.g. "one billion, millionth")
-                            groupName = ORDINAL_NAMES_SHORT_SCALE[magnitude]
+                            groupName = ORDINAL_NAMES_SHORT_SCALE[magnitude]!!
                         } else {
                             groupName += " " + ORDINAL_NAMES_SHORT_SCALE[magnitude]
                         }
@@ -163,14 +163,14 @@ class EnglishFormatter : Formatter("config/en-us") {
         } else {
             var ordi = ordinal && numberIsWhole // not ordinal if not whole
             val groups = Utils.splitByModulus(numberLong, 1000000)
-            val groupNames: MutableList<String?> = ArrayList()
+            val groupNames = ArrayList<String>()
             for (i in groups.indices) {
                 val z = groups[i]
                 if (z == 0L) {
                     continue  // skip 000000 groups
                 }
 
-                var groupName: String?
+                var groupName: String
                 if (z < 1000) {
                     groupName = subThousand(z, i == 0 && ordi)
                 } else {
@@ -195,7 +195,7 @@ class EnglishFormatter : Formatter("config/en-us") {
                         // ordi can be true only for the first group (i.e. at the end of the number)
                         if (z == 1L) {
                             // remove "one" from first group (e.g. "one billion, millionth")
-                            groupName = ORDINAL_NAMES_LONG_SCALE[magnitude]
+                            groupName = ORDINAL_NAMES_LONG_SCALE[magnitude]!!
                         } else {
                             groupName += " " + ORDINAL_NAMES_LONG_SCALE[magnitude]
                         }
@@ -315,13 +315,13 @@ class EnglishFormatter : Formatter("config/en-us") {
      * @param ordinal whether to return an ordinal number (usually with -th)
      * @return the string representation of a number smaller than 1000
      */
-    private fun subThousand(n: Long, ordinal: Boolean): String? {
+    private fun subThousand(n: Long, ordinal: Boolean): String {
         // this function calls itself inside if branches to make sure `ordinal` is respected
         if (ordinal && ORDINAL_NAMES.containsKey(n)) {
-            return ORDINAL_NAMES[n]
+            return ORDINAL_NAMES[n]!!
         } else if (n < 100) {
             if (!ordinal && NUMBER_NAMES.containsKey(n)) {
-                return NUMBER_NAMES[n]
+                return NUMBER_NAMES[n]!!
             }
 
             // n is surely => 20 from here on, since all n < 20 are in (ORDINAL|NUMBER)_NAMES
@@ -338,7 +338,7 @@ class EnglishFormatter : Formatter("config/en-us") {
      * @param result the string builder to append the comma-separated group names to
      * @param groupNames the group names
      */
-    private fun appendSplitGroups(result: StringBuilder, groupNames: List<String?>) {
+    private fun appendSplitGroups(result: StringBuilder, groupNames: List<String>) {
         if (groupNames.isNotEmpty()) {
             result.append(groupNames[groupNames.size - 1])
         }

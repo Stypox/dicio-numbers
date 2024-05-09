@@ -256,7 +256,7 @@ class ItalianFormatter : Formatter("config/it-it") {
         }
     }
 
-    override fun pronounceNumberDuration(number: Long): String? {
+    override fun pronounceNumberDuration(number: Long): String {
         if (number == 1L) {
             return "un"
         }

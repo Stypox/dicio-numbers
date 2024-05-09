@@ -39,7 +39,7 @@ class NiceNumberParameters(private val formatter: Formatter, private val number:
      *
      * @return the formatted mixed fraction as a string
      */
-    fun get(): String? {
+    fun get(): String {
         val mixedFraction = MixedFraction.of(number, denominators)
         if (mixedFraction == null) {
             // unable to convert to fraction
