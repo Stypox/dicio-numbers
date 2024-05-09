@@ -6,6 +6,7 @@ import org.dicio.numbers.parser.lexer.TokenStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class NumberParserParams<T> {
     // TODO add documentation
@@ -21,6 +22,7 @@ public abstract class NumberParserParams<T> {
     protected abstract Supplier<T> getExtractorAtCurrentPosition(TokenStream tokenStream);
 
 
+    @Nullable
     public T getFirst() {
         final TokenStream ts = parser.tokenize(utterance);
         final Supplier<T> extractorAtCurrentPosition = getExtractorAtCurrentPosition(ts);

@@ -1,4 +1,5 @@
 dependencies {
     implementation 'com.grack:nanojson:1.7'
+    implementation 'org.jetbrains:annotations:23.0.0'
     testImplementation 'junit:junit:4.12'
 }
