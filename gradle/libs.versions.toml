@@ -1,0 +1,11 @@
+[versions]
+annotations = "23.0.0"
+junit = "4.13.2"
+nanojson = "1.9"
+
+[libraries]
+annotations = { module = "org.jetbrains:annotations", version.ref = "annotations" }
+junit = { module = "junit:junit", version.ref = "junit" }
+nanojson = { module = "com.grack:nanojson", version.ref = "nanojson" }
+
+[plugins]
