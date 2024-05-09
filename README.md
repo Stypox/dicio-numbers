@@ -1,8 +1,8 @@
 # Dummy dicio-numbers
-This branch contains a dummy version of *dicio-numbers*, containing only a dummy `org.dicio.numbers.NumberParserFormatter`.
+This branch contains a dummy version of *dicio-numbers*, containing only a dummy `org.dicio.numbers.ParserFormatter`.
 
 ## Motivation
-It was created for [*dicio-skill*](https://github.com/Stypox/dicio-skill/), since in order to be built *dicio-skill* requires the definition of `NumberParserFormatter`. But other than that it doesn't use any other classes from *dicio-numbers*, nor `NumberParserFormatter`'s defined methods/fields. Having a dummy dependency:
+It was created for [*dicio-skill*](https://github.com/Stypox/dicio-skill/), since in order to be built *dicio-skill* requires the definition of `ParserFormatter`. But other than that it doesn't use any other classes from *dicio-numbers*, nor `ParserFormatter`'s defined methods/fields. Having a dummy dependency:
 - reduces *dicio-skill*'s dependencies
 - allows users to use *dicio-skill* without *dicio-numbers*
 - and, **most importantly**, removes the burden of having to update the version of *dicio-numbers* both in *dicio-skill* and in *dicio-android* each time (see below on how this is done)
