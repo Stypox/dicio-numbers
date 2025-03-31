@@ -120,8 +120,9 @@ class EnglishDateTimeExtractor internal constructor(
             }
         }
 
-        if (pm != null && pm && !DateTimeExtractorUtils.isMomentOfDayPm(time.hour)!!) {
+        if (pm != null && ((pm && !DateTimeExtractorUtils.isMomentOfDayPm(time.hour)!!) || (!pm && time.hour == 12))) {
             // time must be in the afternoon, but time is not already in the afternoon, correct it
+            // alternatively time is midnight and must be parsed as "morning"
             time = time.withHour((time.hour + 12) % DateTimeExtractorUtils.HOURS_IN_DAY)
         }
         return time
