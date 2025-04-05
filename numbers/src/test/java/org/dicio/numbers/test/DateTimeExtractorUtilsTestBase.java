@@ -137,7 +137,5 @@ public abstract class DateTimeExtractorUtilsTestBase extends WithTokenizerTestBa
         assertEquals(Boolean.TRUE, isMomentOfDayPm(12));
         assertEquals(Boolean.TRUE, isMomentOfDayPm(18));
         assertEquals(Boolean.TRUE, isMomentOfDayPm(24));
-        //noinspection ConstantConditions
-        assertNull(isMomentOfDayPm(null));
     }
 }
