@@ -207,10 +207,7 @@ class DateTimeExtractorUtils(
         val MONTHS_IN_YEAR: Long = Month.entries.size.toLong() // 12
 
         @JvmStatic
-        fun isMomentOfDayPm(momentOfDay: Int?): Boolean? {
-            if (momentOfDay == null) {
-                return null
-            }
+        fun isMomentOfDayPm(momentOfDay: Int): Boolean {
             return momentOfDay >= 12
         }
     }

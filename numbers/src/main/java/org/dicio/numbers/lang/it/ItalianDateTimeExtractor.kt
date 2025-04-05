@@ -110,14 +110,18 @@ class ItalianDateTimeExtractor internal constructor(
             pm = ts.tryOrSkipDateTimeIgnore(true) {
                 Utils.firstNotNull(
                     dateTimeExtractor::ampm,
-                    { DateTimeExtractorUtils.isMomentOfDayPm(momentOfDay()) }
+                    { momentOfDay()?.let(DateTimeExtractorUtils::isMomentOfDayPm) }
                 )
             }
         }
 
-        if (pm != null && pm && !DateTimeExtractorUtils.isMomentOfDayPm(time.hour)!!) {
-            // time must be in the afternoon, but time is not already in the afternoon, correct it
-            time = time.withHour((time.hour + 12) % DateTimeExtractorUtils.HOURS_IN_DAY)
+        if (time.hour != 0 && pm != null) {
+            // AM/PM should not do anything after 0 (e.g. 0pm or 24 di sera)
+
+            if (pm && !DateTimeExtractorUtils.isMomentOfDayPm(time.hour)) {
+                // time must be in the afternoon, but time is not already, correct it
+                time = time.withHour((time.hour + 12) % DateTimeExtractorUtils.HOURS_IN_DAY)
+            }
         }
         return time
     }

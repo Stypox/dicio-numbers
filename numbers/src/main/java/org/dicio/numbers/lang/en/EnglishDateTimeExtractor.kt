@@ -115,15 +115,21 @@ class EnglishDateTimeExtractor internal constructor(
             pm = ts.tryOrSkipDateTimeIgnore(true) {
                 Utils.firstNotNull(
                     dateTimeExtractor::ampm,
-                    { DateTimeExtractorUtils.isMomentOfDayPm(momentOfDay()) }
+                    { momentOfDay()?.let(DateTimeExtractorUtils::isMomentOfDayPm) }
                 )
             }
         }
 
-        if (pm != null && ((pm && !DateTimeExtractorUtils.isMomentOfDayPm(time.hour)!!) || (!pm && time.hour == 12))) {
-            // time must be in the afternoon, but time is not already in the afternoon, correct it
-            // alternatively time is midnight and must be parsed as "morning"
-            time = time.withHour((time.hour + 12) % DateTimeExtractorUtils.HOURS_IN_DAY)
+        if (time.hour != 0 && pm != null) {
+            // AM/PM should not do anything after 0 (e.g. 0pm or 24 in the evening)
+
+            if (!pm && time.hour == 12) {
+                // AM was specified after 12 (e.g. 12AM), so the time is midnight
+                time = time.withHour(0)
+            } else if (pm && !DateTimeExtractorUtils.isMomentOfDayPm(time.hour)) {
+                // time must be in the afternoon, but time is not already, correct it
+                time = time.withHour((time.hour + 12) % DateTimeExtractorUtils.HOURS_IN_DAY)
+            }
         }
         return time
     }

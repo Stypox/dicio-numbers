@@ -460,8 +460,9 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertTimeWithAmpm("18:29:02 and am",                     LocalTime.of(18, 29, 2),  5);
         assertTimeWithAmpm("evening",                             LocalTime.of(21, 0,  0),  1);
         assertTimeWithAmpm("afternoon at four and three and six", LocalTime.of(16, 3,  6),  7);
-        // this turns out wrong, but it is a corner case
-        assertTimeWithAmpm("twenty four in the evening",          LocalTime.of(12, 0,  0),  5);
+        // corner cases:
+        assertTimeWithAmpm("twenty four in the evening",          LocalTime.of(0,  0,  0),  5);
+        assertTimeWithAmpm("12 am",                               LocalTime.of(0,  0,  0),  2);
     }
 
     @Test
