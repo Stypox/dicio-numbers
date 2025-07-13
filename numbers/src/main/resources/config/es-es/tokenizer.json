@@ -6,6 +6,8 @@
     "raw"
   ],
   "plural_endings": [
+  "s",
+  "es"
   ],
   "word_matches": [
     {
@@ -24,7 +26,8 @@
         "date_time_ignore",
         "day_adder_the",
         "ampm_before",
-        "bcad_after"
+        "bcad_after",
+        "pre_special_hour"
       ],
       "values": [
         "a"
@@ -48,7 +51,7 @@
         "thousand_separator"
       ],
       "values": [
-        ","
+        "."
       ]
     },
     {
@@ -88,7 +91,7 @@
         "date_time_ignore"
       ],
       "values": [
-        "."
+        ","
       ]
     },
     {
@@ -153,6 +156,15 @@
     },
     {
       "categories": [
+        "day_before_yesterday"
+      ],
+      "values": [
+        "anteayer",
+        "antier"
+      ]
+    },
+    {
+      "categories": [
         "yesterday"
       ],
       "values": [
@@ -177,13 +189,24 @@
     },
     {
       "categories": [
+        "day_after_tomorrow"
+      ],
+      "values": [
+        "pasado mañana"
+      ]
+    },
+    {
+      "categories": [
         "day_adder_the",
         "date_time_ignore",
         "pre_hour",
         "pre_special_hour"
       ],
       "values": [
-        "el"
+        "el",
+        "la",
+        "los",
+        "las"
       ]
     },
     {
@@ -511,11 +534,12 @@
         "dieciocho": 18,
         "diecinueve": 19,
         "veintiuno": 21,
+        "veintiún": 21,
         "veintidós": 22,
-        "veintitres": 23,
+        "veintitrés": 23,
         "veinticuatro": 24,
         "veinticinco": 25,
-        "veintiseis": 26,
+        "veintiséis": 26,
         "veintisiete": 27,
         "veintiocho": 28,
         "veintinueve": 29
@@ -555,10 +579,15 @@
       "values": {
         "mil": 1000,
         "millón": 1000000,
+        "millones": 1000000,
+        "mil millones": 1000000000,
         "millardo": 1000000000,
+        "millardos": 1000000000,
         "billón": 1000000000000,
-        "billardo": 1000000000000000,
-        "trillón": 1000000000000000000
+        "billones": 1000000000000,
+        "mil billones": 1000000000000000,
+        "trillón": 1000000000000000000,
+        "trillones": 1000000000000000000
       }
     },
     {
@@ -572,6 +601,7 @@
         "primer": 1,
         "segundo": 2,
         "tercero": 3,
+        "tercer": 3,
         "cuarto": 4,
         "quinto": 5,
         "sexto": 6,
@@ -612,7 +642,7 @@
         "quincuagésimo": 50,
         "sexagésimo": 60,
         "septuagésimo": 70,
-        "eightieth": 80,
+        "octogésimo": 80,
         "nonagésimo": 90
       }
     },
@@ -623,7 +653,8 @@
         "hundred"
       ],
       "values": {
-        "centésimo": 100
+        "centésimo": 100,
+        "centésima": 100
       }
     },
     {
@@ -634,11 +665,23 @@
       ],
       "values": {
         "milésimo": 1000,
+        "milésima": 1000,
+        "milésimas": 1000,
         "millonésimo": 1000000,
+        "millonésima": 1000000,
+        "millonésimas": 1000000,
         "milmillonésimo": 1000000000,
+        "milmillonésima": 1000000000,
+        "milmillonésimas": 1000000000,
         "billonésimo": 1000000000000,
+        "billonésima": 1000000000000,
+        "billonésimas": 1000000000000,
         "milbillonésimo": 1000000000000000,
-        "trillonésimo": 1000000000000000000
+        "milbillonésima": 1000000000000000,
+        "milbillonésimas": 1000000000000000,
+        "trillonésimo": 1000000000000000000,
+        "trillonésima": 1000000000000000000,
+        "trillonésimas": 1000000000000000000
       }
     },
     {
@@ -665,6 +708,7 @@
         "centésima": 0.01,
         "pc": 0.01,
         "%": 0.01,
+        "por ciento": 0.01,
         "pormil": 0.001,
         "milésima": 0.001,
         "‰": 0.001
@@ -698,7 +742,7 @@
         "noviembre": 11,
         "nov": 11,
         "diciembre": 12,
-        "dec": 12
+        "dic": 12
       }
     },
     {
@@ -740,6 +784,8 @@
         "madrugada": 3,
         "amanecer": 6,
         "amaneciendo": 6,
+        "desayuno": 7,
+        "desayunos": 7,
         "mañana": 9,
         "mañanas": 9,
         "almuerzo": 12,
@@ -800,8 +846,7 @@
     "1 WEEKS": [
       "semana",
       "semanas",
-      "sem",
-      "s"
+      "sem"
     ],
     "1 MONTHS": [
       "mes",
