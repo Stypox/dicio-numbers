@@ -532,16 +532,6 @@
     {
       "categories": [
         "number",
-        "digit_after_point",
-        "pre_oclock"
-      ],
-      "values": {
-        "o": 0
-      }
-    },
-    {
-      "categories": [
-        "number",
         "teen"
       ],
       "values": {
