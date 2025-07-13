@@ -321,8 +321,13 @@
       ],
       "values": [
         "siguiente",
+        "siguientes",
         "posterior",
-        "próximo"
+        "posteriores",
+        "próximo",
+        "próximos",
+        "próxima",
+        "próximas"
       ]
     },
     {
@@ -349,7 +354,11 @@
         "siguiente",
         "siguientes",
         "posterior",
-        "posteriores"
+        "posteriores",
+        "próximo",
+        "próximos",
+        "próxima",
+        "próximas"
       ]
     },
     {
@@ -360,6 +369,8 @@
       "values": [
         "pasado",
         "pasados",
+        "anterior",
+        "anteriores",
         "transcurrido",
         "transcurridos"
       ]
@@ -371,6 +382,7 @@
       ],
       "values": [
         "anterior",
+        "anteriores",
         "pasado",
         "pasados",
         "pasada",
