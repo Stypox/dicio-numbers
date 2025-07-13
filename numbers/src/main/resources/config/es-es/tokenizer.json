@@ -598,16 +598,25 @@
       ],
       "values": {
         "primero": 1,
+        "primera": 1,
         "primer": 1,
         "segundo": 2,
+        "segunda": 2,
         "tercero": 3,
+        "tercera": 3,
         "tercer": 3,
         "cuarto": 4,
+        "cuarta": 4,
         "quinto": 5,
+        "quinta": 5,
         "sexto": 6,
+        "sexta": 6,
         "séptimo": 7,
+        "séptima": 7,
         "octavo": 8,
-        "noveno": 9
+        "octava": 8,
+        "noveno": 9,
+        "novena": 9
       }
     },
     {
@@ -618,15 +627,25 @@
       ],
       "values": {
         "décimo": 10,
+        "décima": 10,
         "decimoprimero": 11,
+        "decimoprimera": 11,
         "decimosegundo": 12,
+        "decimosegunda": 12,
         "decimotercero": 13,
+        "decimotercera": 13,
         "decimocuarto": 14,
+        "decimocuarta": 14,
         "decimoquinto": 15,
+        "decimoquinta": 15,
         "decimosexto": 16,
+        "decimosexta": 16,
         "decimoséptimo": 17,
+        "decimoséptima": 17,
         "decimooctavo": 18,
-        "decimonoveno": 19
+        "decimooctava": 18,
+        "decimonoveno": 19,
+        "decimonovena": 19
       }
     },
     {
@@ -637,13 +656,21 @@
       ],
       "values": {
         "vigésimo": 20,
+        "vigésima": 20,
         "trigésimo": 30,
+        "trigésima": 30,
         "cuadragésimo": 40,
+        "cuadragésima": 40,
         "quincuagésimo": 50,
+        "quincuagésima": 50,
         "sexagésimo": 60,
+        "sexagésima": 60,
         "septuagésimo": 70,
+        "septuagésima": 70,
         "octogésimo": 80,
-        "nonagésimo": 90
+        "octogésima": 80,
+        "nonagésimo": 90,
+        "nonagésima": 90
       }
     },
     {
