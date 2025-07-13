@@ -151,7 +151,8 @@
         "date_time_ignore"
       ],
       "values": [
-        "de"
+        "de",
+        "más"
       ]
     },
     {
@@ -290,10 +291,16 @@
       "values": [
         "este",
         "estos",
+        "esta",
+        "estas",
         "ese",
         "esos",
+        "esa",
+        "esas",
         "aquel",
-        "aquellos"
+        "aquellos",
+        "aquella",
+        "aquellas"
       ]
     },
     {
@@ -325,7 +332,11 @@
         "positive"
       ],
       "values": [
-        "en"
+        "en",
+        "en el",
+        "en la",
+        "en los",
+        "en las"
       ]
     },
     {
@@ -336,7 +347,9 @@
       ],
       "values": [
         "siguiente",
-        "siguientes"
+        "siguientes",
+        "posterior",
+        "posteriores"
       ]
     },
     {
@@ -346,7 +359,9 @@
       ],
       "values": [
         "pasado",
-        "pasados"
+        "pasados",
+        "transcurrido",
+        "transcurridos"
       ]
     },
     {
@@ -357,7 +372,14 @@
       "values": [
         "anterior",
         "pasado",
-        "precedente"
+        "pasados",
+        "pasada",
+        "pasadas",
+        "precedido",
+        "precedidos",
+        "precedida",
+        "precedidas",
+        "hace"
       ]
     },
     {
