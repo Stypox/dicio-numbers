@@ -2,6 +2,7 @@ package org.dicio.numbers.lang.es
 
 import org.dicio.numbers.parser.lexer.TokenStream
 import org.dicio.numbers.unit.Number
+import org.dicio.numbers.unit.isNullOrZero
 import org.dicio.numbers.util.NumberExtractorUtils
 
 class SpanishNumberExtractor internal constructor(private val ts: TokenStream) {
@@ -136,7 +137,7 @@ class SpanishNumberExtractor internal constructor(private val ts: TokenStream) {
                 ts.movePositionForwardBy(1)
             }
             val denominator = numberInteger(false)
-            if (denominator == null || denominator.isZero()) {
+            if (denominator.isNullOrZero()) {
                 ts.position = originalPosition // not a fraction or division by zero, reset
             } else {
                 return n.divide(denominator)

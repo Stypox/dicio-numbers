@@ -20,10 +20,10 @@ class SpanishFormatter : Formatter("config/es-es") {
             // Spanish context: some fractions are gendered. "un medio" (a half) vs "una media tarta" (a half cake)
             val isFemale = mixedFraction.whole == 0L
             val denominatorString = when (mixedFraction.denominator) {
-                2L -> if (isFemale) "media" else "medio"
+                2 -> if (isFemale) "media" else "medio"
                 else -> {
                     // Ordinals are used for other denominators, e.g., "tercio", "cuarto", "quinto"
-                    val ordinal = pronouncePositive(mixedFraction.denominator, true)
+                    val ordinal = pronouncePositive(mixedFraction.denominator.toLong(), true)
                     if (mixedFraction.numerator > 1) {
                         // pluralize, e.g. "quinto" -> "quintos"
                         if (ordinal.endsWith("o")) ordinal.dropLast(1) + "os" else ordinal + "s"
@@ -36,7 +36,7 @@ class SpanishFormatter : Formatter("config/es-es") {
             val numeratorString = if (mixedFraction.numerator == 1) {
                 if (isFemale) "una" else "un"
             } else {
-                pronouncePositive(mixedFraction.numerator, false)
+                pronouncePositive(mixedFraction.numerator.toLong(), false)
             }
 
             return if (mixedFraction.whole == 0L) {

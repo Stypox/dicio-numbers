@@ -144,7 +144,7 @@ class SpanishDateTimeExtractor internal constructor(
         var result = LocalTime.of(hour, 0)
 
         // Handle "en punto" (o'clock)
-        if (ts.nextValueIs("en") && ts.nextValueIs("punto", 1)) {
+        if (ts[0].isValue("en") && ts[1].isValue("punto")) {
             ts.movePositionForwardBy(2)
             return result
         }
@@ -230,8 +230,8 @@ class SpanishDateTimeExtractor internal constructor(
         // Spanish context: handles "y cuarto" (15), "y media" (30), "menos cuarto" (-15).
         val originalPosition = ts.position
 
-        val isMinus = ts.nextValueIs("menos")
-        val isPlus = ts.nextValueIs("y") || ts.nextValueIs("con")
+        val isMinus = ts[0].isValue("menos")
+        val isPlus = ts[0].isValue("y") || ts[0].isValue("con")
 
         // Look for 'cuarto' or 'media'
         val keywordIndex = if (isMinus || isPlus) 1 else 0
