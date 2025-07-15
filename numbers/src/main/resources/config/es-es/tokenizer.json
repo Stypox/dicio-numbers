@@ -375,7 +375,9 @@
         "anterior",
         "anteriores",
         "transcurrido",
-        "transcurridos"
+        "transcurridos",
+        "que pasó",
+        "que transcurrió"
       ]
     },
     {
@@ -655,6 +657,7 @@
       "values": {
         "décimo": 10,
         "décima": 10,
+        "decimoprimer": 11,
         "decimoprimero": 11,
         "decimoprimera": 11,
         "decimosegundo": 12,
