@@ -19,16 +19,14 @@ public class NiceTimeTest {
         pf = new ParserFormatter(new SpanishFormatter(), null);
     }
 
-    //TODO Spanish translation
-
 
     @Test
     public void random() {
         final LocalTime dt = LocalTime.of(13, 22, 3);
-        assertEquals("one twenty two", pf.niceTime(dt).get());
-        assertEquals("one twenty two p.m.", pf.niceTime(dt).showAmPm(T).get());
-        assertEquals("thirteen twenty two", pf.niceTime(dt).use24Hour(T).get());
-        assertEquals("thirteen twenty two", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
+        assertEquals("una veintidós", pf.niceTime(dt).get());
+        assertEquals("una y veintidós p.m.", pf.niceTime(dt).showAmPm(T).get());
+        assertEquals("trece veintidós", pf.niceTime(dt).use24Hour(T).get());
+        assertEquals("trece veintidós", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
         assertEquals("1:22", pf.niceTime(dt).speech(F).get());
         assertEquals("1:22 PM", pf.niceTime(dt).speech(F).showAmPm(T).get());
         assertEquals("13:22", pf.niceTime(dt).speech(F).use24Hour(T).get());
@@ -38,10 +36,10 @@ public class NiceTimeTest {
     @Test
     public void oClock() {
         final LocalTime dt = LocalTime.of(15, 0, 32);
-        assertEquals("three o'clock", pf.niceTime(dt).get());
-        assertEquals("three p.m.", pf.niceTime(dt).showAmPm(T).get());
-        assertEquals("fifteen hundred", pf.niceTime(dt).use24Hour(T).get());
-        assertEquals("fifteen hundred", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
+        assertEquals("tres en punto", pf.niceTime(dt).get());
+        assertEquals("tres p.m.", pf.niceTime(dt).showAmPm(T).get());
+        assertEquals("mil quinientos", pf.niceTime(dt).use24Hour(T).get());
+        assertEquals("mil quinientos", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
         assertEquals("3:00", pf.niceTime(dt).speech(F).get());
         assertEquals("3:00 PM", pf.niceTime(dt).speech(F).showAmPm(T).get());
         assertEquals("15:00", pf.niceTime(dt).speech(F).use24Hour(T).get());
@@ -51,10 +49,10 @@ public class NiceTimeTest {
     @Test
     public void afterMidnight() {
         final LocalTime dt = LocalTime.of(0, 2, 9);
-        assertEquals("twelve oh two", pf.niceTime(dt).get());
-        assertEquals("twelve oh two a.m.", pf.niceTime(dt).showAmPm(T).get());
-        assertEquals("zero zero zero two", pf.niceTime(dt).use24Hour(T).get());
-        assertEquals("zero zero zero two", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
+        assertEquals("dos cero dos", pf.niceTime(dt).get());
+        assertEquals("doce cero dos a.m.", pf.niceTime(dt).showAmPm(T).get());
+        assertEquals("cero cero cero dos", pf.niceTime(dt).use24Hour(T).get());
+        assertEquals("cero cero cero dos", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
         assertEquals("12:02", pf.niceTime(dt).speech(F).get());
         assertEquals("12:02 AM", pf.niceTime(dt).speech(F).showAmPm(T).get());
         assertEquals("00:02", pf.niceTime(dt).speech(F).use24Hour(T).get());
@@ -64,10 +62,10 @@ public class NiceTimeTest {
     @Test
     public void quarterPast() {
         final LocalTime dt = LocalTime.of(1, 15, 33);
-        assertEquals("quarter past one", pf.niceTime(dt).get());
-        assertEquals("quarter past one a.m.", pf.niceTime(dt).showAmPm(T).get());
-        assertEquals("zero one fifteen", pf.niceTime(dt).use24Hour(T).get());
-        assertEquals("zero one fifteen", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
+        assertEquals("una y cuarto", pf.niceTime(dt).get());
+        assertEquals("una y cuarto a.m.", pf.niceTime(dt).showAmPm(T).get());
+        assertEquals("cero uno quince", pf.niceTime(dt).use24Hour(T).get());
+        assertEquals("cero uno quince", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
         assertEquals("1:15", pf.niceTime(dt).speech(F).get());
         assertEquals("1:15 AM", pf.niceTime(dt).speech(F).showAmPm(T).get());
         assertEquals("01:15", pf.niceTime(dt).speech(F).use24Hour(T).get());
@@ -77,10 +75,10 @@ public class NiceTimeTest {
     @Test
     public void half() {
         final LocalTime dt = LocalTime.of(12, 30, 59);
-        assertEquals("half past twelve", pf.niceTime(dt).get());
-        assertEquals("half past twelve p.m.", pf.niceTime(dt).showAmPm(T).get());
-        assertEquals("twelve thirty", pf.niceTime(dt).use24Hour(T).get());
-        assertEquals("twelve thirty", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
+        assertEquals("doce y media", pf.niceTime(dt).get());
+        assertEquals("doce y media p.m.", pf.niceTime(dt).showAmPm(T).get());
+        assertEquals("doce treinta", pf.niceTime(dt).use24Hour(T).get());
+        assertEquals("doce y treinta", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
         assertEquals("12:30", pf.niceTime(dt).speech(F).get());
         assertEquals("12:30 PM", pf.niceTime(dt).speech(F).showAmPm(T).get());
         assertEquals("12:30", pf.niceTime(dt).speech(F).use24Hour(T).get());
@@ -90,10 +88,10 @@ public class NiceTimeTest {
     @Test
     public void quarterTo() {
         final LocalTime dt = LocalTime.of(23, 45, 7);
-        assertEquals("quarter to twelve", pf.niceTime(dt).get());
-        assertEquals("quarter to twelve p.m.", pf.niceTime(dt).showAmPm(T).get());
-        assertEquals("twenty three forty five", pf.niceTime(dt).use24Hour(T).get());
-        assertEquals("twenty three forty five", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
+        assertEquals("cuarto para las doce", pf.niceTime(dt).get());
+        assertEquals("cuarto para las doce p.m.", pf.niceTime(dt).showAmPm(T).get());
+        assertEquals("veintitrés cuarenta y cinco", pf.niceTime(dt).use24Hour(T).get());
+        assertEquals("veintitrés cuarenta y cinco", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
         assertEquals("11:45", pf.niceTime(dt).speech(F).get());
         assertEquals("11:45 PM", pf.niceTime(dt).speech(F).showAmPm(T).get());
         assertEquals("23:45", pf.niceTime(dt).speech(F).use24Hour(T).get());
@@ -103,10 +101,10 @@ public class NiceTimeTest {
     @Test
     public void tenAm() {
         final LocalTime dt = LocalTime.of(10, 3, 44);
-        assertEquals("ten oh three", pf.niceTime(dt).get());
-        assertEquals("ten oh three a.m.", pf.niceTime(dt).showAmPm(T).get());
-        assertEquals("ten zero three", pf.niceTime(dt).use24Hour(T).get());
-        assertEquals("ten zero three", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
+        assertEquals("diez cero trés", pf.niceTime(dt).get());
+        assertEquals("diez cero trés a.m.", pf.niceTime(dt).showAmPm(T).get());
+        assertEquals("diez cero trés", pf.niceTime(dt).use24Hour(T).get());
+        assertEquals("diez y trés", pf.niceTime(dt).use24Hour(T).showAmPm(T).get());
         assertEquals("10:03", pf.niceTime(dt).speech(F).get());
         assertEquals("10:03 AM", pf.niceTime(dt).speech(F).showAmPm(T).get());
         assertEquals("10:03", pf.niceTime(dt).speech(F).use24Hour(T).get());

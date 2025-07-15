@@ -89,20 +89,20 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
 
     @Test
     public void testNumberGroupLongScale() {
-        assertNumberGroupLongScale("one hundred and twenty million", F, 1e9,  120e6,     F, 5);
-        assertNumberGroupLongScale("sixty three quadrillion",        F, 1e28, 63e24,     F, 3);
-        assertNumberGroupLongScale("three thousand and six",         T, 1e9,  3006,      F, 4);
-        assertNumberGroupLongScale("a hundred thousand",             F, 1e6,  100000,    F, 3);
-        assertNumberGroupLongScale("hundred 70 thousand",            T, 1e6,  170000,    F, 3);
-        assertNumberGroupLongScale("572 million",                    F, 1e9,  572e6,     F, 2);
-        assertNumberGroupLongScale("572012 billion",                 F, 1e18, 572012e12, F, 2);
-        assertNumberGroupLongScale("3 million",                      T, 1e9,  3e6,       F, 2);
-        assertNumberGroupLongScale(", one hundred and ninety one",   F, 1e6,  191,       F, 6);
+        assertNumberGroupLongScale("un ciento y veinte millones",    F, 1e9,  120e6,     F, 5);
+        assertNumberGroupLongScale("sesenta tres mil billones",      F, 1e28, 63e24,     F, 3);
+        assertNumberGroupLongScale("trescientos y seis",             T, 1e9,  3006,      F, 4);
+        assertNumberGroupLongScale("un ciento mil",                  F, 1e6,  100000,    F, 3);
+        assertNumberGroupLongScale("ciento 70 mil",                  T, 1e6,  170000,    F, 3);
+        assertNumberGroupLongScale("572 millones",                   F, 1e9,  572e6,     F, 2);
+        assertNumberGroupLongScale("572012 mil millones",            F, 1e18, 572012e12, F, 2);
+        assertNumberGroupLongScale("3 millones",                     T, 1e9,  3e6,       F, 2);
+        assertNumberGroupLongScale(", ciento noventa y uno",         F, 1e6,  191,       F, 6);
     }
 
     @Test
     public void testNumberGroupLongScaleOrdinal() {
-        assertNumberGroupLongScale("seven hundred and sixty four millionth", T, 1e9, 764e6, T, 6);
+        assertNumberGroupLongScale("setecientos y sesentacuatro milésima",   T, 1e9, 764e6, T, 6);
         assertNumberGroupLongScale("seven hundred and sixty four millionth", F, 1e9, 764,   F, 5);
         assertNumberGroupLongScale("seven hundred and sixty four millionth", F, 1e6, 764,   F, 5);
         assertNumberGroupLongScale("fifth billionth",                        T, 1e9, 5,     T, 1);
@@ -276,12 +276,12 @@ public class ExtractNumbersTest extends WithTokenizerTestBase {
     @Test
     public void testNumberIntegerNull() {
         assertNumberIntegerNull("",                    T);
-        assertNumberIntegerNull("a hello how are you", F);
-        assertNumberIntegerNull(", and",               T);
-        assertNumberIntegerNull("oh two",              F);
-        assertNumberIntegerNull(", 123485 and",        T);
-        assertNumberIntegerNull("and 123",             F);
-        assertNumberIntegerNull(" one thousand ",      T);
+        assertNumberIntegerNull("un hola cómo estás", F);
+        assertNumberIntegerNull(", y",               T);
+        assertNumberIntegerNull("cero dos",              F);
+        assertNumberIntegerNull(", 123485 y",        T);
+        assertNumberIntegerNull("y 123",             F);
+        assertNumberIntegerNull(" un ciento ",      T);
     }
 
     @Test

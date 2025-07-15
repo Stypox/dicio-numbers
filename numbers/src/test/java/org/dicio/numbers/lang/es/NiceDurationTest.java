@@ -40,11 +40,11 @@ public class NiceDurationTest extends NiceDurationTestBase {
 
     @Test
     public void speech() {
-        assertDuration("six days twenty three hours fifty nine minutes thirty two seconds", T,  6, 23, 59, 32);
-        assertDuration("nineteen days fifty two minutes",                                   T, 19,  0, 52,  0);
-        assertDuration("one hour six seconds",                                              T,  0,  1,  0,  6);
-        assertDuration("sixty three days forty four seconds",                               T, 63,  0,  0, 44);
-        assertDuration("one day one hour one minute one second",                            T,  1,  1,  1,  1);
+        assertDuration("seis días veintitrés horas cincuenta y nueve minutos treinta y dos segundos", T,  6, 23, 59, 32);
+        assertDuration("diecinueve días cincuenta y dos minutos",                                     T, 19,  0, 52,  0);
+        assertDuration("una hora seis segundos",                                                      T,  0,  1,  0,  6);
+        assertDuration("sesenta y tres días cuarenta y cuatro segundos",                              T, 63,  0,  0, 44);
+        assertDuration("un día una hora un minuto un segundo",                                        T,  1,  1,  1,  1);
     }
 
     @Test
