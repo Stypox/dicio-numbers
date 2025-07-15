@@ -241,7 +241,7 @@ class SpanishDateTimeExtractor internal constructor(
         }
         if (ts[keywordIndex].isValue("media")) {
             ts.movePositionForwardBy(keywordIndex + 1)
-            return if (isMinus) -30 else 30 // "menos media" is unusual but possible
+            return if (isMinus) -30 else 30 // "menos media" is unusual for non-native speakers but possible
         }
         
         ts.position = originalPosition
