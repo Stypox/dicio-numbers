@@ -13,6 +13,8 @@ class SpanishParser : Parser("config/es-es") {
         shortScale: Boolean,
         preferOrdinal: Boolean
     ): () -> Number? {
+        // Spanish uses the long scale exclusively for number names.
+        // The shortScale parameter is ignored for pronunciation but passed for API consistency.
         val numberExtractor = SpanishNumberExtractor(tokenStream)
         return if (preferOrdinal) {
             numberExtractor::numberPreferOrdinal
@@ -35,6 +37,7 @@ class SpanishParser : Parser("config/es-es") {
         preferMonthBeforeDay: Boolean,
         now: LocalDateTime
     ): () -> LocalDateTime? {
-        return SpanishDateTimeExtractor(tokenStream, now)::dateTime
+        // Pass all parameters down to the extractor, following the English model.
+        return SpanishDateTimeExtractor(tokenStream, preferMonthBeforeDay, now)::dateTime
     }
 }
