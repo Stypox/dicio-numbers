@@ -404,39 +404,35 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     public void testDateNull() {
         assertDateNull("hola cómo estás");
         assertDateNull("am mates");
-        assertDateNull("and two thousand and fifteen");
-        assertDateNull("of may two");
-        assertDateNull("tomorrow");
+        assertDateNull("y dos mil quince");
+        assertDateNull("y mayo de dos");
+        assertDateNull("mañana");
         assertDateNull("1000000000");
     }
 
     @Test
     public void testBcad() {
-        // b.c.e special case, not covered by DateTimeExtractorUtils.bcad()
-        assertBcad("bce",                false, 1);
-        assertBcad("b.c.e.",             false, 5);
-        assertBcad("before current era", false, 3);
-        assertBcad("current era",        true,  2);
+        assertBcad("nuestra era",        true,  2);
     }
 
     @Test
     public void testTime() {
-        assertTime("13:28.33 test",        LocalTime.of(13, 28, 33), 4);
-        assertTime("half past noon",       LocalTime.of(12, 30, 0),  3);
-        assertTime("at fourteen and",      LocalTime.of(14, 0,  0),  2);
-        assertTime("midnight of twelve",   LocalTime.of(0,  12, 0),  3);
-        assertTime("twenty four and zero", LocalTime.of(0,  0,  0),  4);
-        assertTime("the twenty three and fifty one min and 17 seconds", LocalTime.of(23, 51, 17), 10);
+        assertTime("13:28.33 prueba",                     LocalTime.of(13, 28, 33), 4);
+        assertTime("las doce y media del mediodía",       LocalTime.of(12, 30, 0),  3);
+        assertTime("a las catorce y",                     LocalTime.of(14, 0,  0),  2);
+        assertTime("doce de la medianoche",               LocalTime.of(0,  12, 0),  3);
+        assertTime("veinticuatro y cero",                 LocalTime.of(0,  0,  0),  4);
+        assertTime("las veintitrés y cincuenta y un min y 17 segundos", LocalTime.of(23, 51, 17), 10);
     }
 
     @Test
     public void testTimeNull() {
-        assertTimeNull("hello how are you");
-        assertTimeNull("sixty one");
+        assertTimeNull("hola cómo estás");
+        assertTimeNull("sesenta y uno");
         assertTimeNull("30:59");
-        assertTimeNull("minus sixteen");
-        assertTimeNull("four million");
-        assertTimeNull("evening");
+        assertTimeNull("menos dieciséis");
+        assertTimeNull("cuatro millones");
+        assertTimeNull("cena");
     }
 
     @Test
@@ -446,7 +442,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertTimeWithAmpm("at two o'clock in the morning",       LocalTime.of(2,  0,  0),  7);
         assertTimeWithAmpm("three thirty eight in the afternoon", LocalTime.of(15, 38, 0),  6);
         assertTimeWithAmpm("18:29:02 and am",                     LocalTime.of(18, 29, 2),  5);
-        assertTimeWithAmpm("evening",                             LocalTime.of(21, 0,  0),  1);
+        assertTimeWithAmpm("noche",                               LocalTime.of(21, 0,  0),  1);
         assertTimeWithAmpm("afternoon at four and three and six", LocalTime.of(16, 3,  6),  7);
         // corner cases:
         assertTimeWithAmpm("twenty four in the evening",          LocalTime.of(0,  0,  0),  5);
