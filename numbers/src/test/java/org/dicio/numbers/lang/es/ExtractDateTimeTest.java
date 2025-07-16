@@ -296,127 +296,114 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertHourNull("el un millón");
     }
 
-    //TODO Spanish translation
-
     @Test
     public void testNoonMidnightLike() {
         assertNoonMidnightLike("del mediodía", 0,  2);
-        assertNoonMidnightLike("middays",     12, 1);
-        assertNoonMidnightLike("this noon",   12, 2);
+        assertNoonMidnightLike("en el mediodía",   12, 2);
     }
 
     @Test
     public void testNoonMidnightLikeNull() {
-        assertNoonMidnightLikeNull("hello how are you");
-        assertNoonMidnightLikeNull("this evening and");
-        assertNoonMidnightLikeNull("tonight test");
-        assertNoonMidnightLikeNull("after dinner");
-        assertNoonMidnightLikeNull("before the lunch");
-        assertNoonMidnightLikeNull("and at midday");
-        assertNoonMidnightLikeNull("and midnight");
-        assertNoonMidnightLikeNull("at hour noon");
-        assertNoonMidnightLikeNull("in midnight");
-        assertNoonMidnightLikeNull("at the midday");
+        assertNoonMidnightLikeNull("hola cómo estás");
+        assertNoonMidnightLikeNull("este atardecer y");
+        assertNoonMidnightLikeNull("anocher prueba");
+        assertNoonMidnightLikeNull("después de la cena");
+        assertNoonMidnightLikeNull("antes del almuerzo");
+        assertNoonMidnightLikeNull("y al mediodía");
+        assertNoonMidnightLikeNull("y medianoche");
+        assertNoonMidnightLikeNull("a la hora del mediodía");
+        assertNoonMidnightLikeNull("a la medianoche");
+        assertNoonMidnightLikeNull("al mediodía");
     }
 
     @Test
     public void testMomentOfDay() {
-        assertMomentOfDay("at midnight",      0,  2);
-        assertMomentOfDay("noon",             12, 1);
-        assertMomentOfDay("these midnights",  0,  2);
-        assertMomentOfDay("this evening and", 21, 2);
-        assertMomentOfDay("at tonight test",  23, 2);
-        assertMomentOfDay("nighttime test",   3,  1);
-        assertMomentOfDay("after dinner",     21, 2);
-        assertMomentOfDay("before the lunch", 11, 3);
-        assertMomentOfDay("the dinner",       20, 2);
+        assertMomentOfDay("a la medianoche",    0,  2);
+        assertMomentOfDay("mediodía",           12, 1);
+        assertMomentOfDay("estas medianoches",  0,  2);
+        assertMomentOfDay("esta tarde y",       21, 2);
+        assertMomentOfDay("de la noche prueba", 23, 2);
+        assertMomentOfDay("noche prueba",       3,  1);
+        assertMomentOfDay("después de la cena", 21, 2);
+        assertMomentOfDay("después del lonche", 11, 3);
+        assertMomentOfDay("la cena",            20, 2);
     }
 
     @Test
     public void testMomentOfDayNull() {
-        assertMomentOfDayNull("hello how are you");
-        assertMomentOfDayNull("and at midday");
-        assertMomentOfDayNull("mid night");
-        assertMomentOfDayNull("at hour dinner");
-        assertMomentOfDayNull("in dinner");
+        assertMomentOfDayNull("hola cómo estás");
+        assertMomentOfDayNull("y al mediodía");
+        assertMomentOfDayNull("media noche");
+        assertMomentOfDayNull("a la hora de la cena");
+        assertMomentOfDayNull("en la cena");
     }
 
     @Test
     public void testSpecialMinute() {
-        assertSpecialMinute("a quarter to",            -15, 3);
-        assertSpecialMinute("half of past test",       30,  3);
-        assertSpecialMinute("a half to eleven",        -30, 3);
-        assertSpecialMinute("zero point two of past",  12,  5);
-        assertSpecialMinute("thirteen fourteenths to", -56, 3); // 13/14*60 is 55.7 -> rounded to 56
-        assertSpecialMinute("at twenty the past",      20,  4);
-        assertSpecialMinute("the fifty and nine to",   -59, 5);
-        assertSpecialMinute("fifteen past twelve",     15,  2);
+        assertSpecialMinute("un cuarto para",           -15, 3);
+        assertSpecialMinute("half of past test",        30,  3);
+        assertSpecialMinute("a half to eleven",         -30, 3);
+        assertSpecialMinute("zero point two of past",   12,  5);
+        assertSpecialMinute("trece décimocuartos para", -56, 3); // 13/14*60 is 55.7 -> rounded to 56
+        assertSpecialMinute("a los veinte pasados",     20,  4);
+        assertSpecialMinute("cincuenta y nueve para",   -59, 5);
+        assertSpecialMinute("las doce y cuarto",        15,  2);
     }
 
     @Test
     public void testSpecialMinuteNull() {
-        assertSpecialMinuteNull("hello how are you");
-        assertSpecialMinuteNull("two");
-        assertSpecialMinuteNull("one hundred and twelve to");
-        assertSpecialMinuteNull("minus a quarter to five");
-        assertSpecialMinuteNull("four quarters to nine");
-        assertSpecialMinuteNull("zero halfs to");
-        assertSpecialMinuteNull("zero and comma two past");
-        assertSpecialMinuteNull("thirteen and fourteenths past");
-        assertSpecialMinuteNull("and fifteen past twelve");
+        assertSpecialMinuteNull("hola cómo estás");
+        assertSpecialMinuteNull("dos");
+        assertSpecialMinuteNull("ciento doce para la");
+        assertSpecialMinuteNull("menos un cuarto para las cinco");
+        assertSpecialMinuteNull("cuatro cuartos para las nueve");
+        assertSpecialMinuteNull("cero medios para");
+        assertSpecialMinuteNull("cero y coma dos después de");
+        assertSpecialMinuteNull("trece y catorce pasados");
+        assertSpecialMinuteNull("y las quince y cien");
     }
 
     @Test
     public void testOClock() {
-        assertOClock("o clock",    2);
-        assertOClock("o'clock",    2);
-        assertOClock("oclock",     1);
-        assertOClock("o,clock",    3);
-        assertOClock("exact",      1);
-        assertOClock("on the dot", 3);
+        assertOClock("en punto",    2);
     }
 
     @Test
     public void testOClockFalse() {
-        assertOClockFalse("hello");
-        assertOClockFalse("by the clock");
-        assertOClockFalse("clock o");
-        assertOClockFalse("clock");
-        assertOClockFalse("on");
+        assertOClockFalse("hola");
+        assertOClockFalse("por el punto");
     }
 
     @Test
     public void testDate() {
-        assertDate("04/09-4096",                                  F, LocalDate.of(4096,  9,  4),  5);
-        assertDate("04/09-4096",                                  T, LocalDate.of(4096,  4,  9),  5);
-        assertDate("4 13 2023",                                      LocalDate.of(2023,  4,  13), 3);
-        assertDate("13.4.2023",                                      LocalDate.of(2023,  4,  13), 5);
-        assertDate("six of seven of nineteen ninety five",        F, LocalDate.of(1995,  7,  6),  7);
-        assertDate("six of seven of nineteen ninety five",        T, LocalDate.of(1995,  6,  7),  7);
-        assertDate("thursday 26 of may 2022",                        LocalDate.of(2022,  5,  26), 5);
-        assertDate("august the second, two",                         LocalDate.of(2,     8,  2),  5);
-        assertDate("2nd january, two b.c.",                          LocalDate.of(-2,    1,  2),  8);
-        assertDate("mon twelve jun two thousand twelve b.C.",        LocalDate.of(-2012, 6,  12), 9);
-        assertDate("four hundred seventy six AD",                    LocalDate.of(476,   1,  1),  5);
-        assertDate("four thousand before common era",                LocalDate.of(-4000, 1,  1),  5);
-        assertDate("four thousand of before Christ",                 LocalDate.of(4000,  1,  1),  2);
-        assertDate("tuesday and twenty seven",                       LocalDate.of(2023,  2,  27), 4);
-        assertDate("tuesday and twelve",                          F, LocalDate.of(2023,  2,  12), 3);
-        assertDate("tuesday and twelve",                          T, LocalDate.of(2023,  12, 1),  3); // a bit strange
-        assertDate("november e",                                     LocalDate.of(2023,  11, 1),  1);
-        assertDate("wednesday test eight",                           LocalDate.of(2023,  2,  1),  1);
-        assertDate("monday november",                                LocalDate.of(2023,  1,  30), 1);
-        assertDate("october two thousand and twelve",                LocalDate.of(2012,  10, 1),  5);
-        assertDate("999999999",                                      LocalDate.of(999999999,1,1), 1);
+        assertDate("09/04-4096",                                              F, LocalDate.of(4096,  9,  4),  5);
+        assertDate("09/04-4096",                                              T, LocalDate.of(4096,  4,  9),  5);
+        assertDate("13 4 2023",                                                  LocalDate.of(2023,  4,  13), 3);
+        assertDate("13.4.2023",                                                  LocalDate.of(2023,  4,  13), 5);
+        assertDate("seis de siete de mil novecientos noventa y cinco",        F, LocalDate.of(1995,  7,  6),  7);
+        assertDate("seis de siete de mil novecientos noventa y cinco",        T, LocalDate.of(1995,  6,  7),  7);
+        assertDate("jueves 26 de mayo de 2022",                                  LocalDate.of(2022,  5,  26), 5);
+        assertDate("dos de agosto",                                              LocalDate.of(2,     8,  2),  5);
+        assertDate("2 de enero, 2 a.c.",                                         LocalDate.of(-2,    1,  2),  8);
+        assertDate("doce de junio de dos mil doce a.C.",                         LocalDate.of(-2012, 6,  12), 9);
+        assertDate("cuatrocientos setenta y seis d.C.",                          LocalDate.of(476,   1,  1),  5);
+        assertDate("cuatro mil antes de la era común",                           LocalDate.of(-4000, 1,  1),  5);
+        assertDate("cuatro mil de antes de Cristo",                              LocalDate.of(4000,  1,  1),  2);
+        assertDate("martes y veintisiete",                                       LocalDate.of(2023,  2,  27), 4);
+        assertDate("martes y doce",                                           F, LocalDate.of(2023,  2,  12), 3);
+        assertDate("martes y doce",                                           T, LocalDate.of(2023,  12, 1),  3); // a bit strange
+        assertDate("november e",                                                 LocalDate.of(2023,  11, 1),  1);
+        assertDate("miércoles ocho prueba",                                       LocalDate.of(2023,  2,  1),  1);
+        assertDate("lunes noviembre",                                            LocalDate.of(2023,  1,  30), 1);
+        assertDate("octubre de dos mil doce",                                    LocalDate.of(2012,  10, 1),  5);
+        assertDate("999999999",                                                  LocalDate.of(999999999,1,1), 1);
         // the following work thanks to special case in number extractor!
-        assertDate("twenty twelve",                                  LocalDate.of(2012,  1,  1),  2);
-        assertDate("sunday twenty thirteen",                         LocalDate.of(2023,  2,  5),  1);
-    }
+    }       
 
     @Test
     public void testDateNull() {
-        assertDateNull("hello how are you");
-        assertDateNull("am tuedsay");
+        assertDateNull("hola cómo estás");
+        assertDateNull("am mates");
         assertDateNull("and two thousand and fifteen");
         assertDateNull("of may two");
         assertDateNull("tomorrow");

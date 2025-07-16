@@ -134,12 +134,10 @@ public class DateTimeExtractorUtilsTest extends DateTimeExtractorUtilsTestBase {
     @Test
     public void testBcad() {
         assertBcad("a.C. prueba",     false, 3);
-        assertBcad("d.C. and",      true,  3);
+        assertBcad("d.C. y",      true,  3);
         assertBcad("adc prueba y",    true,  1);
         assertBcad("antes de Cristo", false, 2);
         assertBcad("d y Domini",  true,  3);
-        assertBcad("ace",           false, 1);
-        assertBcad("d current",     false, 2);
 
         // there is a workaround for this in spanishDateTimeExtractor
         assertBcad("a.c.e.",        false, 3);
@@ -179,7 +177,7 @@ public class DateTimeExtractorUtilsTest extends DateTimeExtractorUtilsTestBase {
     public void testMonthName() {
         assertMonthName("enero",    1);
         assertMonthName("dic e",      12);
-        assertMonthName("sept ember", 9);
+        assertMonthName("sept iembre", 9);
         assertMonthName("mar",        3);
     }
 
