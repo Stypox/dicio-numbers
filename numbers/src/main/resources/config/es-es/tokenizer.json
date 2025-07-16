@@ -608,14 +608,13 @@
       ],
       "values": {
         "mil": 1000,
+        "miles": 1000,
         "millón": 1000000,
         "millones": 1000000,
-        "mil millones": 1000000000,
         "millardo": 1000000000,
         "millardos": 1000000000,
         "billón": 1000000000000,
         "billones": 1000000000000,
-        "mil billones": 1000000000000000,
         "trillón": 1000000000000000000,
         "trillones": 1000000000000000000
       }
