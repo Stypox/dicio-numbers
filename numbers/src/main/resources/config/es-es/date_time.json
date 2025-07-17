@@ -143,15 +143,6 @@
     "700": "setecientos",
     "800": "ochocientos",
     "900": "novecientos",
-    "1000": "mil",
-    "1100": "mil ciento",
-    "2100": "dos mil ciento",
-    "3100": "tres mil ciento",
-    "4100": "cuatro mil ciento",
-    "5100": "cinco mil ciento",
-    "6100": "seis mil ciento",
-    "7100": "siete mil ciento",
-    "8100": "ocho mil ciento",
-    "9100": "ocho mil ciento"
+    "1000": "mil"
   }
 }
