@@ -1,14 +1,14 @@
 {
   "spaces": " \t\n\f\r:;_!?<>|=()[]{}»«*~^`'\"",
   "characters_as_word": "%‰#-+.,/",
+  "compound_word_piece_category": "compound_word_piece",
   "raw_number_categories": [
     "number",
     "raw"
   ],
   "plural_endings": [
-  "as",
-  "es",
-  "os"
+    "s",
+    "es"
   ],
   "word_matches": [
     {
@@ -73,7 +73,8 @@
         "point"
       ],
       "values": [
-        "punto"
+        "punto",
+        "coma"
       ]
     },
     {
@@ -530,13 +531,12 @@
       "categories": [
         "number",
         "digit",
-        "digit_after_point"
+        "digit_after_point",
+        "compound_word_piece"
       ],
       "values": {
         "cero": 0,
         "uno": 1,
-        "una": 1,
-        "un": 1,
         "dos": 2,
         "tres": 3,
         "cuatro": 4,
@@ -550,7 +550,19 @@
     {
       "categories": [
         "number",
-        "teen"
+        "digit",
+        "compound_word_piece"
+      ],
+      "values": {
+        "un": 1,
+        "una": 1
+      }
+    },
+    {
+      "categories": [
+        "number",
+        "teen",
+        "compound_word_piece"
       ],
       "values": {
         "diez": 10,
@@ -564,7 +576,6 @@
         "dieciocho": 18,
         "diecinueve": 19,
         "veintiuno": 21,
-        "veintiún": 21,
         "veintidós": 22,
         "veintitrés": 23,
         "veinticuatro": 24,
@@ -578,10 +589,12 @@
     {
       "categories": [
         "number",
-        "tens"
+        "tens",
+        "compound_word_piece"
       ],
       "values": {
         "veinte": 20,
+        "veinti": 20,
         "treinta": 30,
         "cuarenta": 40,
         "cincuenta": 50,
@@ -594,17 +607,27 @@
     {
       "categories": [
         "number",
-        "hundred"
+        "hundred",
+        "compound_word_piece"
       ],
       "values": {
         "cien": 100,
-        "ciento": 100
+        "ciento": 100,
+        "doscientos": 200,
+        "trescientos": 300,
+        "cuatrocientos": 400,
+        "quinientos": 500,
+        "seiscientos": 600,
+        "setecientos": 700,
+        "ochocientos": 800,
+        "novecientos": 900
       }
     },
     {
       "categories": [
         "number",
-        "multiplier"
+        "multiplier",
+        "compound_word_piece"
       ],
       "values": {
         "mil": 1000,
@@ -616,21 +639,15 @@
         "billón": 1000000000000,
         "billones": 1000000000000,
         "trillón": 1000000000000000000,
-        "trillones": 1000000000000000000,
-        "un millón": 1000000,
-        "un billón": 1000000000000,
-        "un trillón": 1000000000000000000,
-        "mil millón": 1000000000,
-        "mil millones": 1000000000,
-        "mil billón": 1000000000000000,
-        "mil billones": 1000000000000000
+        "trillones": 1000000000000000000
       }
     },
     {
       "categories": [
         "number",
         "ordinal",
-        "digit"
+        "digit",
+        "compound_word_piece"
       ],
       "values": {
         "primero": 1,
@@ -659,18 +676,16 @@
       "categories": [
         "number",
         "ordinal",
-        "teen"
+        "teen",
+        "compound_word_piece"
       ],
       "values": {
         "décimo": 10,
         "décima": 10,
         "undécimo": 11,
-        "decimoprimer": 11,
-        "decimoprimero": 11,
-        "decimoprimera": 11,
+        "undécima": 11,
         "duodécimo": 12,
-        "decimosegundo": 12,
-        "decimosegunda": 12,
+        "duodécima": 12,
         "decimotercero": 13,
         "decimotercera": 13,
         "decimocuarto": 14,
@@ -691,7 +706,8 @@
       "categories": [
         "number",
         "ordinal",
-        "tens"
+        "tens",
+        "compound_word_piece"
       ],
       "values": {
         "vigésimo": 20,
@@ -716,7 +732,8 @@
       "categories": [
         "number",
         "ordinal",
-        "hundred"
+        "hundred",
+        "compound_word_piece"
       ],
       "values": {
         "centésimo": 100,
@@ -727,27 +744,20 @@
       "categories": [
         "number",
         "ordinal",
-        "multiplier"
+        "multiplier",
+        "compound_word_piece"
       ],
       "values": {
         "milésimo": 1000,
         "milésima": 1000,
-        "milésimas": 1000,
         "millonésimo": 1000000,
         "millonésima": 1000000,
-        "millonésimas": 1000000,
         "milmillonésimo": 1000000000,
         "milmillonésima": 1000000000,
-        "milmillonésimas": 1000000000,
         "billonésimo": 1000000000000,
         "billonésima": 1000000000000,
-        "billonésimas": 1000000000000,
-        "milbillonésimo": 1000000000000000,
-        "milbillonésima": 1000000000000000,
-        "milbillonésimas": 1000000000000000,
         "trillonésimo": 1000000000000000000,
-        "trillonésima": 1000000000000000000,
-        "trillonésimas": 1000000000000000000
+        "trillonésima": 1000000000000000000
       }
     },
     {
@@ -756,20 +766,23 @@
         "suffix_multiplier"
       ],
       "values": {
+        "media": 0.5,
+        "medio": 0.5,
         "mitad": 0.5,
-        "mitades": 0.5,
         "cuarto": 0.25,
-        "cuartos": 0.25,
+        "quinto": 0.2,
+        "octavo": 0.125,
         "par": 2,
-        "pares": 2,
         "dupla": 2,
-        "duplas": 2,
+        "trío": 3,
+        "cuarteto": 3,
         "docena": 12,
-        "docenas": 12,
         "decena": 10,
-        "decenas": 10,
+        "quincena": 15,
         "veintena": 20,
-        "veintenas": 20,
+        "treintena": 30,
+        "cuarentena": 40,
+        "centena": 100,
         "porciento": 0.01,
         "centésima": 0.01,
         "pc": 0.01,
