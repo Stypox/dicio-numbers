@@ -56,7 +56,7 @@ class SpanishFormatter : Formatter("config/es-es") {
         if (java.lang.Double.isNaN(number)) return "no es un número"
 
         if (scientific || abs(number) > 999999999999999934463.0) {
-            val scientificFormatted = String.format(Locale.SPANISH, "%E", number)
+            val scientificFormatted = String.format(Locale("es"), "%E", number)
             val parts = scientificFormatted.split("E".toRegex(), limit = 2).toTypedArray()
             val power = parts[1].toInt().toDouble()
             if (power != 0.0) {
