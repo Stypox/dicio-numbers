@@ -56,7 +56,7 @@ class SpanishFormatter : Formatter("config/es-es") {
         if (java.lang.Double.isNaN(number)) return "no es un número"
 
         if (scientific || abs(number) > 999999999999999934463.0) {
-            val scientificFormatted = String.format(Locale.ENGLISH, "%E", number)
+            val scientificFormatted = String.format(Locale.SPANISH, "%E", number)
             val parts = scientificFormatted.split("E".toRegex(), limit = 2).toTypedArray()
             val power = parts[1].toInt().toDouble()
             if (power != 0.0) {
@@ -162,8 +162,8 @@ class SpanishFormatter : Formatter("config/es-es") {
         }
     }
     
-    // `pronounceNumberDuration` is a simplification for contexts where gender doesn't matter,
-    // like "un minuto", but "una hora". The base `pronouncePositive` is more versatile.
+    // "pronounceNumberDuration" is a simplification for contexts where gender doesn't matter,
+    // like "un minuto", but "una hora". The base "pronouncePositive" is more versatile.
     override fun pronounceNumberDuration(number: Long): String {
         if (number == 1L) return "un"
         return pronouncePositive(number, false)
@@ -188,7 +188,8 @@ class SpanishFormatter : Formatter("config/es-es") {
         // Includes common ordinals.
         private val ORDINAL_NAMES = mapOf(
             1L to "primero", 2L to "segundo", 3L to "tercero", 4L to "cuarto", 5L to "quinto",
-            6L to "sexto", 7L to "séptimo", 8L to "octavo", 9L to "noveno", 10L to "décimo"
+            6L to "sexto", 7L to "séptimo", 8L to "octavo", 9L to "noveno", 10L to "décimo",
+            11L to "undécimo", 12L to "duodécimo", 8L to "octavo", 9L to "noveno", 10L to "décimo",
         )
     }
 }

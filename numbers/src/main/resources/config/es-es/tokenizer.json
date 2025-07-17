@@ -664,9 +664,11 @@
       "values": {
         "décimo": 10,
         "décima": 10,
+        "undécimo": 11,
         "decimoprimer": 11,
         "decimoprimero": 11,
         "decimoprimera": 11,
+        "duodécimo": 12,
         "decimosegundo": 12,
         "decimosegunda": 12,
         "decimotercero": 13,
