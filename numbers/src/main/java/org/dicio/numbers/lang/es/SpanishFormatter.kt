@@ -189,7 +189,7 @@ class SpanishFormatter : Formatter("config/es-es") {
         private val ORDINAL_NAMES = mapOf(
             1L to "primero", 2L to "segundo", 3L to "tercero", 4L to "cuarto", 5L to "quinto",
             6L to "sexto", 7L to "séptimo", 8L to "octavo", 9L to "noveno", 10L to "décimo",
-            11L to "undécimo", 12L to "duodécimo", 8L to "octavo", 9L to "noveno", 10L to "décimo",
+            11L to "undécimo", 12L to "duodécimo"
         )
     }
 }
