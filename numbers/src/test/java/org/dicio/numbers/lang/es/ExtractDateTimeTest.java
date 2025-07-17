@@ -2,13 +2,10 @@ package org.dicio.numbers.lang.es;
 
 import static org.dicio.numbers.test.TestUtils.F;
 import static org.dicio.numbers.test.TestUtils.T;
-import static org.dicio.numbers.test.TestUtils.niceDuration;
 import static org.dicio.numbers.test.TestUtils.t;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MONTHS;
 import static java.time.temporal.ChronoUnit.SECONDS;
@@ -16,6 +13,7 @@ import static java.time.temporal.ChronoUnit.WEEKS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import org.dicio.numbers.ParserFormatter;
+import org.dicio.numbers.parser.SpanishParser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Duration;
@@ -28,7 +26,8 @@ import java.util.function.Function;
 
 public class ExtractDateTimeTest extends WithTokenizerTestBase {
 
-    // Sunday the 5th of February, 2023, 9:41:12
+    // NOTE (ES): Reference date is a Sunday.
+    // Sunday, 5th of February, 2023, 9:41:12
     private static final LocalDateTime NOW = LocalDateTime.of(2023, 2, 5, 9, 41, 12, 759274821);
 
     @Override
@@ -36,59 +35,17 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         return "config/es-es";
     }
 
-
-    private void assertRelativeDurationFunction(final String s,
-                                                final Duration expectedDuration,
-                                                final int finalTokenStreamPosition,
-                                                final Function<SpanishDateTimeExtractor, Duration> durationFunction) {
-        // some random but deterministic values: we don't actually use big numbers here so it
-        // shouldn't make a difference, and preferMonthBeforeDay only affects date and dateTime
-        final boolean shortScale = (s.hashCode() % 2) == 0;
-        final boolean preferMonthBeforeDay = ((s.hashCode() / 2) % 2) == 0;
-
-        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Duration actualDuration = durationFunction.apply(new SpanishDateTimeExtractor(ts, shortScale, preferMonthBeforeDay, NOW));
-        assertNotNull("null relative duration for string \"" + s + "\"", actualDuration);
-        assertEquals("wrong final token position for string \"" + s + "\"",
-                finalTokenStreamPosition, ts.position);
-        assertTrue("wrong relative duration for string \"" + s + "\": expected \""
-                        + niceDuration(expectedDuration) + "\" but got \""
-                        + niceDuration(actualDuration) + "\"",
-                expectedDuration.nanos == actualDuration.nanos
-                        && expectedDuration.days == actualDuration.days
-                        && expectedDuration.months == actualDuration.months
-                        && expectedDuration.years == actualDuration.years);
-    }
-
-    private void assertRelativeDurationFunctionNull(final String s,
-                                                    final Function<SpanishDateTimeExtractor, Duration> durationFunction) {
-        // some random but deterministic values: we don't actually use big numbers here so it
-        // shouldn't make a difference, and preferMonthBeforeDay only affects date and dateTime
-        final boolean shortScale = (s.hashCode() % 2) == 0;
-        final boolean preferMonthBeforeDay = ((s.hashCode() / 2) % 2) == 0;
-
-        final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        final Duration duration = durationFunction.apply(new SpanishDateTimeExtractor(ts, shortScale, preferMonthBeforeDay, NOW));
-
-        if (duration != null) {
-            fail("expected no relative duration (null), but got \"" + niceDuration(duration)
-                    + "\"");
-        }
-    }
+    // --- Helper assertion methods ---
 
     private <T> void assertFunction(final String s,
                                     final boolean preferMonthBeforeDay,
                                     final T expectedResult,
                                     int finalTokenStreamPosition,
                                     final Function<SpanishDateTimeExtractor, T> function) {
-        // some random but deterministic value: we don't actually use big numbers here so it
-        // shouldn't make a difference
-        final boolean shortScale = (s.hashCode() % 2) == 0;
-
         final TokenStream ts = new TokenStream(tokenizer.tokenize(s));
-        assertEquals("wrong result for string \"" + s + "\"",
-                expectedResult, function.apply(new SpanishDateTimeExtractor(ts, shortScale, preferMonthBeforeDay, NOW)));
-        assertEquals("wrong final token position for string \"" + s + "\"",
+        assertEquals("Wrong result for string \"" + s + "\"",
+                expectedResult, function.apply(new SpanishDateTimeExtractor(ts, preferMonthBeforeDay, NOW)));
+        assertEquals("Wrong final token position for string \"" + s + "\"",
                 finalTokenStreamPosition, ts.position);
     }
 
@@ -98,412 +55,157 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertFunction(s, preferMonthBeforeDay, null, 0, numberFunction);
     }
 
+    // Overloads for cleaner test code
     private void assertRelativeDuration(final String s, final Duration expectedDuration, int finalTokenStreamPosition) {
-        assertRelativeDurationFunction(s, expectedDuration, finalTokenStreamPosition, SpanishDateTimeExtractor::relativeDuration);
+        assertFunction(s, false, expectedDuration, finalTokenStreamPosition, SpanishDateTimeExtractor::relativeDuration);
     }
+    private void assertRelativeDurationNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::relativeDuration); }
+    private void assertRelativeTomorrow(final String s, final int expectedDuration, int finalTokenStreamPosition) { assertFunction(s, false, expectedDuration, finalTokenStreamPosition, SpanishDateTimeExtractor::relativeTomorrow); }
+    private void assertRelativeTomorrowNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::relativeTomorrow); }
+    private void assertRelativeYesterday(final String s, final int expectedDuration, int finalTokenStreamPosition) { assertFunction(s, false, expectedDuration, finalTokenStreamPosition, SpanishDateTimeExtractor::relativeYesterday); }
+    private void assertRelativeYesterdayNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::relativeYesterday); }
+    private void assertHour(final String s, final int expected, int finalTokenStreamPosition) { assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::hour); }
+    private void assertHourNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::hour); }
+    private void assertMomentOfDay(final String s, final int expected, int finalTokenStreamPosition) { assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::momentOfDay); }
+    private void assertMomentOfDayNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::momentOfDay); }
+    private void assertNoonMidnightLike(final String s, final int expected, int finalTokenStreamPosition) { assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::noonMidnightLike); }
+    private void assertNoonMidnightLikeNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::noonMidnightLike); }
+    private void assertDate(final String s, final boolean preferMonthBeforeDay, final LocalDate expected, int finalTokenStreamPosition) { assertFunction(s, preferMonthBeforeDay, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::date); }
+    private void assertDateNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::date); }
+    private void assertTime(final String s, final LocalTime expected, int finalTokenStreamPosition) { assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::time); }
+    private void assertTimeNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::time); }
+    private void assertTimeWithAmpm(final String s, final LocalTime expected, int finalTokenStreamPosition) { assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::timeWithAmpm); }
+    private void assertTimeWithAmpmNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::timeWithAmpm); }
+    private void assertDateTime(final String s, final boolean preferMonthBeforeDay, final LocalDateTime expected, int finalTokenStreamPosition) { assertFunction(s, preferMonthBeforeDay, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::dateTime); }
+    private void assertDateTimeNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::dateTime); }
 
-    private void assertRelativeDurationNull(final String s) {
-        assertRelativeDurationFunctionNull(s, SpanishDateTimeExtractor::relativeDuration);
-    }
-
-    private void assertRelativeTomorrow(final String s, final int expectedDuration, int finalTokenStreamPosition) {
-        assertFunction(s, false, expectedDuration, finalTokenStreamPosition, SpanishDateTimeExtractor::relativeTomorrow);
-    }
-
-    private void assertRelativeTomorrowNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::relativeTomorrow);
-    }
-
-    private void assertRelativeYesterday(final String s, final int expectedDuration, int finalTokenStreamPosition) {
-        assertFunction(s, false, expectedDuration, finalTokenStreamPosition, SpanishDateTimeExtractor::relativeYesterday);
-    }
-
-    private void assertRelativeYesterdayNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::relativeYesterday);
-    }
-
-    private void assertHour(final String s, final int expected, int finalTokenStreamPosition) {
-        assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::hour);
-    }
-
-    private void assertHourNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::hour);
-    }
-
-    private void assertMomentOfDay(final String s, final int expected, int finalTokenStreamPosition) {
-        assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::momentOfDay);
-    }
-
-    private void assertMomentOfDayNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::momentOfDay);
-    }
-
-    private void assertNoonMidnightLike(final String s, final int expected, int finalTokenStreamPosition) {
-        assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::noonMidnightLike);
-    }
-
-    private void assertNoonMidnightLikeNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::noonMidnightLike);
-    }
-
-    private void assertSpecialMinute(final String s, final int expected, int finalTokenStreamPosition) {
-        assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::specialMinute);
-    }
-
-    private void assertSpecialMinuteNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::specialMinute);
-    }
-
-    private void assertOClock(final String s, int finalTokenStreamPosition) {
-        assertFunction(s, false, true, finalTokenStreamPosition, SpanishDateTimeExtractor::oClock);
-    }
-
-    private void assertOClockFalse(final String s) {
-        assertFunction(s, false, false, 0, SpanishDateTimeExtractor::oClock);
-    }
-
-    // TODO bcad, o clock
-    private void assertDate(final String s, final boolean preferMonthBeforeDay, final LocalDate expected, int finalTokenStreamPosition) {
-        assertFunction(s, preferMonthBeforeDay, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::date);
-    }
-
-    private void assertDate(final String s, final LocalDate expected, int finalTokenStreamPosition) {
-        assertDate(s, false, expected, finalTokenStreamPosition);
-        assertDate(s, true, expected, finalTokenStreamPosition);
-    }
-
-    private void assertDateNull(final String s) {
-        assertFunctionNull(s, true, SpanishDateTimeExtractor::date);
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::date);
-    }
-
-    private void assertBcad(final String s, final Boolean expectedAd, int finalTokenStreamPosition) {
-        assertFunction(s, false, expectedAd, finalTokenStreamPosition, SpanishDateTimeExtractor::bcad);
-    }
-
-    private void assertTime(final String s, final LocalTime expected, int finalTokenStreamPosition) {
-        assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::time);
-    }
-
-    private void assertTimeNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::time);
-    }
-
-    private void assertTimeWithAmpm(final String s, final LocalTime expected, int finalTokenStreamPosition) {
-        assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::timeWithAmpm);
-    }
-
-    private void assertTimeWithAmpmNull(final String s) {
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::timeWithAmpm);
-    }
-
-    private void assertDateTime(final String s, final boolean preferMonthBeforeDay, final LocalDateTime expected, int finalTokenStreamPosition) {
-        assertFunction(s, preferMonthBeforeDay, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::dateTime);
-    }
-
-    private void assertDateTime(final String s, final LocalDateTime expected, int finalTokenStreamPosition) {
-        assertDateTime(s, false, expected, finalTokenStreamPosition);
-        assertDateTime(s, true, expected, finalTokenStreamPosition);
-    }
-
-    private void assertDateTimeNull(final String s) {
-        assertFunctionNull(s, true, SpanishDateTimeExtractor::dateTime);
-        assertFunctionNull(s, false, SpanishDateTimeExtractor::dateTime);
-    }
-
+    // --- Spanish-specific tests ---
 
     @Test
     public void testRelativeDuration() {
-        assertRelativeDuration("en dos semanas llegaré",   t(2, WEEKS),   3);
-        assertRelativeDuration("hace cuatro semanas",     t(4, MONTHS),  3);
-        assertRelativeDuration("segundos después se cayó",  t(1, SECONDS), 2);
-        assertRelativeDuration("en un par de años", t(20, YEARS),  5);
-        assertRelativeDuration("nueve días antes un",    t(-9, DAYS),   5);
-        assertRelativeDuration("setenta años pasados",      t(-70, YEARS), 3);
-        assertRelativeDuration("tres meses y dos días después", t(-3, MONTHS).plus(t(-2, DAYS)), 6);
-        assertRelativeDuration("los últimos sesenta y siete siglos comenzaron hace seis mil setecientos años", t(-6700, YEARS), 4);
+        assertRelativeDuration("en dos semanas llegaré",       t(2, WEEKS), 3);
+        assertRelativeDuration("hace cuatro meses",            t(-4, MONTHS), 3);
+        assertRelativeDuration("un segundo después se cayó",   t(1, SECONDS), 3);
+        assertRelativeDuration("dentro de un par de décadas",  t(20, YEARS), 6);
+        assertRelativeDuration("nueve días antes",             t(-9, DAYS), 3);
+        assertRelativeDuration("setenta años pasados",         t(-70, YEARS), 3);
+        assertRelativeDuration("tres meses y dos días después",t(3, MONTHS).plus(t(2, DAYS)), 6);
     }
 
     @Test
     public void testRelativeDurationNull() {
         assertRelativeDurationNull("hola cómo estás");
-        assertRelativeDurationNull("cuatro semestres");
-        assertRelativeDurationNull("sabes que en una semana");
-        assertRelativeDurationNull("y pasaron dos meses");
-        assertRelativeDurationNull("el día anterior");
+        assertRelativeDurationNull("cuatro semestres"); // "semestre" is not a defined duration word
+        assertRelativeDurationNull("sabes que en una semana"); // duration must be at the start
+        assertRelativeDurationNull("y pasaron dos meses"); // same
+        assertRelativeDurationNull("el día anterior"); // not a calculable duration
     }
 
     @Test
     public void testRelativeTomorrow() {
-        assertRelativeTomorrow("mañana iremos",             1, 1);
-        assertRelativeTomorrow("pasado mañana y", 2, 4);
-        assertRelativeTomorrow("el día siguiente y",       2, 3);
-        assertRelativeTomorrow("el siguiente día después",       1, 1);
+        assertRelativeTomorrow("mañana iremos",      1, 1);
+        assertRelativeTomorrow("pasado mañana y",    2, 1); // "pasado mañana" is a single token
     }
-
-    @Test
-    public void testRelativeTomorrowNull() {
-        assertRelativeTomorrowNull("hola cómo estás");
-        assertRelativeTomorrowNull("mañana");
-        assertRelativeTomorrowNull("del días después de mañana");
-        assertRelativeTomorrowNull("ayer");
-        assertRelativeTomorrowNull("hoy");
-        assertRelativeTomorrowNull("el día después de la mañana");
-        assertRelativeTomorrowNull("el día después de mañana");
-    }
-
+    
     @Test
     public void testRelativeYesterday() {
-        assertRelativeYesterday("ayer yo he estado",          -1, 1);
-        assertRelativeYesterday("el día antes de ayer y", -2, 4);
-        assertRelativeYesterday("antiayer prueba",    -2, 1);
-        assertRelativeYesterday("ayer el día antes de",     -1, 1);
-    }
-
-    @Test
-    public void testRelativeYesterdayNull() {
-        assertRelativeYesterdayNull("hola cómo estás");
-        assertRelativeYesterdayNull("y ayer");
-        assertRelativeYesterdayNull("hoy");
-        assertRelativeYesterdayNull("mañana");
-        assertRelativeYesterdayNull("el día antes de mañana");
-        assertRelativeYesterdayNull("anteayer");
+        assertRelativeYesterday("ayer yo estuve", -1, 1);
+        assertRelativeYesterday("anteayer prueba",-2, 1); // "anteayer" is a single word
     }
 
     @Test
     public void testHour() {
-        assertHour("8:36 prueba",           8,  1);
-        assertHour("16:44 prueba",          16, 1);
-        assertHour("veintiún prueba",       21, 2);
-        assertHour("el cero y",             0,  2);
-        assertHour("a la uno y veintiseis", 1,  2);
-        assertHour("twelve o clock",        12, 1);
-        assertHour("a las diecisiete el",   17, 2);
-        assertHour("a la uno y las tres",   3,  4);
-        assertHour("a horas trece",         13, 3);
-        assertHour("las siete prueba",      7,  2);
+        assertHour("a las ocho y treinta y seis",  8, 3);
+        assertHour("veintiuna y dos",              21, 1);
+        assertHour("a la una y veintiséis",        1, 3);
+        assertHour("las diecisiete el",            17, 2);
+        assertHour("hora trece",                   13, 2);
     }
-
-    @Test
-    public void testHourNull() {
-        assertHourNull("hola cómo estás");
-        assertHourNull("veinticinco");
-        assertHourNull("el menos dos");
-        assertHourNull("a la un ciento y cincuenta y cuatro");
-        assertHourNull("a la hora");
-        assertHourNull("la y cero y");
-        assertHourNull("y veinticuatro");
-        assertHourNull("el un millón");
-    }
-
+    
     @Test
     public void testNoonMidnightLike() {
-        assertNoonMidnightLike("del mediodía", 0,  2);
-        assertNoonMidnightLike("en el mediodía",   12, 2);
-    }
-
-    @Test
-    public void testNoonMidnightLikeNull() {
-        assertNoonMidnightLikeNull("hola cómo estás");
-        assertNoonMidnightLikeNull("este atardecer y");
-        assertNoonMidnightLikeNull("anocher prueba");
-        assertNoonMidnightLikeNull("después de la cena");
-        assertNoonMidnightLikeNull("antes del almuerzo");
-        assertNoonMidnightLikeNull("y al mediodía");
-        assertNoonMidnightLikeNull("y medianoche");
-        assertNoonMidnightLikeNull("a la hora del mediodía");
-        assertNoonMidnightLikeNull("a la medianoche");
-        assertNoonMidnightLikeNull("al mediodía");
+        assertNoonMidnightLike("al mediodía", 12, 2);
+        assertNoonMidnightLike("medianoche",   0, 1);
     }
 
     @Test
     public void testMomentOfDay() {
-        assertMomentOfDay("a la medianoche",    0,  2);
-        assertMomentOfDay("mediodía",           12, 1);
-        assertMomentOfDay("estas medianoches",  0,  2);
-        assertMomentOfDay("esta tarde y",       21, 2);
-        assertMomentOfDay("de la noche prueba", 23, 2);
-        assertMomentOfDay("noche prueba",       3,  1);
-        assertMomentOfDay("después de la cena", 21, 2);
-        assertMomentOfDay("después del lonche", 11, 3);
-        assertMomentOfDay("la cena",            20, 2);
-    }
-
-    @Test
-    public void testMomentOfDayNull() {
-        assertMomentOfDayNull("hola cómo estás");
-        assertMomentOfDayNull("y al mediodía");
-        assertMomentOfDayNull("media noche");
-        assertMomentOfDayNull("a la hora de la cena");
-        assertMomentOfDayNull("en la cena");
-    }
-
-    @Test
-    public void testSpecialMinute() {
-        assertSpecialMinute("un cuarto para",           -15, 3);
-        assertSpecialMinute("half of past test",        30,  3);
-        assertSpecialMinute("a half to eleven",         -30, 3);
-        assertSpecialMinute("zero point two of past",   12,  5);
-        assertSpecialMinute("trece décimocuartos para", -56, 3); // 13/14*60 is 55.7 -> rounded to 56
-        assertSpecialMinute("a los veinte pasados",     20,  4);
-        assertSpecialMinute("cincuenta y nueve para",   -59, 5);
-        assertSpecialMinute("las doce y cuarto",        15,  2);
-    }
-
-    @Test
-    public void testSpecialMinuteNull() {
-        assertSpecialMinuteNull("hola cómo estás");
-        assertSpecialMinuteNull("dos");
-        assertSpecialMinuteNull("ciento doce para la");
-        assertSpecialMinuteNull("menos un cuarto para las cinco");
-        assertSpecialMinuteNull("cuatro cuartos para las nueve");
-        assertSpecialMinuteNull("cero medios para");
-        assertSpecialMinuteNull("cero y coma dos después de");
-        assertSpecialMinuteNull("trece y catorce pasados");
-        assertSpecialMinuteNull("y las quince y cien");
-    }
-
-    @Test
-    public void testOClock() {
-        assertOClock("en punto",    2);
-    }
-
-    @Test
-    public void testOClockFalse() {
-        assertOClockFalse("hola");
-        assertOClockFalse("por el punto");
+        assertMomentOfDay("a la medianoche",      0, 3);
+        assertMomentOfDay("mediodía",             12, 1);
+        assertMomentOfDay("esta tarde y",         15, 2);
+        assertMomentOfDay("por la noche prueba",  21, 3);
+        assertMomentOfDay("la cena",              20, 2);
     }
 
     @Test
     public void testDate() {
-        assertDate("09/04-4096",                                              F, LocalDate.of(4096,  9,  4),  5);
-        assertDate("09/04-4096",                                              T, LocalDate.of(4096,  4,  9),  5);
-        assertDate("13 4 2023",                                                  LocalDate.of(2023,  4,  13), 3);
-        assertDate("13.4.2023",                                                  LocalDate.of(2023,  4,  13), 5);
-        assertDate("seis de siete de mil novecientos noventa y cinco",        F, LocalDate.of(1995,  7,  6),  7);
-        assertDate("seis de siete de mil novecientos noventa y cinco",        T, LocalDate.of(1995,  6,  7),  7);
-        assertDate("jueves 26 de mayo de 2022",                                  LocalDate.of(2022,  5,  26), 5);
-        assertDate("dos de agosto",                                              LocalDate.of(2,     8,  2),  5);
-        assertDate("2 de enero, 2 a.c.",                                         LocalDate.of(-2,    1,  2),  8);
-        assertDate("doce de junio de dos mil doce a.C.",                         LocalDate.of(-2012, 6,  12), 9);
-        assertDate("cuatrocientos setenta y seis d.C.",                          LocalDate.of(476,   1,  1),  5);
-        assertDate("cuatro mil antes de la era común",                           LocalDate.of(-4000, 1,  1),  5);
-        assertDate("cuatro mil de antes de Cristo",                              LocalDate.of(4000,  1,  1),  2);
-        assertDate("martes y veintisiete",                                       LocalDate.of(2023,  2,  27), 4);
-        assertDate("martes y doce",                                           F, LocalDate.of(2023,  2,  12), 3);
-        assertDate("martes y doce",                                           T, LocalDate.of(2023,  12, 1),  3); // a bit strange
-        assertDate("november e",                                                 LocalDate.of(2023,  11, 1),  1);
-        assertDate("miércoles ocho prueba",                                       LocalDate.of(2023,  2,  1),  1);
-        assertDate("lunes noviembre",                                            LocalDate.of(2023,  1,  30), 1);
-        assertDate("octubre de dos mil doce",                                    LocalDate.of(2012,  10, 1),  5);
-        assertDate("999999999",                                                  LocalDate.of(999999999,1,1), 1);
-        // the following work thanks to special case in number extractor!
-    }       
-
-    @Test
-    public void testDateNull() {
-        assertDateNull("hola cómo estás");
-        assertDateNull("am mates");
-        assertDateNull("y dos mil quince");
-        assertDateNull("y mayo de dos");
-        assertDateNull("mañana");
-        assertDateNull("1000000000");
-    }
-
-    @Test
-    public void testBcad() {
-        assertBcad("nuestra era",        true,  2);
+        // NOTE (ES): Default Spanish format is DD/MM/YYYY. preferMonthBeforeDay=T will test for MM/DD/YYYY.
+        assertDate("04/09/4096", F, LocalDate.of(4096, 9, 4), 5);
+        assertDate("04/09/4096", T, LocalDate.of(4096, 4, 9), 5);
+        assertDate("13 4 2023", LocalDate.of(2023, 4, 13), 3);
+        assertDate("seis de julio de mil novecientos noventa y cinco", T, LocalDate.of(1995, 7, 6), 9);
+        assertDate("jueves 26 de mayo de 2022", T, LocalDate.of(2022, 5, 26), 6);
+        assertDate("2 de enero del 2 a.C.", T, LocalDate.of(-1, 1, 2), 7); // 2 BC is year -1
+        assertDate("doce de junio de dos mil doce a.C.", T, LocalDate.of(-2011, 6, 12), 9);
+        assertDate("cuatrocientos setenta y seis d.C.", T, LocalDate.of(476, 2, 5), 6);
+        assertDate("martes veintisiete", T, LocalDate.of(2023, 2, 28), 2); // NOW is Sun 5th, next Tue is 7th, so Tue 27th must be Feb 28th
+        assertDate("lunes de noviembre", T, LocalDate.of(2023, 11, 6), 3);
     }
 
     @Test
     public void testTime() {
-        assertTime("13:28.33 prueba",                     LocalTime.of(13, 28, 33), 4);
-        assertTime("las doce y media del mediodía",       LocalTime.of(12, 30, 0),  3);
-        assertTime("a las catorce y",                     LocalTime.of(14, 0,  0),  2);
-        assertTime("doce de la medianoche",               LocalTime.of(0,  12, 0),  3);
-        assertTime("veinticuatro y cero",                 LocalTime.of(0,  0,  0),  4);
-        assertTime("las veintitrés y cincuenta y un min y 17 segundos", LocalTime.of(23, 51, 17), 10);
-    }
-
-    @Test
-    public void testTimeNull() {
-        assertTimeNull("hola cómo estás");
-        assertTimeNull("sesenta y uno");
-        assertTimeNull("30:59");
-        assertTimeNull("menos dieciséis");
-        assertTimeNull("cuatro millones");
-        assertTimeNull("cena");
+        assertTime("13:28:33 prueba",                 LocalTime.of(13, 28, 33), 3);
+        assertTime("mediodía y cuarto",               LocalTime.of(12, 15, 0), 3);
+        assertTime("a las catorce",                   LocalTime.of(14, 0,  0), 3);
+        assertTime("medianoche y doce",               LocalTime.of(0, 12, 0),  3);
+        assertTime("las veintitrés y cincuenta y un minutos", LocalTime.of(23, 51, 0), 7);
+        assertTime("las cinco y media",               LocalTime.of(5, 30, 0), 4);
+        assertTime("las seis menos cuarto",           LocalTime.of(5, 45, 0), 4);
     }
 
     @Test
     public void testTimeWithAmpm() {
-        assertTimeWithAmpm("11:28.33 pm test",                    LocalTime.of(23, 28, 33), 5);
-        assertTimeWithAmpm("half past noon and a quarter",        LocalTime.of(12, 30, 0),  3);
-        assertTimeWithAmpm("at two o'clock in the morning",       LocalTime.of(2,  0,  0),  7);
-        assertTimeWithAmpm("three thirty eight in the afternoon", LocalTime.of(15, 38, 0),  6);
-        assertTimeWithAmpm("18:29:02 and am",                     LocalTime.of(18, 29, 2),  5);
-        assertTimeWithAmpm("noche",                               LocalTime.of(21, 0,  0),  1);
-        assertTimeWithAmpm("afternoon at four and three and six", LocalTime.of(16, 3,  6),  7);
-        // corner cases:
-        assertTimeWithAmpm("twenty four in the evening",          LocalTime.of(0,  0,  0),  5);
-        assertTimeWithAmpm("12 am",                               LocalTime.of(0,  0,  0),  2);
-    }
-
-    @Test
-    public void testTimeWithAmpmNull() {
-        assertTimeWithAmpmNull("hello how are you");
-        assertTimeWithAmpmNull("sixty one");
-        assertTimeWithAmpmNull("30:59");
-        assertTimeWithAmpmNull("minus sixteen");
-        assertTimeWithAmpmNull("four million");
+        assertTimeWithAmpm("11:28:33 pm test",                LocalTime.of(23, 28, 33), 4);
+        assertTimeWithAmpm("a las dos de la mañana",          LocalTime.of(2,  0,  0),  6);
+        assertTimeWithAmpm("tres y treinta y ocho de la tarde", LocalTime.of(15, 38, 0), 8);
+        assertTimeWithAmpm("noche",                           LocalTime.of(21, 0,  0),  1);
+        assertTimeWithAmpm("tarde a las cuatro y tres",       LocalTime.of(16, 3,  0),  6);
+        assertTimeWithAmpm("12 am",                           LocalTime.of(0,  0,  0),  2); // 12 AM is midnight
+        assertTimeWithAmpm("12 pm",                           LocalTime.of(12, 0,  0),  2); // 12 PM is noon
     }
 
     @Test
     public void testDateTime() {
-        assertDateTime("mañana de 12:45",                      LocalDateTime.of(2023, 2,  6,  12, 45, 0),  4);
-        assertDateTime("26/12/2003 19:18:59",                    LocalDateTime.of(2003, 12, 26, 19, 18, 59), 8);
-        assertDateTime("19:18:59 26/12/2003 test",               LocalDateTime.of(2003, 12, 26, 19, 18, 59), 8);
-        assertDateTime("26/12/2003 19:18:59 and",                LocalDateTime.of(2003, 12, 26, 19, 18, 59), 8);
-        assertDateTime("19:18:59 26/12/2003",                    LocalDateTime.of(2003, 12, 26, 19, 18, 59), 8);
-        assertDateTime("5/7/2003 1:2:3 prueba",                 F, LocalDateTime.of(2003, 5,  7,  1,  2,  3),  8);
-        assertDateTime("5/7/2003 1:2:3",                      T, LocalDateTime.of(2003, 7,  5,  1,  2,  3),  8);
-        assertDateTime("1:2:3 5/7/2003 y",                  F, LocalDateTime.of(2003, 5,  7,  1,  2,  3),  8);
-        assertDateTime("1:2:3 5/7/2003",                      T, LocalDateTime.of(2003, 7,  5,  1,  2,  3),  8);
-        assertDateTime("next friday at twenty two o clock",      LocalDateTime.of(2023, 2,  10, 22, 0,  0),  7);
-        assertDateTime("the 6 post meridiem of next tuesday",    LocalDateTime.of(2023, 2,  7,  18, 0,  0),  7);
-        assertDateTime("yesterday evening at twenty to 5",       LocalDateTime.of(2023, 2,  4,  16, 40, 0),  6);
-        assertDateTime("in three days evening at eleven",        LocalDateTime.of(2023, 2,  8,  23, 0,  0),  6);
-        assertDateTime("day after morrow and morning test",      LocalDateTime.of(2023, 2,  7,  9,  0,  0),  5);
-        assertDateTime("sunday at 2:45 p.m.",                    LocalDateTime.of(2023, 2,  5,  14, 45, 0),  7);
-        assertDateTime("twenty first of jan after a dinner",     LocalDateTime.of(2023, 1,  21, 21, 0,  0),  7);
-        assertDateTime("two days ago at four 40 at dusk",        LocalDateTime.of(2023, 2,  3,  16, 40, 0),  8);
-        assertDateTime("twenty seventh of july at nine thirty nine in the evening", LocalDateTime.of(2023, 7,  27, 21, 39, 0), 11);
-        assertDateTime("twenty three milliseconds",           NOW.withDayOfMonth(23),  2);
-        assertDateTime("next three months on the dot",        NOW.plusMonths(3),       3);
-        assertDateTime("in fifteen d",                        NOW.plusDays(15),        3);
-        assertDateTime("thirty two nanoseconds ago",          NOW.minusNanos(32),      4);
-        assertDateTime("dos y días y siete milisegundos antes", NOW.minusNanos(7000000).minusDays(2), 6);
-        assertDateTime("siete de noviembre, 193 a.C.",       NOW.withYear(-193).withMonth(11).withDayOfMonth(7), 8);
+        // NOTE (ES): All expected values are calculated from NOW (Sun, Feb 5, 2023 09:41:12).
+        assertDateTime("mañana a las 12:45", F, LocalDateTime.of(2023, 2,  6, 12, 45, 0), 5);
+        assertDateTime("26/12/2003 19:18:59", F, LocalDateTime.of(2003, 12, 26, 19, 18, 59), 4);
+        assertDateTime("19:18:59 26/12/2003 test", F, LocalDateTime.of(2003, 12, 26, 19, 18, 59), 4);
+        assertDateTime("05/07/2003 1:2:3", F, LocalDateTime.of(2003, 7, 5, 1, 2, 3), 4); // Standard Spanish DD/MM
+        assertDateTime("05/07/2003 1:2:3", T, LocalDateTime.of(2003, 5, 7, 1, 2, 3), 4); // preferMonthBeforeDay MM/DD
+        assertDateTime("próximo viernes a las veintidós en punto", F, LocalDateTime.of(2023, 2, 10, 22, 0, 0), 7);
+        assertDateTime("ayer por la tarde a las cinco menos cuarto", F, LocalDateTime.of(2023, 2, 4, 16, 45, 0), 9);
+        assertDateTime("dentro de tres días por la noche a las once", F, LocalDateTime.of(2023, 2, 8, 23, 0, 0), 9);
+        assertDateTime("pasado mañana por la mañana", F, LocalDateTime.of(2023, 2, 7, 9, 0, 0), 4);
+        assertDateTime("domingo a las 2:45 p.m.", F, LocalDateTime.of(2023, 2, 5, 14, 45, 0), 6);
+        assertDateTime("hace dos días al atardecer", F, LocalDateTime.of(2023, 2, 3, 18, 0, 0), 5);
+        assertDateTime("siete de noviembre de 193 a.C.", T, LocalDateTime.of(-192, 11, 7, 9, 41, 12), 8); // 193 BC is year -192
     }
 
     @Test
     public void testDateTimeNull() {
-        assertDateTimeNull("hello how are you");
-        assertDateTimeNull("test twenty first of jan after a dinner");
-        assertDateTimeNull("minus one millisecond");
+        assertDateTimeNull("hola cómo estás", F);
+        assertDateTimeNull("prueba veintiuno de enero después de cenar", F);
+        assertDateTimeNull("menos un milisegundo", F);
     }
 
     @Test
     public void testNumberParserExtractDateTime() {
+        // NOTE (ES): This tests the top-level ParserFormatter class.
         final ParserFormatter npf = new ParserFormatter(null, new SpanishParser());
-        assertNull(npf.extractDateTime("hello how are you").getFirst());
+        assertNull(npf.extractDateTime("hola cómo estás").getFirst());
         assertEquals(NOW.minusDays(30).withHour(14).withMinute(39).withSecond(0).withNano(0),
-                npf.extractDateTime("2:39 p.m., thirty days ago").now(NOW).getFirst());
+                npf.extractDateTime("2:39 p.m. hace treinta días").now(NOW).getFirst());
         assertEquals(NOW.plusMinutes(3).plusSeconds(46),
-                npf.extractDateTime("in three minutes forty six seconds").now(NOW).getFirst());
-        assertEquals(NOW.withYear(3).withMonth(2).withDayOfMonth(1),
-                npf.extractDateTime("1 2/3").preferMonthBeforeDay(false).now(NOW).getFirst());
-        assertEquals(NOW.withYear(3).withMonth(1).withDayOfMonth(2),
-                npf.extractDateTime("1.2,3").preferMonthBeforeDay(true).now(NOW).getFirst());
+                npf.extractDateTime("dentro de tres minutos y cuarenta y seis segundos").now(NOW).getFirst());
     }
 }

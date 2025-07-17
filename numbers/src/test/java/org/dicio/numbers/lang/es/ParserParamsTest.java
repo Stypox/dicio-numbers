@@ -21,44 +21,45 @@ public class ParserParamsTest extends NumberParserParamsTestBase {
         return new SpanishParser();
     }
 
-    //TODO Spanish translation
     @Test
     public void testNumberFirst() {
-        assertNumberFirst("it is nineteen sixty four trillionths", T, F, n(1964e-12, F));
-        assertNumberFirst("36 twelfths of apple",                  F, T, n(3, F));
-        assertNumberFirst("I'm really one hundred and eighth",     F, F, n(100, F));
-        assertNumberFirst("I'm really one hundred and eighth",     T, T, n(108, T));
+        // NOTE (ES): Spanish uses long scale, so "trillonésima" is 10^-18.
+        assertNumberFirst("es mil novecientos sesenta y cuatro trillonésimas", T, F, n(1964e-18, F));
+        assertNumberFirst("treinta y seis doceavos de manzana", F, T, n(3, F));
+        assertNumberFirst("soy realmente el ciento ocho", F, F, n(100, F));
+        assertNumberFirst("soy realmente el ciento ocho", T, T, n(108, T));
     }
 
     @Test
     public void testNumberMixedWithText() {
-        assertNumberMixedWithText(" hello  ciao!, 3/5 or four sevenths?", T, F, " hello  ciao!, ", n(3.0 / 5.0, F), " or ", n(4.0 / 7.0, F), "?");
-        assertNumberMixedWithText(" hello  ciao!, four sevenths or 3/5?", T, T, " hello  ciao!, ", n(4.0 / 7.0, F), " or ", n(3.0 / 5.0, F), "?");
-        assertNumberMixedWithText("three billionth plus two",             T, T, n(3000000000L, T), " ", n(2, F));
-        assertNumberMixedWithText("one billionth and sixteen sixty four", T, F, n(1.0 / 1000000000.0, F), " and ", n(1664, F));
-        assertNumberMixedWithText("two billionths minus fifty eight",     F, T, n(2000000000000L, T), " ", n(-58, F));
-        assertNumberMixedWithText("nine billionths times eleven",         F, F, n(9.0 / 1000000000000.0, F), " times ", n(11, F));
-        assertNumberMixedWithText("three halves, not eleven quarters",    F, T, n(3.0 / 2.0, F), ", not ", n(11.0 / 4.0, F));
-        assertNumberMixedWithText("six pairs equals a dozen ",            F, T, n(12, F), " equals ", n(12, F), " ");
-        assertNumberMixedWithText("a dozen scores is not a gross",        F, T, n(240, F), " is not ", n(144, F));
-        assertNumberMixedWithText("6 quadrillionths of a cake",           F, T, n(6e24, T), " of a cake");
-        assertNumberMixedWithText("is nineteen sixty four quadrillionth", F, F, "is ", n(1964e-24, F));
-        assertNumberMixedWithText("I'm twenty three years old.",          T, F, "I'm ", n(23, F), " years old.");
-        assertNumberMixedWithText("The quintillionth",                    F, F, "The ", n(1e30, T));
-        assertNumberMixedWithText("One quintillionth",                    T, F, n(1e-18, F));
-        assertNumberMixedWithText("One quintillionth",                    T, T, n(1000000000000000000L, T));
-        assertNumberMixedWithText("One billion",                          F, T, n(1000000000000L, F));
+        assertNumberMixedWithText(" hola  qué tal!, 3/5 o cuatro séptimos?", T, F, " hola  qué tal!, ", n(3.0 / 5.0, F), " o ", n(4.0 / 7.0, F), "?");
+        assertNumberMixedWithText(" hola  qué tal!, cuatro séptimos o 3/5?", T, T, " hola  qué tal!, ", n(4.0 / 7.0, F), " o ", n(3.0 / 5.0, F), "?");
+        // NOTE (ES): "tres milmillonésimo" (three billionth in short scale) is not standard. Using long scale.
+        // "tres billonésimo" -> 3 * 10^-12.
+        assertNumberMixedWithText("tres billonésimo más dos", T, T, n(3e-12, T), " más ", n(2, F));
+        // NOTE (ES): "un billón" is 10^12.
+        assertNumberMixedWithText("un billón y mil seiscientos sesenta y cuatro", F, F, n(1e12, F), " y ", n(1664, F));
+        assertNumberMixedWithText("dos billonésimas menos cincuenta y ocho", F, T, n(2e-12, T), " menos ", n(-58, F));
+        assertNumberMixedWithText("nueve milmillonésimas por once", F, F, n(9e-9, F), " por ", n(11, F));
+        assertNumberMixedWithText("tres mitades, no once cuartos", F, T, n(1.5, F), ", no ", n(2.75, F));
+        assertNumberMixedWithText("seis pares es igual a una docena ", F, T, n(12, F), " es igual a ", n(12, F), " ");
+        assertNumberMixedWithText("una docena de veintenas no es una centena", F, T, n(240, F), " no es ", n(100, F));
+        assertNumberMixedWithText("tengo veintitrés años.", T, F, "tengo ", n(23, F), " años.");
+        // NOTE (ES): "quintillionth" (short scale) translates to "trillonésimo" (long scale).
+        assertNumberMixedWithText("El trillonésimo", F, F, "El ", n(1e18, T));
+        assertNumberMixedWithText("Un trillonésimo", T, F, n(1e-18, F));
     }
 
     @Test
     public void testDurationFirst() {
-        assertDurationFirst("Set a two minute and two billion nanosecond timer", F, t(2 * MINUTE + 2000L));
-        assertDurationFirst("you know two years ago are not billions of days", T, t(2 * YEAR));
+        // NOTE (ES): "mil millones" is 10^9.
+        assertDurationFirst("Pon un temporizador de dos minutos y mil millones de nanosegundos", F, t(2 * MINUTE + 1000L)); // 10^9 ns = 1s
+        assertDurationFirst("sabes que hace dos años no son mil millones de días", T, t(2 * YEAR));
     }
 
     @Test
     public void testDurationMixedWithText() {
-        assertDurationMixedWithText("2ns and four hours while six milliseconds.", F, t(4 * HOUR, 2), " while ", t(0, 6 * MILLIS), ".");
-        assertDurationMixedWithText("you know two years ago are not billions of day", T, "you know ", t(2 * YEAR), " ago are not ", t(1000000000L * DAY));
+        assertDurationMixedWithText("2ns y cuatro horas mientras seis milisegundos.", F, t(4 * HOUR, 2), " mientras ", t(0, 6 * MILLIS), ".");
+        assertDurationMixedWithText("sabes que hace dos años no son mil millones de días", T, "sabes que ", t(-2 * YEAR), " no son ", t(1000000000L * DAY));
     }
 }

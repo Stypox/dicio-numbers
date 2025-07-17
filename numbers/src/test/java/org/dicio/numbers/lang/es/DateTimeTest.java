@@ -23,24 +23,32 @@ public class DateTimeTest extends DateTimeTestBase {
 
     @Test
     public void testNiceDate() {
-        // just check that the NumberParserFormatter functions do their job
-        assertEquals("jueves, abril veintiocho, dos mil veintiuno",
+        // NOTE (ES): Test that the Formatter correctly generates full dates in Spanish.
+        // The expected format is "{weekday}, {day} de {month} de {year}".
+        assertEquals("miércoles, veintiocho de abril de dos mil veintiuno",
                 pf.niceDate(LocalDate.of(2021, 4, 28)).get());
-        assertEquals("domingo, agosto trece",
-                pf.niceDate(LocalDate.of(-84, 8, 13)).now(LocalDate.of(-84, 8, 23)).get());
+        
+        // Test for a BC date, ensuring the correct output.
+        assertEquals("domingo, trece de agosto de ochenta y cuatro a.C.",
+                pf.niceDate(LocalDate.of(-83, 8, 13)).get()); // -83 is 84 BC
     }
 
     @Test
     public void testNiceYear() {
-        // just check that the NumberParserFormatter functions do their job
+        // NOTE (ES): Test that the Formatter correctly pronounces years in Spanish.
         assertEquals("mil novecientos ochenta y cuatro", pf.niceYear(LocalDate.of(1984, 4, 28)).get());
-        assertEquals("ochocientos diez a.C.", pf.niceYear(LocalDate.of(-810, 8, 13)).get());
+        assertEquals("ochocientos diez a.C.", pf.niceYear(LocalDate.of(-809, 8, 13)).get()); // -809 is 810 BC
     }
 
     @Test
     public void testNiceDateTime() {
-        // just check that the NumberParserFormatter functions do their job
-        assertEquals("miércoles, veintiuno de septiembre, mil setiesientos sesenta y cuatro al mediodía", pf.niceDateTime(LocalDateTime.of(1764, 9, 12, 12, 0)).get());
-        assertEquals("jueves, tres de noviembre, trescientos veintiocho a.C. a las ocho y siete", pf.niceDateTime(LocalDateTime.of(-328, 11, 3, 5, 7)).get());
+        // NOTE (ES): Test that the Formatter correctly generates full date-time strings.
+        // The expected format is "{date} a las {time}".
+        assertEquals("miércoles, doce de septiembre de mil setecientos sesenta y cuatro al mediodía",
+                pf.niceDateTime(LocalDateTime.of(1764, 9, 12, 12, 0)).get());
+        
+        // Test for a BC date with a specific time.
+        assertEquals("jueves, tres de noviembre de trescientos veintiocho a.C. a las cinco y siete de la mañana",
+                pf.niceDateTime(LocalDateTime.of(-327, 11, 3, 5, 7)).get());
     }
 }
