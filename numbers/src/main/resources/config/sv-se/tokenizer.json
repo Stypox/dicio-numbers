@@ -6,7 +6,11 @@
     "raw"
   ],
   "plural_endings": [
-    "s"
+    "r",
+    "n",
+    "or",
+    "ar",
+    "er"
   ],
   "word_matches": [
     {
@@ -15,7 +19,7 @@
         "date_time_ignore"
       ],
       "values": [
-        "and"
+        "och"
       ]
     },
     {
@@ -23,11 +27,11 @@
         "ignore",
         "date_time_ignore",
         "day_adder_the",
-        "ampm_before",
         "bcad_after"
       ],
       "values": [
-        "a"
+        "en",
+        "ett"
       ]
     },
     {
@@ -37,7 +41,8 @@
         "day_adder_the"
       ],
       "values": [
-        "an"
+        "en",
+        "ett"
       ]
     },
     {
@@ -47,7 +52,8 @@
         "thousand_separator"
       ],
       "values": [
-        ","
+        " ",
+        "."
       ]
     },
     {
@@ -55,10 +61,8 @@
         "ordinal_suffix"
       ],
       "values": [
-        "st",
-        "nd",
-        "rd",
-        "th"
+        ":a",
+        ":e"
       ]
     },
     {
@@ -66,7 +70,7 @@
         "point"
       ],
       "values": [
-        "point"
+        "punkt"
       ]
     },
     {
@@ -75,7 +79,7 @@
         "post_oclock"
       ],
       "values": [
-        "dot"
+        "prick"
       ]
     },
     {
@@ -85,7 +89,8 @@
         "date_time_ignore"
       ],
       "values": [
-        "."
+        ".",
+        ","
       ]
     },
     {
@@ -93,8 +98,8 @@
         "fraction_separator"
       ],
       "values": [
-        "over",
-        "divided"
+        "över",
+        "delat"
       ]
     },
     {
@@ -111,7 +116,7 @@
         "fraction_separator_secondary"
       ],
       "values": [
-        "by"
+        "med"
       ]
     },
     {
@@ -120,7 +125,6 @@
         "positive"
       ],
       "values": [
-        "positive",
         "plus",
         "+"
       ]
@@ -131,7 +135,6 @@
         "negative"
       ],
       "values": [
-        "negative",
         "minus"
       ]
     },
@@ -152,7 +155,7 @@
         "date_time_ignore"
       ],
       "values": [
-        "of"
+        "av"
       ]
     },
     {
@@ -160,7 +163,7 @@
         "yesterday"
       ],
       "values": [
-        "yesterday"
+        "igår"
       ]
     },
     {
@@ -168,7 +171,7 @@
         "today"
       ],
       "values": [
-        "today"
+        "idag"
       ]
     },
     {
@@ -176,8 +179,7 @@
         "tomorrow"
       ],
       "values": [
-        "tomorrow",
-        "morrow"
+        "imorgon"
       ]
     },
     {
@@ -188,7 +190,7 @@
         "pre_special_hour"
       ],
       "values": [
-        "the"
+        "den"
       ]
     },
     {
@@ -196,7 +198,7 @@
         "day_adder_day"
       ],
       "values": [
-        "day"
+        "dag"
       ]
     },
     {
@@ -209,7 +211,7 @@
         "pre_special_hour"
       ],
       "values": [
-        "after"
+        "efter"
       ]
     },
     {
@@ -223,7 +225,7 @@
         "pre_special_hour"
       ],
       "values": [
-        "before"
+        "före"
       ]
     },
     {
@@ -232,7 +234,7 @@
         "special_minute_before"
       ],
       "values": [
-        "to"
+        "till"
       ]
     },
     {
@@ -242,7 +244,8 @@
         "negative"
       ],
       "values": [
-        "past"
+        "över",
+        "efter"
       ]
     },
     {
@@ -250,8 +253,8 @@
         "pre_hour"
       ],
       "values": [
-        "hour",
-        "hours"
+        "timme",
+        "timmar"
       ]
     },
     {
@@ -260,7 +263,8 @@
         "pre_special_hour"
       ],
       "values": [
-        "at"
+        "kl",
+        "klockan"
       ]
     },
     {
@@ -268,10 +272,9 @@
         "pre_special_hour"
       ],
       "values": [
-        "this",
-        "these",
-        "those",
-        "that"
+        "denna",
+        "detta",
+        "dessa"
       ]
     },
     {
@@ -282,7 +285,7 @@
         "pre_oclock"
       ],
       "values": [
-        "on"
+        "på"
       ]
     },
     {
@@ -291,11 +294,8 @@
         "positive"
       ],
       "values": [
-        "next",
-        "coming",
-        "upcoming",
-        "successive",
-        "succeeding"
+        "nästa",
+        "kommande"
       ]
     },
     {
@@ -305,7 +305,7 @@
         "positive"
       ],
       "values": [
-        "in"
+        "om"
       ]
     },
     {
@@ -315,7 +315,7 @@
         "positive"
       ],
       "values": [
-        "following"
+        "följande"
       ]
     },
     {
@@ -324,7 +324,7 @@
         "negative"
       ],
       "values": [
-        "ago"
+        "sedan"
       ]
     },
     {
@@ -333,10 +333,8 @@
         "negative"
       ],
       "values": [
-        "previous",
-        "last",
-        "preceding",
-        "passed"
+        "förra",
+        "föregående"
       ]
     },
     {
@@ -344,7 +342,7 @@
         "bcad_before"
       ],
       "values": [
-        "b"
+        "f.kr"
       ]
     },
     {
@@ -352,7 +350,7 @@
         "bcad_after"
       ],
       "values": [
-        "anno"
+        "e.kr"
       ]
     },
     {
@@ -360,7 +358,7 @@
         "bcad_identifier"
       ],
       "values": [
-        "christ",
+        "kristus",
         "domini",
         "d"
       ]
@@ -372,8 +370,8 @@
       ],
       "values": [
         "c",
-        "common",
-        "current"
+        "gemensam",
+        "nuvarande"
       ]
     },
     {
@@ -406,53 +404,10 @@
     },
     {
       "categories": [
-        "ampm_before"
-      ],
-      "values": [
-        "ante"
-      ]
-    },
-    {
-      "categories": [
-        "ampm_after"
-      ],
-      "values": [
-        "post",
-        "p"
-      ]
-    },
-    {
-      "categories": [
-        "ampm_identifier"
-      ],
-      "values": [
-        "meridiem",
-        "meridian",
-        "m"
-      ]
-    },
-    {
-      "categories": [
-        "ampm_before_combined"
-      ],
-      "values": [
-        "am"
-      ]
-    },
-    {
-      "categories": [
-        "ampm_after_combined"
-      ],
-      "values": [
-        "pm"
-      ]
-    },
-    {
-      "categories": [
         "post_oclock"
       ],
       "values": [
-        "clock"
+        "prick"
       ]
     },
     {
@@ -460,9 +415,8 @@
         "oclock_combined"
       ],
       "values": [
-        "oclock",
-        "exact",
-        "sharp"
+        "exakt",
+        "prick"
       ]
     }
   ],
@@ -474,36 +428,17 @@
         "digit_after_point"
       ],
       "values": {
-        "nought": 0,
-        "zero": 0,
-        "one": 1,
-        "two": 2,
-        "three": 3,
-        "four": 4,
-        "five": 5,
-        "six": 6,
-        "seven": 7,
-        "eight": 8,
-        "nine": 9
-      }
-    },
-    {
-      "categories": [
-        "number",
-        "digit_after_point"
-      ],
-      "values": {
-        "oh": 0
-      }
-    },
-    {
-      "categories": [
-        "number",
-        "digit_after_point",
-        "pre_oclock"
-      ],
-      "values": {
-        "o": 0
+        "noll": 0,
+        "ett": 1,
+        "en": 1,
+        "två": 2,
+        "tre": 3,
+        "fyra": 4,
+        "fem": 5,
+        "sex": 6,
+        "sju": 7,
+        "åtta": 8,
+        "nio": 9
       }
     },
     {
@@ -512,16 +447,16 @@
         "teen"
       ],
       "values": {
-        "ten": 10,
-        "eleven": 11,
-        "twelve": 12,
-        "thirteen": 13,
-        "fourteen": 14,
-        "fifteen": 15,
-        "sixteen": 16,
-        "seventeen": 17,
-        "eighteen": 18,
-        "nineteen": 19
+        "tio": 10,
+        "elva": 11,
+        "tolv": 12,
+        "tretton": 13,
+        "fjorton": 14,
+        "femton": 15,
+        "sexton": 16,
+        "sjutton": 17,
+        "arton": 18,
+        "nitton": 19
       }
     },
     {
@@ -530,14 +465,14 @@
         "tens"
       ],
       "values": {
-        "twenty": 20,
-        "thirty": 30,
-        "forty": 40,
-        "fifty": 50,
-        "sixty": 60,
-        "seventy": 70,
-        "eighty": 80,
-        "ninety": 90
+        "tjugo": 20,
+        "trettio": 30,
+        "fyrtio": 40,
+        "femtio": 50,
+        "sextio": 60,
+        "sjuttio": 70,
+        "åttio": 80,
+        "nittio": 90
       }
     },
     {
@@ -546,7 +481,7 @@
         "hundred"
       ],
       "values": {
-        "hundred": 100
+        "hundra": 100
       }
     },
     {
@@ -555,12 +490,15 @@
         "multiplier"
       ],
       "values": {
-        "thousand": 1000,
-        "million": 1000000,
-        "billion": 1000000000,
-        "trillion": 1000000000000,
-        "quadrillion": 1000000000000000,
-        "quintillion": 1000000000000000000
+        "tusen": 1000,
+        "miljon": 1000000,
+        "miljoner": 1000000,
+        "miljard": 1000000000,
+        "miljarder": 1000000000,
+        "biljon": 1000000000000,
+        "biljoner": 1000000000000,
+        "biljard": 1000000000000000,
+        "biljarder": 1000000000000000
       }
     },
     {
@@ -570,15 +508,15 @@
         "digit"
       ],
       "values": {
-        "first": 1,
-        "second": 2,
-        "third": 3,
-        "fourth": 4,
-        "fifth": 5,
-        "sixth": 6,
-        "seventh": 7,
-        "eighth": 8,
-        "ninth": 9
+        "första": 1,
+        "andra": 2,
+        "tredje": 3,
+        "fjärde": 4,
+        "femte": 5,
+        "sjätte": 6,
+        "sjunde": 7,
+        "åttonde": 8,
+        "nionde": 9
       }
     },
     {
@@ -588,16 +526,16 @@
         "teen"
       ],
       "values": {
-        "tenth": 10,
-        "eleventh": 11,
-        "twelfth": 12,
-        "thirteenth": 13,
-        "fourteenth": 14,
-        "fifteenth": 15,
-        "sixteenth": 16,
-        "seventeenth": 17,
-        "eighteenth": 18,
-        "nineteenth": 19
+        "tionde": 10,
+        "elfte": 11,
+        "tolfte": 12,
+        "trettonde": 13,
+        "fjortonde": 14,
+        "femtonde": 15,
+        "sextonde": 16,
+        "sjuttonde": 17,
+        "artonde": 18,
+        "nittonde": 19
       }
     },
     {
@@ -607,14 +545,14 @@
         "tens"
       ],
       "values": {
-        "twentieth": 20,
-        "thirtieth": 30,
-        "fortieth": 40,
-        "fiftieth": 50,
-        "sixtieth": 60,
-        "seventieth": 70,
-        "eightieth": 80,
-        "ninetieth": 90
+        "tjugonde": 20,
+        "trettionde": 30,
+        "fyrtionde": 40,
+        "femtionde": 50,
+        "sextionde": 60,
+        "sjuttionde": 70,
+        "åttionde": 80,
+        "nittionde": 90
       }
     },
     {
@@ -624,7 +562,7 @@
         "hundred"
       ],
       "values": {
-        "hundredth": 100
+        "hundrade": 100
       }
     },
     {
@@ -634,12 +572,11 @@
         "multiplier"
       ],
       "values": {
-        "thousandth": 1000,
-        "millionth": 1000000,
-        "billionth": 1000000000,
-        "trillionth": 1000000000000,
-        "quadrillionth": 1000000000000000,
-        "quintillionth": 1000000000000000000
+        "tusende": 1000,
+        "miljonte": 1000000,
+        "miljardte": 1000000000,
+        "biljonte": 1000000000000,
+        "biljardte": 1000000000000000
       }
     },
     {
@@ -648,27 +585,16 @@
         "suffix_multiplier"
       ],
       "values": {
-        "half": 0.5,
-        "halves": 0.5,
-        "quarter": 0.25,
-        "quarters": 0.25,
-        "pair": 2,
-        "pairs": 2,
-        "couple": 2,
-        "couples": 2,
-        "dozen": 12,
-        "dozens": 12,
-        "gross": 144,
-        "grosses": 144,
-        "score": 20,
-        "scores": 20,
-        "percent": 0.01,
-        "pct": 0.01,
-        "pc": 0.01,
+        "halv": 0.5,
+        "hälft": 0.5,
+        "kvart": 0.25,
+        "par": 2,
+        "dussin": 12,
+        "gros": 144,
+        "tjog": 20,
+        "procent": 0.01,
         "%": 0.01,
-        "permille": 0.001,
-        "permill": 0.001,
-        "permil": 0.001,
+        "promille": 0.001,
         "‰": 0.001
       }
     },
@@ -677,26 +603,26 @@
         "month_name"
       ],
       "values": {
-        "january": 1,
+        "januari": 1,
         "jan": 1,
-        "february": 2,
+        "februari": 2,
         "feb": 2,
-        "march": 3,
+        "mars": 3,
         "mar": 3,
         "april": 4,
         "apr": 4,
-        "may": 5,
-        "june": 6,
+        "maj": 5,
+        "juni": 6,
         "jun": 6,
-        "july": 7,
+        "juli": 7,
         "jul": 7,
-        "august": 8,
+        "augusti": 8,
         "aug": 8,
         "september": 9,
         "sep": 9,
         "sept": 9,
-        "october": 10,
-        "oct": 10,
+        "oktober": 10,
+        "okt": 10,
         "november": 11,
         "nov": 11,
         "december": 12,
@@ -708,20 +634,20 @@
         "day_of_week"
       ],
       "values": {
-        "monday": 0,
-        "mon": 0,
-        "tuesday": 1,
-        "tue": 1,
-        "wednesday": 2,
-        "wed": 2,
-        "thursday": 3,
-        "thu": 3,
-        "friday": 4,
-        "fri": 4,
-        "saturday": 5,
-        "sat": 5,
-        "sunday": 6,
-        "sun": 6
+        "måndag": 0,
+        "mån": 0,
+        "tisdag": 1,
+        "tis": 1,
+        "onsdag": 2,
+        "ons": 2,
+        "torsdag": 3,
+        "tor": 3,
+        "fredag": 4,
+        "fre": 4,
+        "lördag": 5,
+        "lör": 5,
+        "söndag": 6,
+        "sön": 6
       }
     },
     {
@@ -730,12 +656,8 @@
         "moment_of_day"
       ],
       "values": {
-        "noon": 12,
-        "noons": 12,
-        "midday": 12,
-        "middays": 12,
-        "midnight": 0,
-        "midnights": 0
+        "middag": 12,
+        "midnatt": 0
       }
     },
     {
@@ -743,115 +665,124 @@
         "moment_of_day"
       ],
       "values": {
-        "night": 3,
-        "nights": 3,
-        "nighttime": 3,
-        "dawn": 6,
-        "dawning": 6,
-        "aurora": 6,
-        "morning": 9,
-        "mornings": 9,
+        "natt": 3,
+        "gryning": 6,
+        "morgon": 9,
+        "förmiddag": 10,
         "lunch": 12,
-        "lunches": 12,
-        "dinner": 20,
-        "dinners": 20,
-        "afternoon": 15,
-        "afternoons": 15,
-        "sunset": 18,
-        "dusk": 18,
-        "evening": 21,
-        "evenings": 21,
-        "tonight": 23
+        "eftermiddag": 15,
+        "kväll": 18,
+        "skymning": 18,
+        "sen kväll": 21,
+        "ikväll": 21,
+        "ikväll": 23
       }
     }
   ],
-  "duration_words": {
-    "1 NANOS": [
-      "nanosecond",
-      "nanoseconds",
-      "ns"
-    ],
-    "1 MICROS": [
-      "microsecond",
-      "microseconds",
-      "μs"
-    ],
-    "1 MILLIS": [
-      "millisecond",
-      "milliseconds",
-      "ms"
-    ],
-    "1 SECONDS": [
-      "second",
-      "seconds",
-      "s",
-      "sec",
-      "secs"
-    ],
-    "1 MINUTES": [
-      "minute",
-      "minutes",
-      "m",
-      "min",
-      "mins"
-    ],
-    "1 HOURS": [
-      "hour",
-      "hours",
-      "h",
-      "hr",
-      "hrs"
-    ],
-    "1 DAYS": [
-      "day",
-      "days",
-      "d"
-    ],
-    "1 WEEKS": [
-      "week",
-      "weeks",
-      "w"
-    ],
-    "1 MONTHS": [
-      "month",
-      "months",
-      "mo",
-      "mon",
-      "mons"
-    ],
-    "1 YEARS": [
-      "year",
-      "years",
-      "yr",
-      "yrs"
-    ],
-    "1 DECADES": [
-      "decade",
-      "decades"
-    ],
-    "1 CENTURIES": [
-      "century",
-      "centuries"
-    ],
-    "1 MILLENNIA": [
-      "millenium",
-      "millennium",
-      "milleniums",
-      "millenniums",
-      "millenia",
-      "millennia"
-    ]
-  },
+  "duration_words": [
+    {
+      "categories": [
+        "second"
+      ],
+      "values": [
+        "sekund",
+        "sekunder",
+        "s"
+      ]
+    },
+    {
+      "categories": [
+        "minute"
+      ],
+      "values": [
+        "minut",
+        "minuter",
+        "min"
+      ]
+    },
+    {
+      "categories": [
+        "hour"
+      ],
+      "values": [
+        "timme",
+        "timmar",
+        "h"
+      ]
+    },
+    {
+      "categories": [
+        "day"
+      ],
+      "values": [
+        "dag",
+        "dagar",
+        "dygn"
+      ]
+    },
+    {
+      "categories": [
+        "week"
+      ],
+      "values": [
+        "vecka",
+        "veckor"
+      ]
+    },
+    {
+      "categories": [
+        "month"
+      ],
+      "values": [
+        "månad",
+        "månader"
+      ]
+    },
+    {
+      "categories": [
+        "year"
+      ],
+      "values": [
+        "år"
+      ]
+    },
+    {
+      "categories": [
+        "decade"
+      ],
+      "values": [
+        "årtionde",
+        "decennium",
+        "decennier"
+      ]
+    },
+    {
+      "categories": [
+        "century"
+      ],
+      "values": [
+        "århundrade",
+        "sekel",
+        "sekler"
+      ]
+    },
+    {
+      "categories": [
+        "millennium"
+      ],
+      "values": [
+        "årtusende",
+        "millennium",
+        "millennier"
+      ]
+    }
+  ],
   "duration_restrict_after_number": [
-    "ns",
-    "μs",
-    "ms",
-    "s",
-    "m",
-    "h",
-    "d",
-    "w",
-    "mo",
-    "yr"
+    "decennium",
+    "decennier",
+    "sekel",
+    "sekler",
+    "millennium",
+    "millennier"
   ]
 }
