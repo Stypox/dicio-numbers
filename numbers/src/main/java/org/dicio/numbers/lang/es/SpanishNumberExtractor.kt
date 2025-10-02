@@ -44,7 +44,7 @@ class SpanishNumberExtractor internal constructor(private val ts: TokenStream) {
         return divideByDenominatorIfPossible(number)
     }
 
-    private fun divideByDenominatorIfPossible(numberToEdit: Number?): Number? {
+    fun divideByDenominatorIfPossible(numberToEdit: Number?): Number? {
         if (numberToEdit == null) {
             // Spanish context: handles "un quinto" (a fifth), where "un" is the numerator.
             if (ts[0].isValue("un") || ts[0].isValue("una")) {

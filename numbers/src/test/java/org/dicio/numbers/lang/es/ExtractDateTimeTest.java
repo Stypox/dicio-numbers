@@ -13,7 +13,7 @@ import static java.time.temporal.ChronoUnit.WEEKS;
 import static java.time.temporal.ChronoUnit.YEARS;
 
 import org.dicio.numbers.ParserFormatter;
-import org.dicio.numbers.parser.SpanishParser;
+import org.dicio.numbers.lang.es.SpanishParser;
 import org.dicio.numbers.parser.lexer.TokenStream;
 import org.dicio.numbers.test.WithTokenizerTestBase;
 import org.dicio.numbers.unit.Duration;
@@ -77,7 +77,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     private void assertTimeWithAmpm(final String s, final LocalTime expected, int finalTokenStreamPosition) { assertFunction(s, false, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::timeWithAmpm); }
     private void assertTimeWithAmpmNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::timeWithAmpm); }
     private void assertDateTime(final String s, final boolean preferMonthBeforeDay, final LocalDateTime expected, int finalTokenStreamPosition) { assertFunction(s, preferMonthBeforeDay, expected, finalTokenStreamPosition, SpanishDateTimeExtractor::dateTime); }
-    private void assertDateTimeNull(final String s) { assertFunctionNull(s, false, SpanishDateTimeExtractor::dateTime); }
+    private void assertDateTimeNull(final String s, final boolean preferMonthBeforeDay) { assertFunctionNull(s, preferMonthBeforeDay, SpanishDateTimeExtractor::dateTime); }
 
     // --- Spanish-specific tests ---
 
@@ -142,7 +142,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         // NOTE (ES): Default Spanish format is DD/MM/YYYY. preferMonthBeforeDay=T will test for MM/DD/YYYY.
         assertDate("04/09/4096", F, LocalDate.of(4096, 9, 4), 5);
         assertDate("04/09/4096", T, LocalDate.of(4096, 4, 9), 5);
-        assertDate("13 4 2023", LocalDate.of(2023, 4, 13), 3);
+        assertDate("13 4 2023", F, LocalDate.of(2023, 4, 13), 3);
         assertDate("seis de julio de mil novecientos noventa y cinco", T, LocalDate.of(1995, 7, 6), 9);
         assertDate("jueves 26 de mayo de 2022", T, LocalDate.of(2022, 5, 26), 6);
         assertDate("2 de enero del 2 a.C.", T, LocalDate.of(-1, 1, 2), 7); // 2 BC is year -1
