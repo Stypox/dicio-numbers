@@ -200,20 +200,12 @@ class EnglishNumberExtractor internal constructor(
     }
 
     fun numberInteger(allowOrdinal: Boolean): Number? {
-        if (ts[0].hasCategory("ignore")
-            && (!ts[0].isValue("a") || ts[1].hasCategory("ignore"))
-        ) {
-            return null // do not eat ignored words at the beginning, expect a (see e.g. a hundred)
-        }
-
-        var n = NumberExtractorUtils.numberMadeOfGroups(
-            ts,
-            allowOrdinal,
+        var n = NumberExtractorUtils.numberMadeOfGroups(ts) { ts, lastMultiplier ->
             if (shortScale)
-                NumberExtractorUtils::numberGroupShortScale
+                NumberExtractorUtils.numberGroupShortScale(ts, allowOrdinal, lastMultiplier)
             else
-                ::numberGroupLongScale
-        )
+                numberGroupLongScale(ts, allowOrdinal, lastMultiplier)
+        }
         if (n == null) {
             // try to parse big raw numbers (>=1000), e.g. 1207
             return NumberExtractorUtils.numberBigRaw(ts, allowOrdinal)
@@ -358,21 +350,20 @@ class EnglishNumberExtractor internal constructor(
                 }
 
                 if (first == null) {
-                    val nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0)
-                    if (NumberExtractorUtils.isRawNumber(ts[nextNotIgnore])
-                        && ts[nextNotIgnore].number!!.lessThan(1000000)
+                    if (NumberExtractorUtils.isRawNumber(ts[0])
+                        && ts[0].number!!.lessThan(1000000)
                     ) {
                         // maybe a raw number smaller than 1000000, e.g. 785743
-                        val ordinal = ts[nextNotIgnore + 1].hasCategory("ordinal_suffix")
+                        val ordinal = ts[1].hasCategory("ordinal_suffix")
                         if (ordinal) {
                             if (!allowOrdinal) {
                                 // do not allow raw number + st/nd/rd/th if allowOrdinal is false
                                 return null
                             }
-                            ts.movePositionForwardBy(nextNotIgnore + 2)
+                            ts.movePositionForwardBy(2)
                             return ts[-2].number!!.withOrdinal(true)
                         }
-                        ts.movePositionForwardBy(nextNotIgnore + 1)
+                        ts.movePositionForwardBy(1)
                         first = ts[-1].number // raw number group, e.g. 123042 million
                     }
                 }
@@ -382,8 +373,12 @@ class EnglishNumberExtractor internal constructor(
                     return first
                 }
 
+                val nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0)
+                ts.movePositionForwardBy(nextNotIgnore)
                 val second = NumberExtractorUtils.numberLessThan1000(ts, allowOrdinal)
-                if (second != null) {
+                if (second == null) {
+                    ts.movePositionForwardBy(-nextNotIgnore)
+                } else {
                     first = first.plus(second)
                     if (second.isOrdinal) {
                         return first.withOrdinal(true) // nothing else follows an ordinal number

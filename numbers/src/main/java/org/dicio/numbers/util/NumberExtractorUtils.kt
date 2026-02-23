@@ -48,14 +48,13 @@ object NumberExtractorUtils {
 
     fun numberBigRaw(ts: TokenStream, allowOrdinal: Boolean): Number? {
         // try to parse big raw numbers (bigger than 999), e.g. 1207, 57378th
-        val nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0)
-        if (isRawNumber(ts[nextNotIgnore])) {
-            val ordinal = ts[nextNotIgnore + 1].hasCategory("ordinal_suffix")
+        if (isRawNumber(ts[0])) {
+            val ordinal = ts[1].hasCategory("ordinal_suffix")
             if (!allowOrdinal && ordinal) {
                 return null // do not allow ordinal if allowOrdinal is false
             } else {
                 // a big number in raw form, e.g. 1250067, 5839th
-                ts.movePositionForwardBy(nextNotIgnore + (if (ordinal) 2 else 1))
+                ts.movePositionForwardBy(if (ordinal) 2 else 1)
                 return ts[if (ordinal) -2 else -1].number!!.withOrdinal(ordinal)
             }
         } else {
@@ -65,14 +64,15 @@ object NumberExtractorUtils {
 
     fun numberMadeOfGroups(
         ts: TokenStream,
-        allowOrdinal: Boolean,
-        getNumberGroup: (ts: TokenStream, allowOrdinal: Boolean, lastMultiplier: Double) -> Number?
+        getNumberGroup: (ts: TokenStream, lastMultiplier: Double) -> Number?
     ): Number? {
         // read as many groups as possible (e.g. 123 billion + 45 million + 6 thousand + 78)
         var groups: Number? = null
         var lastMultiplier = Double.MAX_VALUE
         while (true) {
-            val group = getNumberGroup(ts, allowOrdinal, lastMultiplier)
+            val group = ts.tryOrSkipCategory("ignore", groups != null) {
+                getNumberGroup(ts, lastMultiplier)
+            }
 
             groups = if (group == null) {
                 break // either nothing else was found or next multiplier is bigger than last one
@@ -141,8 +141,21 @@ object NumberExtractorUtils {
         var ten: Long = -1
         var digit: Long = -1
         var ordinal = false
+        var firstIteration = true
         while (true) {
-            val nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0)
+            val nextNotIgnore = if (firstIteration) {
+                firstIteration = false
+                // this avoids matching "and seven", "a two" and "a hundredth",
+                // but still allows "a hundred"
+                if (ts[0].isValue("a") && ts[1].isValue("hundred")) {
+                    1 // allow ignoring "a" if it comes right before "hundred" literally
+                } else {
+                    0 // ... but otherwise do not allow ignoring anything at the beginning
+                }
+            } else {
+                ts.indexOfWithoutCategory("ignore", 0)
+            }
+
             if (!allowOrdinal && ts[nextNotIgnore].hasCategory("ordinal")) {
                 // prevent ordinal numbers if allowOrdinal is false
                 break

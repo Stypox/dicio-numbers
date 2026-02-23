@@ -175,20 +175,12 @@ class ItalianNumberExtractor internal constructor(private val ts: TokenStream) {
     }
 
     fun numberInteger(allowOrdinal: Boolean): Number? {
-        if (ts[0].hasCategory("ignore")) {
-            return null // do not eat ignored words at the beginning
+        var n = NumberExtractorUtils.numberMadeOfGroups(ts) { ts, lastMultiplier ->
+            NumberExtractorUtils.numberGroupShortScale(ts, allowOrdinal, lastMultiplier)
         }
-
-        var n = NumberExtractorUtils.numberMadeOfGroups(
-            ts,
-            allowOrdinal,
-            NumberExtractorUtils::numberGroupShortScale
-        )
         if (n == null) {
-            return NumberExtractorUtils.numberBigRaw(
-                ts,
-                allowOrdinal
-            ) // try to parse big raw numbers (>=1000), e.g. 1207
+            // try to parse big raw numbers (>=1000), e.g. 1207
+            return NumberExtractorUtils.numberBigRaw(ts, allowOrdinal)
         } else if (n.isOrdinal) {
             return n // no more checks, as the ordinal word comes last, e.g. million twelfth
         }
