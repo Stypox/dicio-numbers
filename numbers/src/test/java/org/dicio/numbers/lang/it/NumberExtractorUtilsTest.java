@@ -61,7 +61,7 @@ public class NumberExtractorUtilsTest extends NumberExtractorUtilsTestBase {
         assertNumberLessThan1000("sette cento e sei",        F, 706, F, 4);
         assertNumberLessThan1000("cento novanta uno",        T, 191, F, 3);
         assertNumberLessThan1000("otto e cento e quindici",  F, 815, F, 5);
-        assertNumberLessThan1000("e e cento e e undici e e", T, 111, F, 6);
+        assertNumberLessThan1000("cento e e e undici e e e", T, 111, F, 5);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class NumberExtractorUtilsTest extends NumberExtractorUtilsTestBase {
         assertNumberGroupShortScale("cento 70 migliaia",     T, 1000000,    170000,    F, 3);
         assertNumberGroupShortScale("572 milioni",           F, 1000000000, 572000000, F, 2);
         assertNumberGroupShortScale("1 milione",             T, 1000000000, 1000000,   F, 2);
-        assertNumberGroupShortScale(", cento e novanta uno", F, 1000,       191,       F, 5);
+        assertNumberGroupShortScale("cento e novanta uno, ", F, 1000,       191,       F, 4);
     }
 
     @Test
@@ -130,5 +130,7 @@ public class NumberExtractorUtilsTest extends NumberExtractorUtilsTestBase {
         assertNumberGroupShortScaleNull("nove mila uno",           T, 1000);
         assertNumberGroupShortScaleNull("otto milioni di persone", F, 1000000);
         assertNumberGroupShortScaleNull(" dieci ",                 T, 1000000);
+        assertNumberGroupShortScaleNull("e dieci",                 F, 1000000);
+        assertNumberGroupShortScaleNull("e milleseicento novanta", T, 1000000000);
     }
 }

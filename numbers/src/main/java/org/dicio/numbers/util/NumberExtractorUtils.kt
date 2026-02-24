@@ -109,7 +109,10 @@ object NumberExtractorUtils {
             return groupValue
         }
 
-        val nextNotIgnore = ts.indexOfWithoutCategory("ignore", 0)
+        val nextNotIgnore = if (groupValue == null)
+            0 // do not skip ahead if nothing was matched so far
+        else
+            ts.indexOfWithoutCategory("ignore", 0)
         val ordinal = ts[nextNotIgnore].hasCategory("ordinal")
         if (ts[nextNotIgnore].hasCategory("multiplier") && (allowOrdinal || !ordinal)) {
             // prevent ordinal multiplier if allowOrdinal is false

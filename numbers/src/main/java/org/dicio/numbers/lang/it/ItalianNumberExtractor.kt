@@ -109,7 +109,7 @@ class ItalianNumberExtractor internal constructor(private val ts: TokenStream) {
     }
 
     fun numberPoint(allowOrdinal: Boolean): Number? {
-        var n = numberInteger(allowOrdinal).let {
+        var n = numberInteger(allowOrdinal).let { // the `let` makes `n` be of non-null type
             if (it == null || it.isOrdinal) {
                 // numbers can not start with just "virgola"
                 // no point or fraction separator can appear after an ordinal number
