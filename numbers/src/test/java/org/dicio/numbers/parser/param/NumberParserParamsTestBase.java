@@ -15,22 +15,22 @@ public abstract class NumberParserParamsTestBase {
 
     protected abstract Parser numberParser();
 
-    private <T, R> void assertNppFirst(final NumberParserParams<T> npp,
+    private <T, R> void assertNppFirst(final ParserParams<T> npp,
                                        final Function<T, R> transformActualResult,
                                        final R expectedResult) {
-        assertEquals(expectedResult, transformActualResult.apply(npp.getFirst()));
+        assertEquals(expectedResult, transformActualResult.apply(npp.parseFirst()));
     }
 
     private <T, R> void assertNppFirstIfInteger(final ExtractNumberParams npp,
                                                 final Long expectedResult) {
-        assertEquals(expectedResult, npp.getFirstIfInteger());
+        assertEquals(expectedResult, npp.parseFirstIfInteger());
     }
 
-    private <T, R> void assertNppMixedWithText(final NumberParserParams<T> npp,
+    private <T, R> void assertNppMixedWithText(final ParserParams<T> npp,
                                                final Class<T> nppClass,
                                                final Function<T, R> transformActualResult,
                                                final Object... expectedResults) {
-        final List<Object> actualResults = npp.getMixedWithText();
+        final List<Object> actualResults = npp.parseMixedWithText();
         final String actualResultsString = actualResults.toString();
 
         assertEquals("Wrong results size: " + actualResultsString, expectedResults.length, actualResults.size());

@@ -5,7 +5,7 @@ import org.dicio.numbers.parser.lexer.TokenStream
 import org.dicio.numbers.unit.Number
 
 class ExtractNumberParams(parser: Parser, utterance: String) :
-    NumberParserParams<Number?>(parser, utterance) {
+    ParserParams<Number?>(parser, utterance) {
     // TODO documentation
     // default values
     private var shortScale = true
@@ -27,8 +27,9 @@ class ExtractNumberParams(parser: Parser, utterance: String) :
         return this
     }
 
-    val firstIfInteger: Long?
-        get() = first?.takeIf { it.isInteger }?.integerValue()
+    fun parseFirstIfInteger(): Long? {
+        return parseFirst()?.takeIf { it.isInteger }?.integerValue()
+    }
 
     override fun getExtractorAtCurrentPosition(tokenStream: TokenStream): () -> Number? {
         return parser.extractNumber(tokenStream, shortScale, preferOrdinal, integerOnly)

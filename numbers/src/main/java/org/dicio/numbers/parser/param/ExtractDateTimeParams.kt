@@ -5,7 +5,7 @@ import org.dicio.numbers.parser.lexer.TokenStream
 import java.time.LocalDateTime
 
 class ExtractDateTimeParams(parser: Parser, utterance: String) :
-    NumberParserParams<LocalDateTime>(parser, utterance) {
+    ParserParams<LocalDateTime>(parser, utterance) {
     // TODO documentation
     // default values
     private var now: LocalDateTime = LocalDateTime.now()

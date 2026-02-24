@@ -446,16 +446,16 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     @Test
     public void testNumberParserExtractDateTime() {
         final ParserFormatter npf = new ParserFormatter(null, new ItalianParser());
-        assertNull(npf.extractDateTime("ciao come va").getFirst());
+        assertNull(npf.extractDateTime("ciao come va").parseFirst());
         assertEquals(NOW.minusDays(30).withHour(14).withMinute(39).withSecond(0).withNano(0),
-                npf.extractDateTime("2:39 p.m., trenta giorni fa").preferMonthBeforeDay(true).now(NOW).getFirst());
+                npf.extractDateTime("2:39 p.m., trenta giorni fa").preferMonthBeforeDay(true).now(NOW).parseFirst());
         assertEquals(NOW.plusMinutes(3).plusSeconds(46),
-                npf.extractDateTime("fra tre minuti e quarantasei secondi").now(NOW).getFirst());
+                npf.extractDateTime("fra tre minuti e quarantasei secondi").now(NOW).parseFirst());
 
         // preferMonthBeforeDay does nothing for italian (as if it was always false)
         assertEquals(NOW.withYear(3).withMonth(2).withDayOfMonth(1),
-                npf.extractDateTime("1 2/3").preferMonthBeforeDay(false).now(NOW).getFirst());
+                npf.extractDateTime("1 2/3").preferMonthBeforeDay(false).now(NOW).parseFirst());
         assertEquals(NOW.withYear(3).withMonth(2).withDayOfMonth(1),
-                npf.extractDateTime("1.2,3").preferMonthBeforeDay(true).now(NOW).getFirst());
+                npf.extractDateTime("1.2,3").preferMonthBeforeDay(true).now(NOW).parseFirst());
     }
 }

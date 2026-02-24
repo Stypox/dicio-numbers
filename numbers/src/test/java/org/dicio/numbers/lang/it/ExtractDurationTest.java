@@ -19,11 +19,11 @@ public class ExtractDurationTest extends WithTokenizerTestBase {
     @Test
     public void testNumberParserExtractDuration() {
         final ParserFormatter npf = new ParserFormatter(null, new ItalianParser());
-        assertNull(npf.extractDuration("ciao come stai?").getFirst());
-        assertNull(npf.extractDuration("un miliardo di euro").shortScale(true).getFirst());
-        assertNull(npf.extractDuration("un milione").shortScale(false).getFirst());
-        assertEquals(t(DAY), npf.extractDuration("ventiquattro ore non sono due giorni").getFirst().toJavaDuration());
-        assertEquals(t(2 * DAY), npf.extractDuration("due giorni non sono ventiquattro ore").getFirst().toJavaDuration());
-        assertEquals(t(3 * MONTH + 2 * DAY), npf.extractDuration("tre mesi e due giorni").getFirst().toJavaDuration());
+        assertNull(npf.extractDuration("ciao come stai?").parseFirst());
+        assertNull(npf.extractDuration("un miliardo di euro").shortScale(true).parseFirst());
+        assertNull(npf.extractDuration("un milione").shortScale(false).parseFirst());
+        assertEquals(t(DAY), npf.extractDuration("ventiquattro ore non sono due giorni").parseFirst().toJavaDuration());
+        assertEquals(t(2 * DAY), npf.extractDuration("due giorni non sono ventiquattro ore").parseFirst().toJavaDuration());
+        assertEquals(t(3 * MONTH + 2 * DAY), npf.extractDuration("tre mesi e due giorni").parseFirst().toJavaDuration());
     }
 }

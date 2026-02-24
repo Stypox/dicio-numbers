@@ -512,14 +512,14 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
     @Test
     public void testNumberParserExtractDateTime() {
         final ParserFormatter npf = new ParserFormatter(null, new EnglishParser());
-        assertNull(npf.extractDateTime("hello how are you").getFirst());
+        assertNull(npf.extractDateTime("hello how are you").parseFirst());
         assertEquals(NOW.minusDays(30).withHour(14).withMinute(39).withSecond(0).withNano(0),
-                npf.extractDateTime("2:39 p.m., thirty days ago").now(NOW).getFirst());
+                npf.extractDateTime("2:39 p.m., thirty days ago").now(NOW).parseFirst());
         assertEquals(NOW.plusMinutes(3).plusSeconds(46),
-                npf.extractDateTime("in three minutes forty six seconds").now(NOW).getFirst());
+                npf.extractDateTime("in three minutes forty six seconds").now(NOW).parseFirst());
         assertEquals(NOW.withYear(3).withMonth(2).withDayOfMonth(1),
-                npf.extractDateTime("1 2/3").preferMonthBeforeDay(false).now(NOW).getFirst());
+                npf.extractDateTime("1 2/3").preferMonthBeforeDay(false).now(NOW).parseFirst());
         assertEquals(NOW.withYear(3).withMonth(1).withDayOfMonth(2),
-                npf.extractDateTime("1.2,3").preferMonthBeforeDay(true).now(NOW).getFirst());
+                npf.extractDateTime("1.2,3").preferMonthBeforeDay(true).now(NOW).parseFirst());
     }
 }
