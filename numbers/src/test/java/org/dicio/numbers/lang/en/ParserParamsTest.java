@@ -9,10 +9,18 @@ import static org.dicio.numbers.test.TestUtils.T;
 import static org.dicio.numbers.test.TestUtils.YEAR;
 import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.t;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.Parser;
+import org.dicio.numbers.parser.param.ExtractNumberParams;
 import org.dicio.numbers.parser.param.NumberParserParamsTestBase;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParserParamsTest extends NumberParserParamsTestBase {
 
@@ -99,6 +107,57 @@ public class ParserParamsTest extends NumberParserParamsTestBase {
         assertNumberMixedWithText("One billion",                          F, T, F, n(1000000000000L, F));
         assertNumberMixedWithText("two halves",                           F, F, F, n(1, F));
         assertNumberMixedWithText("two halves",                           F, T, T, n(2, F), " halves");
+    }
+
+    // built for usage below, but the building shouldn't count in the test timeout
+    static String longNumberMixedWithText;
+    static int partsOfLongNumberMixedWithText;
+    @BeforeClass
+    public static void setupLongNumberMixedWithText() {
+        final ParserFormatter npf = new ParserFormatter(new EnglishFormatter(), null);
+        final List<String> strings = new ArrayList<>();
+        for (int i = 0; i < 1100000000;) {
+            if (i < 2200) {
+                ++i; // test all numbers from 0 to 200 (also tests years!)
+            } else if (i < 1000000) {
+                i += 1207;
+            } else {
+                i += 299527; // roughly 10000 iterations
+            }
+
+            final double num = (i % 4 == 0) ? (1.0 / i) : i;
+            strings.add(npf.pronounceNumber(num).places(0).get()); // not ordinal
+            strings.add(npf.pronounceNumber(num).places(0).ordinal(T).get()); // ordinal
+            strings.add(npf.pronounceNumber(num).places(0).shortScale(false).get()); // long scale not ordinal
+            strings.add(npf.pronounceNumber(num).places(0).shortScale(false).ordinal(true).get()); // long scale ordinal
+            strings.add(npf.niceNumber(num).speech(false).get()); // not speech
+            strings.add(npf.niceNumber(num).speech(true).get()); // speech
+            strings.add(String.valueOf(num));
+            strings.add(i % 2 == 0 ? " hello " : " of ");
+            strings.add(i % 2 == 0 ? "invalid" : "one hundredth");
+            strings.add(i % 2 == 0 ? " and " : " a ");
+            strings.add(i % 2 == 0 ? "," : " ; ");
+            strings.add("-++-+--+-+-");
+            strings.add(i % 2 == 0 ? " plus " : " minus ");
+        }
+        partsOfLongNumberMixedWithText = strings.size();
+        longNumberMixedWithText = String.join("", strings);
+    }
+    @Test(timeout = 12000) // ~160000 number parses take <6s, use 12s timeout just for slower PCs
+    public void testNumberMixedWithTextPerformance() {
+        // make sure there are a lot of strings indeed (these numbers are just used to test that the
+        // input data makes sense, if the input data changes feel free to also change these)
+        assertEquals(87061, partsOfLongNumberMixedWithText);
+        assertEquals(2120319, longNumberMixedWithText.length());
+
+        for (int i = 0; i < (1 << 3); ++i) {
+            final List<Object> objects = new ExtractNumberParams(numberParser(), longNumberMixedWithText)
+                .shortScale(i%2 == 1).integerOnly((i/2)%2 == 1).preferOrdinal((i/4)%2 == 1)
+                .parseMixedWithText();
+            // make sure the number of numbers that was actually parsed is roughly the same as those
+            // in the input (the 0.8 is just a magic value, so feel free to decrease it if needed)
+            assertTrue(objects.size() / ((double) partsOfLongNumberMixedWithText) > 0.8);
+        }
     }
 
     @Test
