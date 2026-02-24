@@ -11,26 +11,26 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class NumberParserParamsTestBase {
+public abstract class ParserParamsTestBase {
 
     protected abstract Parser numberParser();
 
-    private <T, R> void assertNppFirst(final ParserParams<T> npp,
-                                       final Function<T, R> transformActualResult,
-                                       final R expectedResult) {
-        assertEquals(expectedResult, transformActualResult.apply(npp.parseFirst()));
+    private <T, R> void assertPpFirst(final ParserParams<T> pp,
+                                      final Function<T, R> transformActualResult,
+                                      final R expectedResult) {
+        assertEquals(expectedResult, transformActualResult.apply(pp.parseFirst()));
     }
 
-    private <T, R> void assertNppFirstIfInteger(final ExtractNumberParams npp,
-                                                final Long expectedResult) {
-        assertEquals(expectedResult, npp.parseFirstIfInteger());
+    private <T, R> void assertPpFirstIfInteger(final ExtractNumberParams pp,
+                                               final Long expectedResult) {
+        assertEquals(expectedResult, pp.parseFirstIfInteger());
     }
 
-    private <T, R> void assertNppMixedWithText(final ParserParams<T> npp,
-                                               final Class<T> nppClass,
-                                               final Function<T, R> transformActualResult,
-                                               final Object... expectedResults) {
-        final List<Object> actualResults = npp.parseMixedWithText();
+    private <T, R> void assertPpMixedWithText(final ParserParams<T> pp,
+                                              final Class<T> ppClass,
+                                              final Function<T, R> transformActualResult,
+                                              final Object... expectedResults) {
+        final List<Object> actualResults = pp.parseMixedWithText();
         final String actualResultsString = actualResults.toString();
 
         assertEquals("Wrong results size: " + actualResultsString, expectedResults.length, actualResults.size());
@@ -38,9 +38,9 @@ public abstract class NumberParserParamsTestBase {
             if (actualResults.get(i) instanceof String) {
                 assertEquals("Wrong string at position " + i + ": " + actualResultsString,
                         expectedResults[i], actualResults.get(i));
-            } else if (nppClass.isInstance(actualResults.get(i))) {
+            } else if (ppClass.isInstance(actualResults.get(i))) {
                 assertEquals("Wrong object at position " + i + ": " + actualResultsString,
-                        expectedResults[i], transformActualResult.apply(nppClass.cast(actualResults.get(i))));
+                        expectedResults[i], transformActualResult.apply(ppClass.cast(actualResults.get(i))));
             } else {
                 fail("Wrong object type at position " + i + ": " + actualResultsString);
             }
@@ -48,40 +48,40 @@ public abstract class NumberParserParamsTestBase {
     }
 
     protected void assertNumberFirst(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final Number expectedResult) {
-        assertNppFirst(new ExtractNumberParams(numberParser(), s)
+        assertPpFirst(new ExtractNumberParams(numberParser(), s)
                 .shortScale(shortScale).integerOnly(integerOnly)
                 .preferOrdinal(preferOrdinal), Function.identity(), expectedResult);
     }
 
     protected void assertNumberFirstIfInteger(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final Long expectedResult) {
-        assertNppFirstIfInteger(new ExtractNumberParams(numberParser(), s)
+        assertPpFirstIfInteger(new ExtractNumberParams(numberParser(), s)
                 .shortScale(shortScale).integerOnly(integerOnly)
                 .preferOrdinal(preferOrdinal), expectedResult);
     }
 
     protected void assertNumberMixedWithText(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final Object... expectedResults) {
-        assertNppMixedWithText(new ExtractNumberParams(numberParser(), s)
+        assertPpMixedWithText(new ExtractNumberParams(numberParser(), s)
                 .shortScale(shortScale).integerOnly(integerOnly)
                 .preferOrdinal(preferOrdinal), Number.class, Function.identity(), expectedResults);
     }
 
     protected void assertDurationFirst(final String s, final boolean shortScale, final java.time.Duration expectedResult) {
-        assertNppFirst(new ExtractDurationParams(numberParser(), s).shortScale(shortScale),
+        assertPpFirst(new ExtractDurationParams(numberParser(), s).shortScale(shortScale),
                 Duration::toJavaDuration, expectedResult);
     }
 
     protected void assertDurationMixedWithText(final String s, final boolean shortScale, final Object... expectedResults) {
-        assertNppMixedWithText(new ExtractDurationParams(numberParser(), s).shortScale(shortScale),
+        assertPpMixedWithText(new ExtractDurationParams(numberParser(), s).shortScale(shortScale),
                 Duration.class, Duration::toJavaDuration, expectedResults);
     }
 
     protected void assertDateTimeFirst(final String s, final LocalDateTime now, final LocalDateTime expectedResult) {
-        assertNppFirst(new ExtractDateTimeParams(numberParser(), s).now(now),
+        assertPpFirst(new ExtractDateTimeParams(numberParser(), s).now(now),
                 Function.identity(), expectedResult);
     }
 
     protected void assertDateTimeMixedWithText(final String s, final LocalDateTime now, final Object... expectedResults) {
-        assertNppMixedWithText(new ExtractDateTimeParams(numberParser(), s).now(now),
+        assertPpMixedWithText(new ExtractDateTimeParams(numberParser(), s).now(now),
                 LocalDateTime.class, Function.identity(), expectedResults);
     }
 }

@@ -15,14 +15,14 @@ import static org.junit.Assert.assertTrue;
 import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.Parser;
 import org.dicio.numbers.parser.param.ExtractNumberParams;
-import org.dicio.numbers.parser.param.NumberParserParamsTestBase;
+import org.dicio.numbers.parser.param.ParserParamsTestBase;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParserParamsTest extends NumberParserParamsTestBase {
+public class ParserParamsTest extends ParserParamsTestBase {
 
     @Override
     protected Parser numberParser() {
