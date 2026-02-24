@@ -65,7 +65,7 @@ jobs:
       - name: Build debug APK with local dicio-numbers
         run: |
           cd dicio-android
-          echo "useLocalDicioLibraries=true" >> local.properties
+          echo "useLocalDicioLibraries=dicio-numbers:../dicio-numbers" >> local.properties
           ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
