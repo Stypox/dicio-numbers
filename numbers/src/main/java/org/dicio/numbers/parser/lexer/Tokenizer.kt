@@ -327,7 +327,7 @@ class Tokenizer(configFolder: String) {
                 val nextTokens = tokenizeCompoundWord(
                     clean = clean.substring(compoundPiece.length),
                     spacesFollowing = spacesFollowing,
-                    positionInOriginalString = positionInOriginalString,
+                    positionInOriginalString = positionInOriginalString + compoundPiece.length,
                 )
                 if (nextTokens != null) {
                     nextTokens.add(

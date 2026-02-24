@@ -108,4 +108,14 @@ public class TokenizerTest extends WithTokenizerTestBase {
         assertToken(tokens.get(2),  "çòÙplé", " ", 11, cat("number", "suffix_multiplier"),   cat("multiplier"), new Number(2));
         assertToken(tokens.get(3),  "mInùs",  "",  18, cat("sign", "negative"),              cat("number"));
     }
+
+    @Test
+    public void compound() {
+        final List<Token> tokens = new Tokenizer("config/it-it").tokenize("z; centoventottesimo; z;");
+        assertToken(tokens.get(0),  "z",        "; ", 0);
+        assertToken(tokens.get(1),  "cento",    "",   3,  cat("number", "hundred", "compound_word_piece"),          cat("digit"),      new Number(100));
+        assertToken(tokens.get(2),  "vent",     "",   8,  cat("number", "tens", "compound_word_piece"),             cat("ordinal"),    new Number(20));
+        assertToken(tokens.get(3),  "ottesimo", "; ", 12, cat("number", "digit", "ordinal", "compound_word_piece"), cat("multiplier"), new Number(8));
+        assertToken(tokens.get(4),  "z",        ";",  22);
+    }
 }
