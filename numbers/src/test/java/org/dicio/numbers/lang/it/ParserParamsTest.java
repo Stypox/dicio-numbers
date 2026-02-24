@@ -14,9 +14,12 @@ import static org.junit.Assert.assertTrue;
 
 import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.Parser;
+import org.dicio.numbers.parser.param.ExtractDateTimeParams;
+import org.dicio.numbers.parser.param.ExtractDurationParams;
 import org.dicio.numbers.parser.param.ExtractNumberParams;
 import org.dicio.numbers.parser.param.ParserParams;
 import org.dicio.numbers.parser.param.ParserParamsTestBase;
+import org.dicio.numbers.unit.Duration;
 import org.dicio.numbers.unit.Number;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -66,8 +69,12 @@ public class ParserParamsTest extends ParserParamsTestBase {
 
 
     // used in timeout tests below: they are built separately so they don't contribute to timeout
-    static String longNumberMixedWithText;
-    static int partsOfLongNumberMixedWithText;
+    private static String longNumberMixedWithText;
+    private static int partsOfLongNumberMixedWithText;
+    private static String durationStressTest;
+    private static int partsOfDurationStressTest;
+    private static String dateTimeStressTest;
+    private static int partsOfDateTimeStressTest;
 
     @BeforeClass
     public static void setupLongNumberMixedWithText() {
@@ -98,6 +105,34 @@ public class ParserParamsTest extends ParserParamsTestBase {
         Collections.shuffle(strings, new Random(42));
         partsOfLongNumberMixedWithText = strings.size();
         longNumberMixedWithText = String.join("", strings);
+    }
+
+    @BeforeClass
+    public static void setupDurationStressTest() {
+        final List<String> durationStressTestList = Collections.nCopies(30, List.of(
+                ",centoventi nanosecondi ",
+                ",settemila duecentotrentacinque nanosecondi ",
+                " 12 microsecondi ", " cinque millisecondi;", " venti quattro secondi ",
+                " trenta due minuti ",
+                " cinque ore ", " un paio d'anni ", " decennio ", " cinque secoli "
+        )).stream().flatMap(List::stream).toList();
+        Collections.shuffle(new ArrayList<>(durationStressTestList), new Random(42));
+        partsOfDurationStressTest = durationStressTestList.size();
+        durationStressTest = String.join("", durationStressTestList);
+    }
+
+    @BeforeClass
+    public static void setupDateStressTest() {
+        final List<String> dateTimeStressTestList = Collections.nCopies(10000, List.of(
+                ",mercoledì ", ",il dodicesimo ", " giugno ", " 10 ", " 290 ", " 2026 ",
+                " 9 ", " 13 ", " ventiquattro ", " dodici ", " di luglio ", " a pranzo ", " a ",
+                " mezzogiorno ", "10:28", " 9:1 ", ":", " 09:18 ", " ventidue minuti ",
+                " cinque ore ", " un paio d'anni ", " decennio ", " cinque secoli ",
+                " 12 microsecondi ", " cinque millisecondi;"
+        )).stream().flatMap(List::stream).toList();
+        Collections.shuffle(new ArrayList<>(dateTimeStressTestList), new Random(42));
+        partsOfDateTimeStressTest = dateTimeStressTestList.size();
+        dateTimeStressTest = String.join("", dateTimeStressTestList);
     }
 
 
@@ -235,6 +270,7 @@ public class ParserParamsTest extends ParserParamsTestBase {
     @Test
     public void testDurationFirst() {
         assertDurationFirst("Metti un timer di due minuti e trenta secondi test", t(2 * MINUTE + 30));
+        assertDurationFirst("Metti un timer di trenta secondi e due minuti test", t(2 * MINUTE + 30));
         assertDurationFirst("sai due anni fa non sono 750gg", t(2 * YEAR));
     }
 
@@ -256,6 +292,28 @@ public class ParserParamsTest extends ParserParamsTestBase {
                 range(0, 17, t(4 * HOUR, 2), T), range(0, 3, t(0, 2), F),
                 range(6, 17, t(4 * HOUR), F), range(14, 17, t(HOUR), F),
                 range(25, 41, t(0, 6 * MILLIS), T), range(29, 41, t(0, MILLIS), F));
+    }
+
+    // TODO duration parsing under worst conditions seems very very slow compared to number parsing
+    //  so some effort should be put into optimizing it (e.g. first extract all number intervals and
+    //  then see how to match them with duration multipliers)
+    @Test(timeout = 28000) // computing ~250000 possible intervals takes <14s, use 28s timeout just for slower PCs
+    public void testDurationPossibleIntervalsPerformance() {
+        // make sure there are a lot of strings indeed (these numbers are just used to test that the
+        // input data makes sense, if the input data changes feel free to also change these)
+        assertEquals(300, partsOfDurationStressTest);
+        assertEquals(6030, durationStressTest.length());
+
+        for (int i = 0; i < 2; ++i) {
+            final List<ParserParams.MatchedRange<Duration>> objects = new ExtractDurationParams(numberParser(), durationStressTest)
+                    .shortScale(i%2 == 1)
+                    .parsePossibleIntervals();
+            //System.out.println(objects.size() + " - " + partsOfDurationStressTest);
+            // make sure the number of intervals is significantly larger than the number of numbers
+            // originating from roughly the same as those
+            // in the input (the 400 is just a magic value, so feel free to decrease it if needed)
+            assertTrue(objects.size() / ((double) partsOfDurationStressTest) > 400);
+        }
     }
 
     @Test
@@ -314,5 +372,24 @@ public class ParserParamsTest extends ParserParamsTestBase {
                 range(30, 32, LocalDateTime.of(0,    1,  1,  6,  5, 4), F),
                 range(37, 48, LocalDateTime.of(2026, 2, 24, 13,  0, 0), T),
                 range(42, 48, LocalDateTime.of(2026, 2, 24, 12,  0, 0), F));
+    }
+
+    @Test(timeout = 36000) // computing ~2500000 possible intervals takes <18s, use 36s timeout just for slower PCs
+    public void testDateTimePossibleIntervalsPerformance() {
+        // make sure there are a lot of strings indeed (these numbers are just used to test that the
+        // input data makes sense, if the input data changes feel free to also change these)
+        assertEquals(250000, partsOfDateTimeStressTest);
+        assertEquals(2410000, dateTimeStressTest.length());
+
+        for (int i = 0; i < 2; ++i) {
+            final List<ParserParams.MatchedRange<LocalDateTime>> objects = new ExtractDateTimeParams(numberParser(), dateTimeStressTest)
+                    .shortScale(i%2 == 1)
+                    .parsePossibleIntervals();
+            //System.out.println(objects.size() + " - " + partsOfDateTimeStressTest);
+            // make sure the number of intervals is significantly larger than the number of numbers
+            // originating from roughly the same as those
+            // in the input (the 4 is just a magic value, so feel free to decrease it if needed)
+            assertTrue(objects.size() / ((double) partsOfDateTimeStressTest) > 4);
+        }
     }
 }
