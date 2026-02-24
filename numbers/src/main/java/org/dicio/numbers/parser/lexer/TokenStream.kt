@@ -6,13 +6,21 @@ class TokenStream(private val tokens: List<Token>) {
     @JvmField
     var position: Int = 0
 
+    /**
+     * Allows artificially reducing the number of tokens that this tokenizer should consider at most
+     * from [tokens]. Useful when you want to parse a number constrained to a range of tokens.
+     * Is always surely `<=`[tokens]`.size`, and represents the position of one past the last token.
+     */
+    var tokenCount = tokens.size
+        set(value) { field = minOf(value, tokens.size) }
+
     operator fun get(aheadBy: Int): Token {
         val index = position + aheadBy
-        if (index < 0 || index >= tokens.size) {
-            return Token.emptyToken() // empty token to allow reducing checks
+        return if (index in 0..<tokenCount) {
+            tokens[index]
+        } else {
+            Token.emptyToken() // empty token to allow reducing checks
         }
-
-        return tokens[index]
     }
 
     /**
@@ -25,7 +33,7 @@ class TokenStream(private val tokens: List<Token>) {
     }
 
     fun finished(): Boolean {
-        return position >= tokens.size
+        return position >= tokenCount
     }
 
 
@@ -37,12 +45,12 @@ class TokenStream(private val tokens: List<Token>) {
      * token in the token stream if no token was found without the provided category
      */
     fun indexOfWithoutCategory(category: String, startFromAheadBy: Int): Int {
-        for (i in max(position + startFromAheadBy, 0) until tokens.size) {
+        for (i in max(position + startFromAheadBy, 0) until tokenCount) {
             if (!tokens[i].hasCategory(category)) {
                 return i - position
             }
         }
-        return tokens.size - position
+        return tokenCount - position
     }
 
     fun <T> tryOrSkipCategory(

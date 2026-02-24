@@ -100,4 +100,32 @@ public class TokenStreamTest {
             }
         }
     }
+
+    @Test
+    public void testTokenCount() {
+        final TokenStream ts = new TokenStream(TOKENS);
+        assertEquals(TOKENS.size(), ts.getTokenCount());
+
+        ts.position = 0;
+        ts.setTokenCount(100);
+        assertEquals(TOKENS.size(), ts.getTokenCount());
+        assertFalse(ts.finished());
+        assertEquals(0, ts.position);
+        assertEquals(TOKENS.get(0), ts.get(0));
+        assertEquals(Token.emptyToken(), ts.get(99));
+        ts.position = 99;
+        assertEquals(TOKENS.get(1), ts.get(-98));
+        assertEquals(Token.emptyToken(), ts.get(0));
+
+        ts.position = 2;
+        ts.setTokenCount(2);
+        assertEquals(2, ts.getTokenCount());
+        assertTrue(ts.finished());
+        assertEquals(2, ts.position);
+        assertEquals(Token.emptyToken(), ts.get(0));
+        assertEquals(TOKENS.get(1), ts.get(-1));
+        ts.position = 0;
+        assertEquals(TOKENS.get(0), ts.get(0));
+        assertEquals(Token.emptyToken(), ts.get(2));
+    }
 }
