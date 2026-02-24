@@ -56,7 +56,6 @@ public class NumberExtractorUtilsTest extends NumberExtractorUtilsTestBase {
         assertNumberLessThan1000("eighteen hundred",                   T, 18,  F, 1);
         assertNumberLessThan1000("zero hundred",                       F, 0,   F, 1);
         assertNumberLessThan1000("sixty nought",                       T, 60,  F, 1);
-        assertNumberLessThan1000("a hundred",                          F, 100, F, 2);
         assertNumberLessThan1000("one, and a hundred",                 T, 100, F, 5);
         assertNumberLessThan1000("seven hundred and six",              F, 706, F, 4);
         assertNumberLessThan1000("one hundred and ninety one",         T, 191, F, 5);
@@ -93,6 +92,8 @@ public class NumberExtractorUtilsTest extends NumberExtractorUtilsTestBase {
         assertNumberLessThan1000Null("a million",           T);
         assertNumberLessThan1000Null(" twenty",             F);
         assertNumberLessThan1000Null("a two",               T);
+        assertNumberLessThan1000Null("a hundred",           F); // the "a" is handled in the English extractor
+        assertNumberLessThan1000Null("a 1247",              F);
         assertNumberLessThan1000Null("a, hundred",          T);
         assertNumberLessThan1000Null("a a hundred",         T);
         assertNumberLessThan1000Null("a a one a a hundred", F);
@@ -102,7 +103,6 @@ public class NumberExtractorUtilsTest extends NumberExtractorUtilsTestBase {
     public void testNumberGroupShortScale() {
         assertNumberGroupShortScale("one hundred and twenty million", F, 1000000000, 120000000, F, 5);
         assertNumberGroupShortScale("three thousand and six",         T, 1000000000, 3000,      F, 2);
-        assertNumberGroupShortScale("a hundred thousand",             F, 1000000,    100000,    F, 3);
         assertNumberGroupShortScale("hundred 70 thousand",            T, 1000000,    170000,    F, 3);
         assertNumberGroupShortScale("572 million",                    F, 1000000000, 572000000, F, 2);
         assertNumberGroupShortScale("3 million",                      T, 1000000000, 3000000,   F, 2);
@@ -134,5 +134,6 @@ public class NumberExtractorUtilsTest extends NumberExtractorUtilsTestBase {
         assertNumberGroupShortScaleNull("eight million people",  F, 1000000);
         assertNumberGroupShortScaleNull(" ten ",                 T, 1000000);
         assertNumberGroupShortScaleNull("a two",                 F, 1000);
+        assertNumberGroupShortScaleNull("a hundred thousand",    F, 1000000); // the "a" is handled in the English extractor
     }
 }

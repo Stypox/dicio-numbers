@@ -222,6 +222,18 @@ class EnglishNumberExtractor internal constructor(
     }
 
     fun numberInteger(allowOrdinal: Boolean): Number? {
+        val originalPosition = ts.position
+        // this avoids matching "and seven", "a two", "a hundredth" and "a trillionth",
+        // but still allows "a hundred" and "a trillion"
+        if (ts[0].isValue("a") && (
+                    (ts[1].hasCategory("multiplier") && !ts[1].number!!.isOrdinal)
+                            || ts[1].hasCategory("hundred")
+                    )
+        ) {
+            // allow ignoring "a" if it comes right before the multiplier (e.g. a thousand)
+            ts.movePositionForwardBy(1)
+        }
+
         var n = NumberExtractorUtils.numberMadeOfGroups(ts) { ts, lastMultiplier ->
             if (shortScale)
                 NumberExtractorUtils.numberGroupShortScale(ts, allowOrdinal, lastMultiplier)
@@ -229,6 +241,8 @@ class EnglishNumberExtractor internal constructor(
                 numberGroupLongScale(ts, allowOrdinal, lastMultiplier)
         }
         if (n == null) {
+            // restore original position, "a" can't come before a random raw number, e.g. a 1207
+            ts.position = originalPosition
             // try to parse big raw numbers (>=1000), e.g. 1207
             return NumberExtractorUtils.numberBigRaw(ts, allowOrdinal)
         } else if (n.isOrdinal) {

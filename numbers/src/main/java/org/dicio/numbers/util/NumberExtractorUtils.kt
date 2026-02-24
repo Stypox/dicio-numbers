@@ -148,13 +148,7 @@ object NumberExtractorUtils {
         while (true) {
             val nextNotIgnore = if (firstIteration) {
                 firstIteration = false
-                // this avoids matching "and seven", "a two" and "a hundredth",
-                // but still allows "a hundred"
-                if (ts[0].isValue("a") && ts[1].isValue("hundred")) {
-                    1 // allow ignoring "a" if it comes right before "hundred" literally
-                } else {
-                    0 // ... but otherwise do not allow ignoring anything at the beginning
-                }
+                0 // do not skip ahead if nothing was matched so far
             } else {
                 ts.indexOfWithoutCategory("ignore", 0)
             }
