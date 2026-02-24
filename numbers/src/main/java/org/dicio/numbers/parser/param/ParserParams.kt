@@ -33,11 +33,11 @@ abstract class ParserParams<T> protected constructor(
     fun parseMixedWithText(): List<Any> {
         val ts = parser.tokenize(utterance)
         val extractorAtCurrentPosition = getExtractorAtCurrentPosition(ts)
-        val textAndObjects: MutableList<Any> = ArrayList()
+        val textAndObjects = ArrayList<Any>()
         val currentText = StringBuilder()
 
         while (!ts.finished()) {
-            val o: Any? = extractorAtCurrentPosition()
+            val o: T? = extractorAtCurrentPosition()
 
             if (o == null) {
                 // no object here, add text and spaces of the current token to currentText instead
@@ -60,5 +60,65 @@ abstract class ParserParams<T> protected constructor(
         }
 
         return textAndObjects
+    }
+
+    /**
+     * [[start], [end]) is an inclusive-exclusive interval representing the range of characters in
+     * [utterance] that correspond to [parsedData]. [isLargestPossible] is `true` only if this range
+     * is not contained in any other range returned by [parsePossibleIntervals].
+     */
+    data class MatchedRange<T>(
+        val start: Int,
+        val end: Int, // exclusive
+        val parsedData: T,
+        val isLargestPossible: Boolean,
+    )
+
+    /**
+     * This function is `O(n * k²)`, where `n` is the length of [utterance], and `k` is the maximum
+     * length of any object of type [T] that can be parsed in [utterance]. Since [T] represents
+     * numbers, durations or dates, `k` is generally small (e.g. just a few words).
+     *
+     * @return a list of ranges, one for every interval where an object of type [T] could be parsed,
+     * sorted first according to [MatchedRange.start] and then by reversed [MatchedRange.end].
+     */
+    fun parsePossibleIntervals(): List<MatchedRange<T>> {
+        val ts = parser.tokenize(utterance)
+        val tokenCount = ts.tokenCount
+        val extractorAtCurrentPosition = getExtractorAtCurrentPosition(ts)
+        val ranges = ArrayList<MatchedRange<T>>()
+
+        var maxEndSoFar = 0
+        for (start in 0..<tokenCount) {
+            ts.tokenCount = tokenCount // parse up to the whole string (set before accessing ts[0]!)
+            ts.position = start // set this so `ts[0].positionInOriginalString` points to start
+            val startPositionInOriginalString = ts[0].positionInOriginalString
+
+            // this loops tries to parse all possible lengths of `extractorAtCurrentPosition()`
+            // starting from the starting token stream position `start`
+            while (true) {
+                ts.position = start // start parsing from `start` at every cycle
+                val parsedData: T = extractorAtCurrentPosition()
+                    ?: break // nothing found, so there also won't be anything if we restrict the interval further
+                assert(ts.position != start) // something was matched, so the token stream surely advanced
+
+                ranges.add(
+                    MatchedRange(
+                        start = startPositionInOriginalString,
+                        end = ts[-1].positionInOriginalString + ts[-1].value.length,
+                        parsedData = parsedData,
+                        // If this is the longest range starting from here, and it reaches further
+                        // right than ever observed before, then this range is not contained in any
+                        // other range for sure.
+                        isLargestPossible = ts.tokenCount == tokenCount && ts.position > maxEndSoFar,
+                    )
+                )
+
+                maxEndSoFar = maxOf(maxEndSoFar, ts.position)
+                ts.tokenCount = ts.position - 1 // next time try to parse a smaller token stream!
+            }
+        }
+
+        return ranges
     }
 }

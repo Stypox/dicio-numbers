@@ -1,5 +1,6 @@
 package org.dicio.numbers.parser.param;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -11,9 +12,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 
+@SuppressWarnings({"unchecked", "DataFlowIssue"})
 public abstract class ParserParamsTestBase {
 
     protected abstract Parser numberParser();
+
+    protected final <T> ParserParams.MatchedRange<T> range(final int start,
+                                                           final int end,
+                                                           final T parsedData,
+                                                           final boolean isLargestPossible) {
+        return new ParserParams.MatchedRange<>(start, end, parsedData, isLargestPossible);
+    }
 
     private <T, R> void assertPpFirst(final ParserParams<T> pp,
                                       final Function<T, R> transformActualResult,
@@ -47,6 +56,17 @@ public abstract class ParserParamsTestBase {
         }
     }
 
+    private <T, R> void assertPpPossibleIntervals(final ParserParams<T> pp,
+                                                  final Function<T, R> transformActualResult,
+                                                  final ParserParams.MatchedRange<R>... expectedRanges) {
+        final List<ParserParams.MatchedRange<T>> actualResults = pp.parsePossibleIntervals();
+        final ParserParams.MatchedRange<R>[] actualResultsMapped = actualResults.stream()
+                .map(e -> new ParserParams.MatchedRange<>(e.getStart(), e.getEnd(),
+                        transformActualResult.apply(e.getParsedData()), e.isLargestPossible()))
+                .<ParserParams.MatchedRange<R>>toArray(ParserParams.MatchedRange[]::new);
+        assertArrayEquals(expectedRanges, actualResultsMapped);
+    }
+
     protected void assertNumberFirst(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final Number expectedResult) {
         assertPpFirst(new ExtractNumberParams(numberParser(), s)
                 .shortScale(shortScale).integerOnly(integerOnly)
@@ -65,6 +85,12 @@ public abstract class ParserParamsTestBase {
                 .preferOrdinal(preferOrdinal), Number.class, Function.identity(), expectedResults);
     }
 
+    protected void assertNumberPossibleIntervals(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final ParserParams.MatchedRange<Number>... expectedRanges) {
+        assertPpPossibleIntervals(new ExtractNumberParams(numberParser(), s)
+                .shortScale(shortScale).integerOnly(integerOnly)
+                .preferOrdinal(preferOrdinal), Function.identity(), expectedRanges);
+    }
+
     protected void assertDurationFirst(final String s, final boolean shortScale, final java.time.Duration expectedResult) {
         assertPpFirst(new ExtractDurationParams(numberParser(), s).shortScale(shortScale),
                 Duration::toJavaDuration, expectedResult);
@@ -75,6 +101,11 @@ public abstract class ParserParamsTestBase {
                 Duration.class, Duration::toJavaDuration, expectedResults);
     }
 
+    protected void assertDurationPossibleIntervals(final String s, final boolean shortScale, final ParserParams.MatchedRange<java.time.Duration>... expectedRanges) {
+        assertPpPossibleIntervals(new ExtractDurationParams(numberParser(), s).shortScale(shortScale),
+                Duration::toJavaDuration, expectedRanges);
+    }
+
     protected void assertDateTimeFirst(final String s, final LocalDateTime now, final LocalDateTime expectedResult) {
         assertPpFirst(new ExtractDateTimeParams(numberParser(), s).now(now),
                 Function.identity(), expectedResult);
@@ -83,5 +114,10 @@ public abstract class ParserParamsTestBase {
     protected void assertDateTimeMixedWithText(final String s, final LocalDateTime now, final Object... expectedResults) {
         assertPpMixedWithText(new ExtractDateTimeParams(numberParser(), s).now(now),
                 LocalDateTime.class, Function.identity(), expectedResults);
+    }
+
+    protected void assertDateTimePossibleIntervals(final String s, final LocalDateTime now, final ParserParams.MatchedRange<LocalDateTime>... expectedRanges) {
+        assertPpPossibleIntervals(new ExtractDateTimeParams(numberParser(), s).now(now),
+                Function.identity(), expectedRanges);
     }
 }
