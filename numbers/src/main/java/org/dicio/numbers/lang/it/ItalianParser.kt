@@ -11,13 +11,14 @@ class ItalianParser : Parser("config/it-it") {
     override fun extractNumber(
         tokenStream: TokenStream,
         shortScale: Boolean,
-        preferOrdinal: Boolean
+        preferOrdinal: Boolean,
+        integerOnly: Boolean
     ): () -> Number? {
         val numberExtractor = ItalianNumberExtractor(tokenStream)
-        return if (preferOrdinal) {
-            numberExtractor::numberPreferOrdinal
-        } else {
-            numberExtractor::numberPreferFraction
+        return when {
+            integerOnly -> numberExtractor::numberMustBeInteger
+            preferOrdinal -> numberExtractor::numberPreferOrdinal
+            else -> numberExtractor::numberPreferFraction
         }
     }
 

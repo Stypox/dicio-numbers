@@ -1,6 +1,5 @@
 package org.dicio.numbers.lang.en
 
-import org.dicio.numbers.parser.lexer.NumberToken
 import org.dicio.numbers.parser.lexer.TokenStream
 import org.dicio.numbers.unit.Number
 import org.dicio.numbers.util.NumberExtractorUtils
@@ -10,50 +9,55 @@ class EnglishNumberExtractor internal constructor(
     private val shortScale: Boolean
 ) {
     fun numberPreferOrdinal(): Number? {
-        // first try with suffix multiplier, e.g. dozen
-        var number = numberSuffixMultiplier()
-        if (number == null) {
-            number = numberSignPoint(true) // then try with normal number
-        }
+        val number = numberSuffixMultiplier() // first try with suffix multiplier, e.g. dozen
+            ?: numberSignPoint(true) // then try with normal number
 
         // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
         return divideByDenominatorIfPossible(number)
     }
 
     fun numberPreferFraction(): Number? {
-        // first try with suffix multiplier, e.g. dozen
-        var number = numberSuffixMultiplier()
-        if (number == null) {
-            number = numberSignPoint(false) // then try without ordinal
-        }
+        val number = numberSuffixMultiplier() // first try with suffix multiplier, e.g. dozen
+            ?: numberSignPoint(false) // then try without ordinal
 
-        // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
-        // note that e.g. "a couple halves" ends up here, but that's valid
-        number = divideByDenominatorIfPossible(number)
-
-        if (number == null) {
+        return if (number == null) {
             // maybe an ordinal number?
-            number = numberSignPoint(true)
+            numberSignPoint(true)
+        } else {
+            // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
+            // note that e.g. "a couple halves" ends up here, but that's valid
+            divideByDenominatorIfPossible(number)
         }
-        return number
     }
 
     fun numberNoOrdinal(): Number? {
         // for now this function is used internally just for duration parsing, but maybe it could
         // be exposed to library users, giving more control over how ordinals are handled.
 
-        // first try with suffix multiplier, e.g. dozen
-
-        var number = numberSuffixMultiplier()
-        if (number == null) {
-            number = numberSignPoint(false) // then try without ordinal
-        }
+        val number = numberSuffixMultiplier() // first try with suffix multiplier, e.g. dozen
+            ?: numberSignPoint(false) // then try without ordinal
 
         // maybe there is a valid denominator? (note: number could be null, e.g. a tenth)
         // note that e.g. "a couple halves" ends up here, but that's valid
-        number = divideByDenominatorIfPossible(number)
+        return divideByDenominatorIfPossible(number)
+    }
 
-        return number
+    fun numberMustBeInteger(): Number? {
+        val number = numberSuffixMultiplierInteger() // first try with suffix multiplier, e.g. dozen
+            ?: numberSignInteger(true) // then try with normal number
+
+        return if (number == null) {
+            null
+        } else {
+            // a number was found, maybe it has a valid denominator?
+            // note that e.g. "doppia dozzina" ends up here, but that's valid
+            val multiplier = numberSuffixMultiplierInteger()
+            if (multiplier == null) {
+                number
+            } else {
+                number.multiply(multiplier)
+            }
+        }
     }
 
 
@@ -124,8 +128,26 @@ class EnglishNumberExtractor internal constructor(
         }
     }
 
+    fun numberSuffixMultiplierInteger(): Number? {
+        if (ts[0].hasCategory("suffix_multiplier") && ts[0].number!!.isInteger) {
+            ts.movePositionForwardBy(1)
+            return ts[-1].number // a suffix multiplier, e.g. dozen, score
+        } else if (ts[0].isValue("a") && ts[1].hasCategory("suffix_multiplier")
+            && ts[1].number!!.isInteger
+        ) {
+            ts.movePositionForwardBy(2) // also skip "a" before the suffix, e.g. a dozen
+            return ts[-1].number // a suffix multiplier preceded by "a", e.g. a score
+        } else {
+            return null
+        }
+    }
+
     fun numberSignPoint(allowOrdinal: Boolean): Number? {
         return NumberExtractorUtils.signBeforeNumber(ts) { numberPoint(allowOrdinal) }
+    }
+
+    fun numberSignInteger(allowOrdinal: Boolean): Number? {
+        return NumberExtractorUtils.signBeforeNumber(ts) { numberInteger(allowOrdinal) }
     }
 
     fun numberPoint(allowOrdinal: Boolean): Number? {

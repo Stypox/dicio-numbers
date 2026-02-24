@@ -1,6 +1,5 @@
 package org.dicio.numbers.parser.param;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -20,6 +19,11 @@ public abstract class NumberParserParamsTestBase {
                                        final Function<T, R> transformActualResult,
                                        final R expectedResult) {
         assertEquals(expectedResult, transformActualResult.apply(npp.getFirst()));
+    }
+
+    private <T, R> void assertNppFirstIfInteger(final ExtractNumberParams npp,
+                                                final Long expectedResult) {
+        assertEquals(expectedResult, npp.getFirstIfInteger());
     }
 
     private <T, R> void assertNppMixedWithText(final NumberParserParams<T> npp,
@@ -43,13 +47,21 @@ public abstract class NumberParserParamsTestBase {
         }
     }
 
-    protected void assertNumberFirst(final String s, final boolean shortScale, final boolean preferOrdinal, final Number expectedResult) {
-        assertNppFirst(new ExtractNumberParams(numberParser(), s).shortScale(shortScale)
+    protected void assertNumberFirst(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final Number expectedResult) {
+        assertNppFirst(new ExtractNumberParams(numberParser(), s)
+                .shortScale(shortScale).integerOnly(integerOnly)
                 .preferOrdinal(preferOrdinal), Function.identity(), expectedResult);
     }
 
-    protected void assertNumberMixedWithText(final String s, final boolean shortScale, final boolean preferOrdinal, final Object... expectedResults) {
-        assertNppMixedWithText(new ExtractNumberParams(numberParser(), s).shortScale(shortScale)
+    protected void assertNumberFirstIfInteger(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final Long expectedResult) {
+        assertNppFirstIfInteger(new ExtractNumberParams(numberParser(), s)
+                .shortScale(shortScale).integerOnly(integerOnly)
+                .preferOrdinal(preferOrdinal), expectedResult);
+    }
+
+    protected void assertNumberMixedWithText(final String s, final boolean shortScale, final boolean preferOrdinal, final boolean integerOnly, final Object... expectedResults) {
+        assertNppMixedWithText(new ExtractNumberParams(numberParser(), s)
+                .shortScale(shortScale).integerOnly(integerOnly)
                 .preferOrdinal(preferOrdinal), Number.class, Function.identity(), expectedResults);
     }
 

@@ -24,12 +24,16 @@ public class ParserParamsTest extends NumberParserParamsTestBase {
         return new ItalianParser();
     }
 
-    protected void assertNumberFirst(final String s, final boolean preferOrdinal, final Number expectedResult) {
-        assertNumberFirst(s, true, preferOrdinal, expectedResult);
+    protected void assertNumberFirst(final String s, final boolean preferOrdinal, final boolean integerOnly, final Number expectedResult) {
+        assertNumberFirst(s, true, preferOrdinal, integerOnly, expectedResult);
     }
 
-    protected void assertNumberMixedWithText(final String s, final boolean preferOrdinal, final Object... expectedResults) {
-        assertNumberMixedWithText(s, true, preferOrdinal, expectedResults);
+    protected void assertNumberFirstIfInteger(final String s, final boolean preferOrdinal, final boolean integerOnly, final Long expectedResult) {
+        assertNumberFirstIfInteger(s, true, preferOrdinal, integerOnly, expectedResult);
+    }
+
+    protected void assertNumberMixedWithText(final String s, final boolean preferOrdinal, final boolean integerOnly, final Object... expectedResults) {
+        assertNumberMixedWithText(s, true, preferOrdinal, integerOnly, expectedResults);
     }
 
     protected void assertDurationFirst(final String s, final java.time.Duration expectedResult) {
@@ -43,40 +47,77 @@ public class ParserParamsTest extends NumberParserParamsTestBase {
 
     @Test
     public void testNumberFirst() {
-        assertNumberFirst("è mille nove cento sessanta quattro trilionesimi", F, n(1964e-18, F));
-        assertNumberFirst("36 dodicesimi di mela",                            T, n(3, F));
-        assertNumberFirst("sono proprio centottesimo",                        F, n(12.5, F));
-        assertNumberFirst("sono proprio centottesimo",                        T, n(108, T));
+        assertNumberFirst("36 dodicesimi di mela",     T, F, n(3, F));
+        assertNumberFirst("36 dodicesimi di mela",     T, T, n(36, F));
+        assertNumberFirst("sono proprio centottesimo", F, F, n(12.5, F));
+        assertNumberFirst("sono proprio centottesimo", F, T, n(108, T));
+        assertNumberFirst("sono proprio centottesimo", T, F, n(108, T));
+        assertNumberFirst("sono proprio centottesimo", T, T, n(108, T));
+        assertNumberFirst("fanno 10/20",               F, F, n(0.5, F));
+        assertNumberFirst("fanno 10/20",               F, T, n(10, F));
+        assertNumberFirst("è mezzo",                   T, F, n(0.5, F));
+        assertNumberFirst("è mezzo",                   T, T, null);
+        assertNumberFirst("un",                        F, F, n(1, F));
+        assertNumberFirst("whatever",                  F, F, null);
+        assertNumberFirst("e whatever",                T, F, null);
+
+        // edge case, "mille nove cento sessanta quattro trilioni" wouldn't be a valid short scale
+        // integer, and so "mille" and "nove cento sessanta quattro trilioni" are considered two
+        // different numbers
+        assertNumberFirst("è mille nove cento sessanta quattro trilionesimi", F, F, n(1964e-18, F));
+        assertNumberFirst("è mille nove cento sessanta quattro trilionesimi", F, T, n(1000, F));
+        assertNumberFirst("è mille nove cento sessanta quattro trilionesimi", T, F, n(1000 / 964e18, F));
+        assertNumberFirst("è mille nove cento sessanta quattro trilioni",     T, F, n(1000, F));
+    }
+
+    @Test
+    public void testNumberFirstIfInteger() {
+        assertNumberFirstIfInteger("fanno dieci centesimi ok?", T, F, null);
+        assertNumberFirstIfInteger("fanno dieci centesimi ok?", T, T, 10L);
+        assertNumberFirstIfInteger("è mezzo",                   T, F, null);
+        assertNumberFirstIfInteger("è mezzo",                   T, T, null);
+        assertNumberFirstIfInteger("due mezzi",                 T, F, 1L);
+        assertNumberFirstIfInteger("due mezzi",                 T, T, 2L);
     }
 
     @Test
     public void testNumberMixedWithText() {
-        assertNumberMixedWithText("un miliardesimo e mille sei cento novanta quattro",  F, n(1.0 / 1000000000.0, F), " e ", n(1694, F));
-        assertNumberMixedWithText(" hello  ciao!, 3/5 o quattro settimi?", F, " hello  ciao!, ", n(3.0 / 5.0, F), " o ", n(4.0 / 7.0, F), "?");
-        assertNumberMixedWithText(" hello  ciao!, quattro settimi o 3/5?", T, " hello  ciao!, ", n(4.0 / 7.0, F), " o ", n(3.0 / 5.0, F), "?");
-        assertNumberMixedWithText("tre miliardesimo piu due",              T, n(3000000000L, T), " ", n(2, F));
-        assertNumberMixedWithText("due miliardesimi meno cinquanta otto",  T, n(2000000000L, T), " ", n(-58, F));
-        assertNumberMixedWithText("nove miliardesimi per undici",          F, n(9.0 / 1000000000.0, F), " per ", n(11, F));
-        assertNumberMixedWithText("tre mezzi, non undici quarti",          T, n(3.0 / 2.0, F), ", non ", n(11.0 / 4.0, F));
-        assertNumberMixedWithText("sei paia equivale a una dozzina ",      T, n(12, F), " equivale a ", n(12, F), " ");
-        assertNumberMixedWithText("6 trilionesimi di una torta",           T, n(6000000000000000000L, T), " di ", n(1, F), " torta");
-        assertNumberMixedWithText("Il trilionesimo",                       F, "Il ", n(1000000000000000000L, T));
-        assertNumberMixedWithText("Un trilionesimo",                       F, n(1e-18, F));
-        assertNumberMixedWithText("Un miliardo",                           T, n(1000000000L, F));
-        assertNumberMixedWithText("Mille non più mille",                   F, n(1000, F), " non ", n(1000, F));
-        assertNumberMixedWithText("Vince sei a zero ",                     T, "Vince ", n(6, F), " a ", n(0, F), " ");
+        assertNumberMixedWithText("un miliardesimo e mille sei cento novanta quattro",  F, F, n(1.0 / 1000000000.0, F), " e ", n(1694, F));
+        assertNumberMixedWithText("un miliardesimo e mille sei cento novanta quattro",  F, T, n(1000000000, T), " e ", n(1694, F));
+        assertNumberMixedWithText(" hello  ciao!, 3/5 o quattro settimi?", F, F, " hello  ciao!, ", n(3.0 / 5.0, F), " o ", n(4.0 / 7.0, F), "?");
+        assertNumberMixedWithText(" hello  ciao!, quattro settimi o 3/5?", T, F, " hello  ciao!, ", n(4.0 / 7.0, F), " o ", n(3.0 / 5.0, F), "?");
+        assertNumberMixedWithText(" hello  ciao!, quattro settimi o 3/5?", T, T, " hello  ciao!, ", n(4, F), " ", n(7, T), " o ", n(3, F), "/", n(5, F), "?");
+        assertNumberMixedWithText("tre miliardesimo piu due",              T, F, n(3000000000L, T), " ", n(2, F));
+        assertNumberMixedWithText("due miliardesimi meno cinquanta otto",  T, F, n(2000000000L, T), " ", n(-58, F));
+        assertNumberMixedWithText("nove miliardesimi per undici",          F, F, n(9.0 / 1000000000.0, F), " per ", n(11, F));
+        assertNumberMixedWithText("nove miliardesimi per undici",          F, T, n(9000000000L, T), " per ", n(11, F));
+        assertNumberMixedWithText("tre mezzi, non undici quarti",          T, F, n(3.0 / 2.0, F), ", non ", n(11.0 / 4.0, F));
+        assertNumberMixedWithText("tre mezzi, non undici quarti",          T, T, n(3, F), " mezzi, non ", n(11, F), " ", n(4, T));
+        assertNumberMixedWithText("sei paia equivale a una dozzina ",      T, F, n(12, F), " equivale a ", n(12, F), " ");
+        assertNumberMixedWithText("sei paia equivale a una dozzina ",      T, T, n(12, F), " equivale a ", n(12, F), " ");
+        assertNumberMixedWithText("6 trilionesimi di una torta",           T, F, n(6000000000000000000L, T), " di ", n(1, F), " torta");
+        assertNumberMixedWithText("6 trilionesimi di una torta",           F, T, n(6000000000000000000L, T), " di ", n(1, F), " torta");
+        assertNumberMixedWithText("6 trilionesimi di una torta",           F, F, n(6e-18, F), " di ", n(1, F), " torta");
+        assertNumberMixedWithText("Il trilionesimo",                       F, F, "Il ", n(1000000000000000000L, T));
+        assertNumberMixedWithText("Un trilionesimo",                       F, F, n(1e-18, F));
+        assertNumberMixedWithText("Un trilionesimo",                       F, T, n(1000000000000000000L, T));
+        assertNumberMixedWithText("Un miliardo",                           T, F, n(1000000000L, F));
+        assertNumberMixedWithText("Mille non più mille",                   F, F, n(1000, F), " non ", n(1000, F));
+        assertNumberMixedWithText("Vince sei a zero ",                     T, T, "Vince ", n(6, F), " a ", n(0, F), " ");
+        assertNumberMixedWithText("due mezzi",                             F, F, n(1, F));
+        assertNumberMixedWithText("due mezzi",                             T, T, n(2, F), " mezzi");
     }
 
     @Test
     public void testNumberMixedWithTextCompound() {
-        assertNumberMixedWithText("millemiliardesimi e milleseicento novantaquattro",              F, n(1000.0 / 1000000000.0, F), " e ", n(1694, F));
-        assertNumberMixedWithText("è millenovecento sessantaquattro novanta quattro trilionesimi", F, "è ", n(1964.0 / 94e18, F));
-        assertNumberMixedWithText("ventitreesimo meno cinquantotto ventinovesimi",                 T, n(23, T), " ", n(-2, F));
-        assertNumberMixedWithText("novantasei trentaseiesimi più centosedici",                     F, n(96.0 / 36.0, F), " ", n(116, F));
-        assertNumberMixedWithText("novantanove virgola unounozeroquattrotre virgola zerouno",      T, n(99.11043, F), " virgola ", n(0, F), n(1, F));
-        assertNumberMixedWithText("venticinque dozzine trequarti virgola ventidueciao",            T, n(300, F), " ", n(3.0 / 4.0, F), " virgola ventidueciao");
-        assertNumberMixedWithText("mezze coppie",                                                  T, n(0.5, F), " ", n(2, F));
-        assertNumberMixedWithText("Ho ventitre anni",                                              F, "Ho ", n(23, F), " anni");
+        assertNumberMixedWithText("millemiliardesimi e milleseicento novantaquattro",              F, F, n(1000.0 / 1000000000.0, F), " e ", n(1694, F));
+        assertNumberMixedWithText("è millenovecento sessantaquattro novanta quattro trilionesimi", F, F, "è ", n(1964.0 / 94e18, F));
+        assertNumberMixedWithText("ventitreesimo meno cinquantotto ventinovesimi",                 T, F, n(23, T), " ", n(-2, F));
+        assertNumberMixedWithText("novantasei trentaseiesimi più centosedici",                     F, F, n(96.0 / 36.0, F), " ", n(116, F));
+        assertNumberMixedWithText("novantanove virgola unounozeroquattrotre virgola zerouno",      T, F, n(99.11043, F), " virgola ", n(0, F), n(1, F));
+        assertNumberMixedWithText("venticinque dozzine trequarti virgola ventidueciao",            T, F, n(300, F), " ", n(3.0 / 4.0, F), " virgola ventidueciao");
+        assertNumberMixedWithText("mezze coppie",                                                  T, F, n(0.5, F), " ", n(2, F));
+        assertNumberMixedWithText("Ho ventitre anni",                                              F, F, "Ho ", n(23, F), " anni");
     }
 
     @Test

@@ -13,7 +13,8 @@ abstract class Parser protected constructor(configFolder: String) {
     abstract fun extractNumber(
         tokenStream: TokenStream,
         shortScale: Boolean,
-        preferOrdinal: Boolean
+        preferOrdinal: Boolean,
+        integerOnly: Boolean
     ): () -> Number?
 
     abstract fun extractDuration(

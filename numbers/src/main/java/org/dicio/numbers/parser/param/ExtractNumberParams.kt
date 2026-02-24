@@ -10,6 +10,7 @@ class ExtractNumberParams(parser: Parser, utterance: String) :
     // default values
     private var shortScale = true
     private var preferOrdinal = false
+    private var integerOnly = false
 
     fun shortScale(shortScale: Boolean): ExtractNumberParams {
         this.shortScale = shortScale
@@ -21,7 +22,15 @@ class ExtractNumberParams(parser: Parser, utterance: String) :
         return this
     }
 
+    fun integerOnly(integerOnly: Boolean): ExtractNumberParams {
+        this.integerOnly = integerOnly
+        return this
+    }
+
+    val firstIfInteger: Long?
+        get() = first?.takeIf { it.isInteger }?.integerValue()
+
     override fun getExtractorAtCurrentPosition(tokenStream: TokenStream): () -> Number? {
-        return parser.extractNumber(tokenStream, shortScale, preferOrdinal)
+        return parser.extractNumber(tokenStream, shortScale, preferOrdinal, integerOnly)
     }
 }
