@@ -137,7 +137,11 @@ class ItalianFormatter : Formatter("config/it-it") {
                 groupNames.add(groupName)
             }
 
-            appendSplitGroups(result, groupNames)
+            if (groupNames.isEmpty()) {
+                result.append("zero")
+            } else {
+                appendSplitGroups(result, groupNames)
+            }
 
             if (ordinal && numberIsWhole) { // not ordinal if not whole
                 if (result.lastIndexOf("dieci") == result.length - 5) {

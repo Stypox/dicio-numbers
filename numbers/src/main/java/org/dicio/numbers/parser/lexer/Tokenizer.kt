@@ -1,3 +1,5 @@
+@file:Suppress("ReplaceSubstringWithDropLast", "ReplaceSubstringWithTake") // substring() is cleaner
+
 package org.dicio.numbers.parser.lexer
 
 import com.grack.nanojson.JsonArray
@@ -115,7 +117,8 @@ class Tokenizer(configFolder: String) {
                     throw RuntimeException(
                         "Unit \"" + parts[1] + "\" of duration \""
                                 + key + "\" is not a valid unit; valid units are: "
-                                + ChronoUnit::class.java.enumConstants.contentToString()
+                                + ChronoUnit::class.java.enumConstants.contentToString(),
+                        e
                     )
                 }
 
@@ -166,7 +169,7 @@ class Tokenizer(configFolder: String) {
             ++i
         }
         if (i != 0) {
-            tokens.add(Token("", s.substring(0, i)))
+            tokens.add(Token("", s.substring(0, i), 0))
         }
 
         var begin = i
@@ -196,6 +199,7 @@ class Tokenizer(configFolder: String) {
                 }
                 ++i
             }
+            val positionInOriginalString = begin
             val value = s.substring(begin, i)
             begin = i
 
@@ -205,7 +209,7 @@ class Tokenizer(configFolder: String) {
             val spacesFollowing = s.substring(begin, i)
             begin = i
 
-            addTokenFromValue(tokens, value, spacesFollowing, tokenIsDigits, valueNeedsCleaning)
+            addTokenFromValue(tokens, value, positionInOriginalString, spacesFollowing, tokenIsDigits, valueNeedsCleaning)
         }
         return tokens
     }
@@ -214,6 +218,7 @@ class Tokenizer(configFolder: String) {
     private fun addTokenFromValue(
         tokens: MutableList<Token>,
         value: String,
+        positionInOriginalString: Int,
         spacesFollowing: String,
         tokenIsDigits: Boolean,
         valueNeedsCleaning: Boolean
@@ -221,7 +226,7 @@ class Tokenizer(configFolder: String) {
         if (tokenIsDigits) {
             tokens.add(
                 NumberToken(
-                    value, spacesFollowing, rawNumberCategories,
+                    value, spacesFollowing, positionInOriginalString, rawNumberCategories,
                     Number(value.toLong())
                 )
             )
@@ -229,31 +234,31 @@ class Tokenizer(configFolder: String) {
         }
 
         val clean = if (valueNeedsCleaning) cleanValue(value) else value
-        var token = tokenFromValueExact(clean, value, spacesFollowing)
+        var token = tokenFromValueExact(clean, value, positionInOriginalString, spacesFollowing)
         if (token == null) {
             val removedPluralEndings = removePluralEndings(clean)
             if (removedPluralEndings != null) {
-                token = tokenFromValueExact(removedPluralEndings, value, spacesFollowing)
+                token = tokenFromValueExact(removedPluralEndings, value, positionInOriginalString, spacesFollowing)
             }
         }
 
         if (token == null) {
             // try to parse compound word
-            val compoundWord: List<Token>? = tokenizeCompoundWord(clean)
+            val compoundWord: List<Token>? = tokenizeCompoundWord(clean, spacesFollowing, positionInOriginalString)
             if (!compoundWord.isNullOrEmpty()) {
-                compoundWord[0].spacesFollowing = spacesFollowing
                 // results from tokenizeCompoundWord are reversed
                 tokens.addAll(compoundWord.reversed())
                 return
             }
         }
 
-        tokens.add(token ?: Token(value, spacesFollowing))
+        tokens.add(token ?: Token(value, spacesFollowing, positionInOriginalString))
     }
 
     private fun tokenFromValueExact(
         clean: String,
         value: String,
+        positionInOriginalString: Int,
         spacesFollowing: String
     ): Token? {
         var matchedToken: MatchedToken? = null
@@ -261,16 +266,20 @@ class Tokenizer(configFolder: String) {
         if (mapping == null) {
             val wordMatch = wordMatches[clean]
             if (wordMatch != null) {
-                matchedToken = MatchedToken(value, spacesFollowing, wordMatch)
+                matchedToken = MatchedToken(
+                    value, spacesFollowing, positionInOriginalString, wordMatch
+                )
             }
         } else {
-            matchedToken = NumberToken(value, spacesFollowing, mapping.categories, mapping.number)
+            matchedToken = NumberToken(
+                value, spacesFollowing, positionInOriginalString, mapping.categories, mapping.number
+            )
         }
 
         val dur = durationMappings[clean]
         if (dur != null) {
             val durationToken = DurationToken(
-                value, spacesFollowing,
+                value, spacesFollowing, positionInOriginalString,
                 dur.durationCategory, dur.durationMultiplier, dur.restrictedAfterNumber
             )
             if (matchedToken == null) {
@@ -304,16 +313,31 @@ class Tokenizer(configFolder: String) {
      * @param clean the clean word
      * @return a list of tokens in reverse order (e.g. [two, twenty] for input twentytwo)
      */
-    private fun tokenizeCompoundWord(clean: String): MutableList<Token>? {
+    private fun tokenizeCompoundWord(
+        clean: String,
+        spacesFollowing: String,
+        positionInOriginalString: Int,
+    ): MutableList<Token>? {
         if (clean.isEmpty()) {
             return ArrayList()
         }
 
         for (compoundPiece in compoundWordPieces) {
             if (clean.startsWith(compoundPiece)) {
-                val nextTokens = tokenizeCompoundWord(clean.substring(compoundPiece.length))
+                val nextTokens = tokenizeCompoundWord(
+                    clean = clean.substring(compoundPiece.length),
+                    spacesFollowing = spacesFollowing,
+                    positionInOriginalString = positionInOriginalString,
+                )
                 if (nextTokens != null) {
-                    nextTokens.add(tokenFromValueExact(compoundPiece, compoundPiece, "")!!)
+                    nextTokens.add(
+                        tokenFromValueExact(
+                            clean = compoundPiece,
+                            value = compoundPiece,
+                            spacesFollowing = if (nextTokens.isEmpty()) spacesFollowing else "",
+                            positionInOriginalString = positionInOriginalString,
+                        )!!
+                    )
                     return nextTokens // will be in reverse order, since first matches are added last
                 }
             }

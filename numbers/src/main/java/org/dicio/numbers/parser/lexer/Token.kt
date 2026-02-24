@@ -2,7 +2,14 @@ package org.dicio.numbers.parser.lexer
 
 import org.dicio.numbers.unit.Number
 
-open class Token internal constructor(@JvmField val value: String, @JvmField var spacesFollowing: String) {
+/**
+ * @param positionInOriginalString index in the original string at which `value` starts
+ */
+open class Token internal constructor(
+    @JvmField val value: String,
+    @JvmField val spacesFollowing: String,
+    @JvmField val positionInOriginalString: Int,
+) {
 
     fun isValue(value: String?): Boolean {
         return this.value.equals(value, ignoreCase = true)
@@ -22,7 +29,7 @@ open class Token internal constructor(@JvmField val value: String, @JvmField var
 
 
     companion object {
-        private val EMPTY_TOKEN = Token("", "")
+        private val EMPTY_TOKEN = Token("", "", -1)
 
         @JvmStatic
         fun emptyToken(): Token {

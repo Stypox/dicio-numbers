@@ -3,8 +3,9 @@ package org.dicio.numbers.parser.lexer
 open class MatchedToken internal constructor(
     value: String,
     spacesFollowing: String,
+    positionInOriginalString: Int,
     private val categories: Set<String>
-) : Token(value, spacesFollowing) {
+) : Token(value, spacesFollowing, positionInOriginalString) {
     private var durationTokenMatch: DurationToken? = null
 
     fun setDurationTokenMatch(durationTokenMatch: DurationToken?) {
