@@ -156,24 +156,30 @@ class ItalianDateTimeExtractor internal constructor(
             dayOfWeek != null
         ) { extractIntegerInRange(1, 31) }
 
+        // below here, we do result.withMonth(1) because January has 31 days, so setting the
+        // withDayOfMonth() below will always succeed, and then we overwrite/reset the month anyway
+        val originalMonth = result.month.value // just to avoid withDayOfMonth failing
         if (day == null) {
             if (dayOfWeek != null) {
                 // TODO maybe enforce the date to be in the future?
                 return result.plus((dayOfWeek - result.dayOfWeek.ordinal).toLong(), ChronoUnit.DAYS)
             }
-            result = result.withDayOfMonth(1)
+            result = result.withMonth(1).withDayOfMonth(1)
         } else {
-            result = result.withDayOfMonth(day)
+            result = result.withMonth(1).withDayOfMonth(day)
         }
 
+        // do withMonth after setting the day, so it coerces the day of month within the number of
+        // days in the month if needed
         val month = ts.tryOrSkipDateTimeIgnore(day != null) {
             Utils.firstNotNull(dateTimeExtractor::monthName, { extractIntegerInRange(1, 12) })
         }
         if (month == null) {
             if (day != null) {
+                result = result.withMonth(originalMonth)
                 return result
             }
-            result = result.withMonth(1)
+            // otherwise keep the "result.withMonth(1)" from above
         } else {
             result = result.withMonth(month)
         }

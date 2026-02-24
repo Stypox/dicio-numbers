@@ -186,12 +186,14 @@ class EnglishDateTimeExtractor internal constructor(
             return result.plus((dayOfWeek - result.dayOfWeek.ordinal).toLong(), ChronoUnit.DAYS)
         }
 
+        // below here, we do result.withMonth(1) because January has 31 days, so setting the
+        // withDayOfMonth() below will always succeed, and then we overwrite/reset the month anyway
         val monthName = ts.tryOrSkipDateTimeIgnore(
             firstNum != null
         ) { dateTimeExtractor.monthName() }
         if (monthName == null) {
             result = if (firstNum == null) {
-                result.withDayOfMonth(1).withMonth(1)
+                result.withMonth(1).withDayOfMonth(1)
             } else {
                 val secondNumMax = if (firstNum <= 12) 31 else 12
                 val secondNum = ts.tryOrSkipDateTimeIgnore(
@@ -200,21 +202,22 @@ class EnglishDateTimeExtractor internal constructor(
 
                 if (secondNum == null) {
                     return if (preferMonthBeforeDay && firstNum <= 12) {
-                        result.withDayOfMonth(1).withMonth(firstNum)
+                        result.withMonth(1).withDayOfMonth(1).withMonth(firstNum)
                     } else {
-                        result.withDayOfMonth(firstNum)
+                        val originalMonth = result.month.value // just to avoid withDayOfMonth failing
+                        result.withMonth(1).withDayOfMonth(firstNum).withMonth(originalMonth)
                     }
                 } else {
                     if ((preferMonthBeforeDay || secondNum > 12) && firstNum <= 12) {
-                        result.withDayOfMonth(secondNum).withMonth(firstNum)
+                        result.withMonth(1).withDayOfMonth(secondNum).withMonth(firstNum)
                     } else {
                         // secondNum is surely <= 12 here because of secondNumMax
-                        result.withDayOfMonth(firstNum).withMonth(secondNum)
+                        result.withMonth(1).withDayOfMonth(firstNum).withMonth(secondNum)
                     }
                 }
             }
         } else {
-            result = result.withMonth(monthName)
+            result = result.withMonth(1)
 
             if (firstNum == null) {
                 val secondNum = ts.tryOrSkipDateTimeIgnore(
@@ -228,6 +231,10 @@ class EnglishDateTimeExtractor internal constructor(
             } else {
                 result = result.withDayOfMonth(firstNum)
             }
+
+            // do withMonth after setting the day, so it coerces the day of month within the number
+            // of days in the month if needed
+            result = result.withMonth(monthName)
         }
         val dayOrMonthFound = firstNum != null || monthName != null
 

@@ -358,6 +358,7 @@ public class ExtractDateTimeTest extends WithTokenizerTestBase {
         assertDate("domenica duemilatredici",                     LocalDate.of(2022,  5,  15), 1);
         assertDate("lunedì novembre",                             LocalDate.of(2022,  5,  9),  1);
         assertDate("999999999",                                   LocalDate.of(999999999,1,1), 1);
+        assertDate("30 febbraio",                                 LocalDate.of(2022,  2, 28),  2); // special case, how would you handle it otherwise?
     }
 
     @Test
