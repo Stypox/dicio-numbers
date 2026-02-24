@@ -9,13 +9,20 @@ import static org.dicio.numbers.test.TestUtils.T;
 import static org.dicio.numbers.test.TestUtils.YEAR;
 import static org.dicio.numbers.test.TestUtils.n;
 import static org.dicio.numbers.test.TestUtils.t;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import org.dicio.numbers.ParserFormatter;
 import org.dicio.numbers.parser.Parser;
+import org.dicio.numbers.parser.param.ExtractNumberParams;
 import org.dicio.numbers.parser.param.NumberParserParamsTestBase;
 import org.dicio.numbers.unit.Number;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParserParamsTest extends NumberParserParamsTestBase {
 
@@ -72,9 +79,9 @@ public class ParserParamsTest extends NumberParserParamsTestBase {
 
     @Test
     public void testNumberFirstIfInteger() {
-        assertNumberFirstIfInteger("fanno dieci centesimi ok?", T, F, null);
-        assertNumberFirstIfInteger("fanno dieci centesimi ok?", T, T, 10L);
-        assertNumberFirstIfInteger("è mezzo",                   T, F, null);
+        assertNumberFirstIfInteger("fanno dieci centesimi ok?", F, F, null);
+        assertNumberFirstIfInteger("fanno dieci centesimi ok?", F, T, 10L);
+        assertNumberFirstIfInteger("è mezzo",                   F, F, null);
         assertNumberFirstIfInteger("è mezzo",                   T, T, null);
         assertNumberFirstIfInteger("due mezzi",                 T, F, 1L);
         assertNumberFirstIfInteger("due mezzi",                 T, T, 2L);
@@ -118,6 +125,55 @@ public class ParserParamsTest extends NumberParserParamsTestBase {
         assertNumberMixedWithText("venticinque dozzine trequarti virgola ventidueciao",            T, F, n(300, F), " ", n(3.0 / 4.0, F), " virgola ventidueciao");
         assertNumberMixedWithText("mezze coppie",                                                  T, F, n(0.5, F), " ", n(2, F));
         assertNumberMixedWithText("Ho ventitre anni",                                              F, F, "Ho ", n(23, F), " anni");
+    }
+
+    // built for usage below, but the building shouldn't count in the test timeout
+    static String longNumberMixedWithText;
+    static int partsOfLongNumberMixedWithText;
+    @BeforeClass
+    public static void setupLongNumberMixedWithText() {
+        final ParserFormatter npf = new ParserFormatter(new ItalianFormatter(), null);
+        final List<String> strings = new ArrayList<>();
+        for (int i = 0; i < 1100000000;) {
+            if (i < 2200) {
+                ++i; // test all numbers from 0 to 200 (also tests years!)
+            } else if (i < 1000000) {
+                i += 1207;
+            } else {
+                i += 299527; // roughly 10000 iterations
+            }
+
+            final double num = (i % 4 == 0) ? (1.0 / i) : i;
+            strings.add(npf.pronounceNumber(num).places(0).get()); // not ordinal
+            strings.add(npf.pronounceNumber(num).places(0).ordinal(T).get()); // ordinal
+            strings.add(npf.niceNumber(num).speech(false).get()); // not speech
+            strings.add(npf.niceNumber(num).speech(true).get()); // speech
+            strings.add(String.valueOf(num));
+            strings.add(i % 2 == 0 ? " ciao " : " di ");
+            strings.add(i % 2 == 0 ? "invalido" : "un centesimo");
+            strings.add(i % 2 == 0 ? " e " : " un ");
+            strings.add(i % 2 == 0 ? "," : " ; ");
+            strings.add("-++-+--+-+-");
+            strings.add(i % 2 == 0 ? " più " : " meno ");
+        }
+        partsOfLongNumberMixedWithText = strings.size();
+        longNumberMixedWithText = String.join("", strings);
+    }
+    @Test(timeout = 10000) // ~160000 number parses take <5s, use 10s timeout just for slower PCs
+    public void testNumberMixedWithTextPerformance() {
+        // make sure there are a lot of strings indeed (these numbers are just used to test that the
+        // input data makes sense, if the input data changes feel free to also change these)
+        assertEquals(73667, partsOfLongNumberMixedWithText);
+        assertEquals(1267337, longNumberMixedWithText.length());
+
+        for (int i = 0; i < (1 << 3); ++i) {
+            final List<Object> objects = new ExtractNumberParams(numberParser(), longNumberMixedWithText)
+                    .shortScale(i%2 == 1).integerOnly((i/2)%2 == 1).preferOrdinal((i/4)%2 == 1)
+                    .parseMixedWithText();
+            // make sure the number of numbers that was actually parsed is roughly the same as those
+            // in the input (the 0.8 is just a magic value, so feel free to decrease it if needed)
+            assertTrue(objects.size() / ((double) partsOfLongNumberMixedWithText) > 0.8);
+        }
     }
 
     @Test
