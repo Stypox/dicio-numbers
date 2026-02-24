@@ -224,13 +224,15 @@ class Tokenizer(configFolder: String) {
         valueNeedsCleaning: Boolean
     ) {
         if (tokenIsDigits) {
-            tokens.add(
-                NumberToken(
-                    value, spacesFollowing, positionInOriginalString, rawNumberCategories,
-                    Number(value.toLong())
-                )
-            )
-            return
+            // `value` might be too big to fit in a Long, in that case first try parsing it as
+            // Double, and if even that does not work, don't consider this a number
+            val number = runCatching { Number(value.toLong()) }.getOrNull()
+                ?: Number(value.toDouble()).takeIf { it.decimalValue().isFinite() }
+            if (number != null) {
+                tokens.add(NumberToken(value, spacesFollowing, positionInOriginalString,
+                                       rawNumberCategories, number))
+                return
+            }
         }
 
         val clean = if (valueNeedsCleaning) cleanValue(value) else value

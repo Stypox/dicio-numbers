@@ -118,4 +118,23 @@ public class TokenizerTest extends WithTokenizerTestBase {
         assertToken(tokens.get(3),  "ottesimo", "; ", 12, cat("number", "digit", "ordinal", "compound_word_piece"), cat("multiplier"), new Number(8));
         assertToken(tokens.get(4),  "z",        ";",  22);
     }
+
+    @Test
+    public void hugeNumbers() {
+        final String doubleMax = "179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        final List<Token> tokens = tokenizer.tokenize(Long.MAX_VALUE + " 1" + Long.MAX_VALUE + " " +
+                Long.MIN_VALUE + " " + (Long.MIN_VALUE + 1) + " " + Long.MIN_VALUE + "1 " +
+                doubleMax + " 1" + doubleMax + " " + doubleMax.repeat(10));
+        assertToken(tokens.get(0),  "9223372036854775807",  " ", 0,   cat("number", "raw"),    cat("digit"),  new Number(9223372036854775807L));
+        assertToken(tokens.get(1),  "19223372036854775807", " ", 20,  cat("number", "raw"),    cat("digit"),  new Number(19223372036854775807.0));
+        assertToken(tokens.get(2),  "-",                    "",  41,  cat("sign", "negative"), cat("number"));
+        assertToken(tokens.get(3),  "9223372036854775808",  " ", 42,  cat("number", "raw"),    cat("digit"),  new Number(9223372036854775808.0));
+        assertToken(tokens.get(4),  "-",                    "",  62,  cat("sign", "negative"), cat("number"));
+        assertToken(tokens.get(5),  "9223372036854775807",  " ", 63,  cat("number", "raw"),    cat("digit"),  new Number(9223372036854775807L));
+        assertToken(tokens.get(6),  "-",                    "",  83,  cat("sign", "negative"), cat("number"));
+        assertToken(tokens.get(7),  "92233720368547758081", " ", 84,  cat("number", "raw"),    cat("digit"),  new Number(92233720368547758081.0));
+        assertToken(tokens.get(8),  doubleMax,              " ", 105, cat("number", "raw"),    cat("digit"),  new Number(Double.MAX_VALUE));
+        assertToken(tokens.get(9),  "1" + doubleMax,        " ", 415);
+        assertToken(tokens.get(10), doubleMax.repeat(10),   "",  726);
+    }
 }
