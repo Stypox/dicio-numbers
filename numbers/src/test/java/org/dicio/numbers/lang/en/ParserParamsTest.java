@@ -112,6 +112,8 @@ public class ParserParamsTest extends ParserParamsTestBase {
     public void testNumberFirst() {
         assertNumberFirst("36 twelfths of apple",              F, T, F, n(3, F));
         assertNumberFirst("36 twelfths of apple",              T, T, T, n(36, F));
+        assertNumberFirst("hundred eighths",                   F, F, F, n(12.5, F));
+        assertNumberFirst("hundred eighths",                   F, T, F, n(108, T));
         assertNumberFirst("I'm really one hundred and eighth", F, F, F, n(100, F));
         assertNumberFirst("I'm really one hundred and eighth", T, T, F, n(108, T));
         assertNumberFirst("I'm really one hundred and eighth", T, F, T, n(108, T));

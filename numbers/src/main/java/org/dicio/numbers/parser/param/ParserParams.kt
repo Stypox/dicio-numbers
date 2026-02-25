@@ -9,8 +9,20 @@ import org.dicio.numbers.parser.lexer.TokenStream
 abstract class ParserParams<T> protected constructor(
     protected val parser: Parser, private val utterance: String
 ) {
+    /**
+     * Builds an extractor for the given token stream. When the extractor is called, it must start
+     * trying to extract an object of type [T] starting from the current position of [tokenStream],
+     * even if that position was changed externally in the meantime.
+     */
     protected abstract fun getExtractorAtCurrentPosition(tokenStream: TokenStream): () -> T?
 
+    /**
+     * @return Finds, parses and returns the object of type [T] that starts at the lowest index in
+     * [utterance]. In case there are multiple objects of type [T] starting at the same position,
+     * the longest one is returned (i.e. no restrictions are imposed on the object extractor so as
+     * to how much characters it can consume). Returns `null` if there is no object of type [T] in
+     * [utterance].
+     */
     fun parseFirst(): T? {
         val ts = parser.tokenize(utterance)
         val extractorAtCurrentPosition = getExtractorAtCurrentPosition(ts)
@@ -30,6 +42,21 @@ abstract class ParserParams<T> protected constructor(
         return null
     }
 
+    /**
+     * This function is `O(n)`. To obtain this complexity we assume that
+     * [getExtractorAtCurrentPosition]`(tokenStream)()` takes a linear amount of time in the number
+     * of tokens it ends up matching (i.e. it is `O(h)`, where `h` is by how many tokens the
+     * extractor advanced the `tokenStream` during execution).
+     *
+     * @return Finds and parses all objects of type [T] at different positions in [utterance], and
+     * returns an ordered list containing the objects of type [T] that were parsed interleaved with
+     * objects of type [String]. The parsing goes from start to end. At each index, if the extractor
+     * can parse an object of type [T] from that index, that object is greedily added to the list.
+     * Otherwise a [String] is created with the unmatched characters. This means that if there are
+     * two objects of type [T] that could start at a specific index in [utterance], the longest one
+     * is taken greedily (i.e. no restrictions are imposed on the object extractor so as to how much
+     * characters after the start index it can consume at any point).
+     */
     fun parseMixedWithText(): List<Any> {
         val ts = parser.tokenize(utterance)
         val extractorAtCurrentPosition = getExtractorAtCurrentPosition(ts)
@@ -77,7 +104,10 @@ abstract class ParserParams<T> protected constructor(
     /**
      * This function is `O(n * k²)`, where `n` is the length of [utterance], and `k` is the maximum
      * length of any object of type [T] that can be parsed in [utterance]. Since [T] represents
-     * numbers, durations or dates, `k` is generally small (e.g. just a few words).
+     * numbers, durations or dates, `k` is generally small (e.g. just a few words). To obtain the
+     * above complexity we assume that [getExtractorAtCurrentPosition]`(tokenStream)()` takes a
+     * linear amount of time in the number of tokens it ends up matching (i.e. it is `O(h)`, where
+     * `h` is by how many tokens the extractor advanced the `tokenStream` during execution).
      *
      * @return a list of ranges, one for every interval where an object of type [T] could be parsed,
      * sorted first according to [MatchedRange.start] and then by reversed [MatchedRange.end].
