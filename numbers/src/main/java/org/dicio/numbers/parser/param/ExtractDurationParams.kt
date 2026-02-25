@@ -5,7 +5,7 @@ import org.dicio.numbers.parser.lexer.TokenStream
 import org.dicio.numbers.unit.Duration
 
 class ExtractDurationParams(parser: Parser, utterance: String) :
-    ParserParams<Duration?>(parser, utterance) {
+    ParserParams<Duration>(parser, utterance) {
     // default values
     private var shortScale = true
 

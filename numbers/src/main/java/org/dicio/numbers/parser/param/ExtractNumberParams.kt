@@ -5,7 +5,7 @@ import org.dicio.numbers.parser.lexer.TokenStream
 import org.dicio.numbers.unit.Number
 
 class ExtractNumberParams(parser: Parser, utterance: String) :
-    ParserParams<Number?>(parser, utterance) {
+    ParserParams<Number>(parser, utterance) {
     // default values
     private var shortScale = true
     private var preferOrdinal = false
